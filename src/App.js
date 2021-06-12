@@ -59,7 +59,7 @@ class App extends Component{
       this.remoteVideoref.current.srcObject = e.streams[0]
     }
     const constraints = {
-      audio: false,
+      audio: false,//set true when trying to use audio
       video:true,
     }
     const success = (stream) => {//if success, then placing the stream in video reference(localVideoref)
