@@ -430,7 +430,13 @@ class App extends Component{
       // stop all remote peerconnections
       peerConnections && Object.values(peerConnections).forEach(pc => pc.close())
 
-      return (<div>You have successfully Disconnected. Room ID = {window.location.pathname}</div>)
+      return (
+        <div>
+          You have successfully Disconnected. Room ID = {window.location.pathname}
+          <br/>
+          <a href={'//localhost:8080' + window.location.pathname}>Click Here to Rejoin the meeting</a>
+        </div>
+      )
     }
 
     const statusText = <div style={{ color: 'yellow', padding: 5 }}>{status}</div>
