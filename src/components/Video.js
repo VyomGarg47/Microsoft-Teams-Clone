@@ -79,12 +79,15 @@ class Video extends Component {
       return {camera: !prevState.camera}
     })
   }
-
+  sendData = (e) => {
+    this.props.parentCallback(true)
+  }
   render() {
     const muteControls = this.props.showMuteControls && (
       <div>
         <i onClick={this.mutemic} style={{ cursor: 'pointer', padding: 5, fontSize: 20, color: this.state.mic && 'white' || 'red' }} class='material-icons'>{this.state.mic && 'mic' || 'mic_off'}</i>
         <i onClick={this.mutecamera} style={{ cursor: 'pointer', padding: 5, fontSize: 20, color: this.state.camera && 'white' || 'red' }} class='material-icons'>{this.state.camera && 'videocam' || 'videocam_off'}</i>
+        <i onClick={this.sendData} style={{ cursor: 'pointer', paddingLeft: 15, color: 'red' }} class='material-icons'>highlight_off</i>
       </div>
     )
 

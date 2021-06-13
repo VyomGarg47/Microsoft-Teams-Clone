@@ -407,6 +407,9 @@ class App extends Component{
     stream.getTracks().forEach(track => track.stop())
   }
 
+  callbackFunction = (data) => {
+    this.setState({disconnected: data})
+  }
 
   render() {
     const {
@@ -443,61 +446,57 @@ class App extends Component{
 
     return (
       <div>
-      <Draggable style={{
-        zIndex: 101,
-        position: 'absolute',
-        right: 0,
-        cursor: 'move'
-      }}>
-        <Video
-          videoType='localVideo'
-          videoStyles={{
-            // zIndex:2,
-            // position: 'absolute',
-            // right:0,
-            width: 200,
-            // height: 200,
-            // margin: 5,
-            // backgroundColor: 'black'
-          }}
-          frameStyle={{
-            width: 200,
-            margin: 5,
-            borderRadius: 5,
-            backgroundColor: 'black',
-          }}
-          showMuteControls={true}
-          // ref={this.localVideoref}
-          videoStream={localStream}
-          autoPlay muted>
-        </Video>
-      </Draggable>
-      <br />
-        <div style={{
-          zIndex: 3,
-          position: 'absolute',
-          // margin: 10,
-          // backgroundColor: '#cdc4ff4f',
-          // padding: 10,
-          // borderRadius: 5,
+        <Draggable style={{
+            zIndex: 4,
+            position: 'absolute',
+            right: 0,
+            cursor: 'move'
         }}>
-          <i onClick={(e) => {this.setState({disconnected: true})}} style={{ cursor: 'pointer', paddingLeft: 15, color: 'red' }} class='material-icons'>highlight_off</i>
+          <Video
+            videoType='localVideo'
+            videoStyles={{
+              width: 200,
+            }}
+            frameStyle={{
+              width: 200,
+              margin: 5,
+              borderRadius: 5,
+              backgroundColor: 'black',
+            }}
+            showMuteControls={true}
+            // ref={this.localVideoref}
+            videoStream={localStream}
+            parentCallback = {this.callbackFunction}
+            autoPlay muted>
+          </Video>
+        </Draggable>
+        <br />
+        <div style={{
+            zIndex: 3,
+            position: 'absolute',
+        }}>
           <div style={{
             margin: 10,
             backgroundColor: '#cdc4ff4f',
             padding: 10,
             borderRadius: 5,
-          }}>{ statusText }</div>
+            }}><div style={{color: 'yellow', padding: 5}}>here goes my card or maybe something else</div>
+          </div>
+          <div style={{
+            margin: 10,
+            backgroundColor: '#cdc4ff4f',
+            padding: 10,
+            borderRadius: 5,
+            }}>{ statusText }
+          </div>
         </div>
         <div>
           <Videos
             switchVideo={this.switchVideo}
             remoteStreams={remoteStreams}
-            // videoStream={this.state.selectedVideo && this.state.selectedVideo.stream}
           ></Videos>
         </div>
         <br />
-
         <Chat
             user={{
               uid: this.socket && this.socket.id || ''
@@ -519,4 +518,3 @@ class App extends Component{
 }
 
 export default App;
- 
