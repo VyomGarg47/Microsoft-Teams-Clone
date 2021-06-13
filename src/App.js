@@ -430,7 +430,13 @@ class App extends Component{
       // stop all remote peerconnections
       peerConnections && Object.values(peerConnections).forEach(pc => pc.close())
 
-      return (<div>You have successfully Disconnected</div>)
+      return (
+        <div>
+          You have successfully Disconnected. Room ID = {window.location.pathname}
+          <br/>
+          <a href={'//localhost:8080' + window.location.pathname}>Click Here to Rejoin the meeting</a>
+        </div>
+      )
     }
 
     const statusText = <div style={{ color: 'yellow', padding: 5 }}>{status}</div>
@@ -466,26 +472,6 @@ class App extends Component{
           autoPlay muted>
         </Video>
       </Draggable>
-      {/* <Video
-          frameStyle={{
-            zIndex: 1,
-            position: 'fixed',
-            bottom: 0,
-            minWidth: '100%', minHeight: '100%',
-            backgroundColor: 'black'
-          }}
-        videoStyles={{
-          // zIndex: 1,
-          // position: 'fixed',
-          // bottom: 0,
-          minWidth: '100%',
-          minHeight: '100%',
-          // backgroundColor: 'black'
-        }}
-        // ref={ this.remoteVideoref }
-        videoStream={this.state.selectedVideo && this.state.selectedVideo.stream}
-        // autoPlay
-      ></Video> */}
       <br />
         <div style={{
           zIndex: 3,
@@ -527,16 +513,6 @@ class App extends Component{
             this.sendToPeer('new-message', JSON.stringify(message), {local: this.socket.id})
           }}
         />
-
-        {/* <div style={{zIndex: 1, position: 'fixed'}} >
-          <button onClick={this.createOffer}>Offer</button>
-          <button onClick={this.createAnswer}>Answer</button>
-          <br />
-          <textarea style={{ width: 450, height:40 }} ref={ref => { this.textref = ref }} />
-        </div> */}
-        {/* <br />
-        <button onClick={this.setRemoteDescription}>Set Remote Desc</button>
-        <button onClick={this.addCandidate}>Add Candidate</button> */}
       </div>
     )
   }
