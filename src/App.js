@@ -5,6 +5,8 @@ import Videos from './components/Videos'
 import Chat from './components/chat'
 import Draggable from './components/draggable'
 import {Input,Button} from '@material-ui/core'
+import {message} from 'antd'
+import 'antd/dist/antd.css'
 
 class App extends Component{
   constructor(props){
@@ -426,7 +428,11 @@ class App extends Component{
   }
   copyUrl = () => {
 		let text = window.location.href
-		navigator.clipboard.writeText(text)
+		navigator.clipboard.writeText(text).then(function () {
+			message.success("Link copied to clipboard!")
+		}, () => {
+			message.error("Failed to copy")
+		})
 	}
 
   render() {

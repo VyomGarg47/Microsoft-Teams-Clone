@@ -55,10 +55,6 @@ class Video extends Component {
     if (this.props.videoType === 'remoteVideo' && audioTrack && audioTrack.length) {
       audioTrack[0].onmute = () => {
         alert('muted')
-        // this.setState({
-        //   videoVisible: false,
-        // })
-        // this.props.videoMuted(nextProps.videoStream)
       }
     }
 
