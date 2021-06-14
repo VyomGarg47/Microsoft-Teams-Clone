@@ -4,6 +4,7 @@ import Video from './components/Video';
 import Videos from './components/Videos'
 import Chat from './components/chat'
 import Draggable from './components/draggable'
+import {Input,Button} from '@material-ui/core'
 
 class App extends Component{
   constructor(props){
@@ -32,6 +33,8 @@ class App extends Component{
       messages: [],
       sendChannels: [],
       disconnected: false,
+      askForUsername: true,
+      username: ''
     }
     //DONT FORGET TO CHANGE TO YOUR URL
     this.serviceIP = '/webrtcPeer'
@@ -198,7 +201,7 @@ class App extends Component{
     )
     this.socket.on('connection-success', data => {
 
-      this.getLocalStream()
+      //this.getLocalStream()
 
       //console.log(data.success)
       const status = data.peerCount > 1 ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}` : 'Waiting for other peers to connect'
@@ -411,6 +414,17 @@ class App extends Component{
     this.setState({disconnected: data})
   }
 
+  handleUsername = (e) => {
+    this.setState({
+      username: e.target.value
+    })
+  }
+
+  startconnection = (e) => {
+    this.setState({askForUsername: false})
+    this.getLocalStream()
+  }
+
   render() {
     const {
       status,
@@ -443,75 +457,89 @@ class App extends Component{
     }
 
     const statusText = <div style={{ color: 'yellow', padding: 5 }}>{status}</div>
-
+    
     return (
       <div>
-        <Draggable style={{
-            zIndex: 4,
-            position: 'absolute',
-            right: 0,
-            cursor: 'move'
-        }}>
-          <Video
-            videoType='localVideo'
-            videoStyles={{
-              width: 200,
-            }}
-            frameStyle={{
-              width: 200,
-              margin: 5,
-              borderRadius: 5,
-              backgroundColor: 'black',
-            }}
-            showMuteControls={true}
-            // ref={this.localVideoref}
-            videoStream={localStream}
-            parentCallback = {this.callbackFunction}
-            autoPlay muted>
-          </Video>
-        </Draggable>
-        <br />
-        <div style={{
-            zIndex: 3,
-            position: 'absolute',
-        }}>
-          <div style={{
-            margin: 10,
-            backgroundColor: '#cdc4ff4f',
-            padding: 10,
-            borderRadius: 5,
-            }}><div style={{color: 'yellow', padding: 5}}>here goes my card or maybe something else</div>
-          </div>
-          <div style={{
-            margin: 10,
-            backgroundColor: '#cdc4ff4f',
-            padding: 10,
-            borderRadius: 5,
-            }}>{ statusText }
-          </div>
-        </div>
+        {this.state.askForUsername === true ? 
         <div>
-          <Videos
-            switchVideo={this.switchVideo}
-            remoteStreams={remoteStreams}
-          ></Videos>
+          <div style={{background: "white", width: "30%", height: "auto", padding: "20px", minWidth: "400px",
+              textAlign: "center", margin: "auto", marginTop: "50px", justifyContent: "center"}}>
+            <p style={{ margin: 0, fontWeight: "bold", paddingRight: "50px" }}>Set your username</p>
+            <Input placeholder="Username" value={this.state.username} onChange={e => this.handleUsername(e)} />
+            <Button variant="contained" color="primary" onClick={this.startconnection} style={{ margin: "20px" }}>Connect</Button>
+          </div>
+				</div>
+        :
+        <div>
+          <Draggable style={{
+              zIndex: 4,
+              position: 'absolute',
+              right: 0,
+              cursor: 'move'
+          }}>
+            <Video
+              videoType='localVideo'
+              videoStyles={{
+                width: 200,
+              }}
+              frameStyle={{
+                width: 200,
+                margin: 5,
+                borderRadius: 5,
+                backgroundColor: 'black',
+              }}
+              showMuteControls={true}
+              // ref={this.localVideoref}
+              videoStream={localStream}
+              parentCallback = {this.callbackFunction}
+              autoPlay muted>
+            </Video>
+          </Draggable>
+          <br />
+          <div style={{
+              zIndex: 3,
+              position: 'absolute',
+          }}>
+            <div style={{
+              margin: 10,
+              backgroundColor: '#cdc4ff4f',
+              padding: 10,
+              borderRadius: 5,
+              }}><div style={{color: 'yellow', padding: 5}}>here goes my card or maybe something else</div>
+            </div>
+            <div style={{
+              margin: 10,
+              backgroundColor: '#cdc4ff4f',
+              padding: 10,
+              borderRadius: 5,
+              }}>{ statusText }
+            </div>
+          </div>
+          <div>
+            <Videos
+              switchVideo={this.switchVideo}
+              remoteStreams={remoteStreams}
+            ></Videos>
+          </div>
+          <br />
+          <Chat
+              user={{
+                //uid: this.socket && this.socket.id || ''
+                uid: this.state.username
+            }}
+            messages={messages}
+            sendMessage={(message) => {
+              this.setState(prevState => {
+                return {messages: [...prevState.messages, message]}
+              })
+              this.state.sendChannels.map(sendChannel => {
+                sendChannel.readyState === 'open' && sendChannel.send(JSON.stringify(message))
+              })
+              this.sendToPeer('new-message', JSON.stringify(message), {local: this.socket.id})
+            }}
+          />
         </div>
-        <br />
-        <Chat
-            user={{
-              uid: this.socket && this.socket.id || ''
-          }}
-          messages={messages}
-          sendMessage={(message) => {
-            this.setState(prevState => {
-              return {messages: [...prevState.messages, message]}
-            })
-            this.state.sendChannels.map(sendChannel => {
-              sendChannel.readyState === 'open' && sendChannel.send(JSON.stringify(message))
-            })
-            this.sendToPeer('new-message', JSON.stringify(message), {local: this.socket.id})
-          }}
-        />
+         }
       </div>
     )
   }
