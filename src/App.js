@@ -424,6 +424,10 @@ class App extends Component{
     this.setState({askForUsername: false})
     this.getLocalStream()
   }
+  copyUrl = () => {
+		let text = window.location.href
+		navigator.clipboard.writeText(text)
+	}
 
   render() {
     const {
@@ -505,7 +509,12 @@ class App extends Component{
               backgroundColor: '#cdc4ff4f',
               padding: 10,
               borderRadius: 5,
-              }}><div style={{color: 'yellow', padding: 5}}>here goes my card or maybe something else</div>
+              }}><div style={{ paddingTop: "20px" }}>
+                <Input value={window.location.href} disable="true"></Input>
+                <Button style={{backgroundColor: "#3f51b5",color: "whitesmoke",marginLeft: "20px",
+                  marginTop: "10px",width: "120px",fontSize: "10px"
+                }} onClick={this.copyUrl}>Copy invite link</Button>
+              </div>
             </div>
             <div style={{
               margin: 10,
