@@ -482,7 +482,7 @@ class Meet extends Component{
         :
         <div>
           <Draggable style={{
-              zIndex: 4,
+              zIndex: 101,
               position: 'absolute',
               right: 0,
               cursor: 'move'
@@ -490,10 +490,10 @@ class Meet extends Component{
             <Video
               videoType='localVideo'
               videoStyles={{
-                width: 200,
+                width: 300,
               }}
               frameStyle={{
-                width: 200,
+                width: 300,
                 margin: 5,
                 borderRadius: 5,
                 backgroundColor: 'black',

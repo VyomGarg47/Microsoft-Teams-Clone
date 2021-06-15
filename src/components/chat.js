@@ -92,9 +92,9 @@ const Chat = props => {
         zIndex: 10,
         position: 'absolute',
         right: 5,
-        top: 190,
+        top: 300,
         bottom: 140,
-        width: 350,
+        width: 300,
         // height: 650,
     }}>
         <ul className="chat" id="chatList">
