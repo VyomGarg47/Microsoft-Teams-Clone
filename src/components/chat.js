@@ -93,7 +93,7 @@ const Chat = props => {
         position: 'absolute',
         right: 5,
         top: 300,
-        bottom: 140,
+        bottom: 10,
         width: 300,
         // height: 650,
     }}>

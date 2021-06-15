@@ -120,7 +120,7 @@ class Videos extends Component {
             position: 'fixed',
             padding: '6px 3px',
             backgroundColor: '#424242',
-            maxHeight: 120,
+            maxHeight: 130,
             top: 'auto',
             right: 350,
             left: 500,

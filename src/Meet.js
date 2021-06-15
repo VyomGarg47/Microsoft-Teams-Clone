@@ -36,7 +36,8 @@ class Meet extends Component{
       sendChannels: [],
       disconnected: false,
       askForUsername: true,
-      username: ''
+      username: '',
+      numberOfUsers: 0
     }
     //DONT FORGET TO CHANGE TO YOUR URL
     this.serviceIP = '/webrtcPeer'
@@ -207,16 +208,19 @@ class Meet extends Component{
 
       //console.log(data.success)
       const status = data.peerCount > 1 ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}` : 'Waiting for other peers to connect'
+      const numberOfUsers = data.peerCount
 
       this.setState({
         status: status,
-        messages: data.messages
+        messages: data.messages,
+        numberOfUsers: numberOfUsers
       })
     })
     this.socket.on('joined-peers', data => {
 
       this.setState({
-        status: data.peerCount > 1 ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}` : 'Waiting for other peers to connect'
+        status: data.peerCount > 1 ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}` : 'Waiting for other peers to connect',
+        numberOfUsers: data.peerCount
       })
     })
 
@@ -240,7 +244,8 @@ class Meet extends Component{
           // remoteStream: remoteStreams.length > 0 && remoteStreams[0].stream || null,
           remoteStreams,
           ...selectedVideo,
-          status: data.peerCount > 1 ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}` : 'Waiting for other peers to connect'
+          status: data.peerCount > 1 ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}` : 'Waiting for other peers to connect',
+          numberOfUsers: data.peerCount
         }
         }
       )
@@ -530,29 +535,37 @@ class Meet extends Component{
               }}>{ statusText }
             </div>
           </div>
-          <div>
-            <Videos
-              switchVideo={this.switchVideo}
-              remoteStreams={remoteStreams}
-            ></Videos>
-          </div>
-          <br />
-          <Chat
-              user={{
-                //uid: this.socket && this.socket.id || ''
-                uid: this.state.username
-            }}
-            messages={messages}
-            sendMessage={(message) => {
-              this.setState(prevState => {
-                return {messages: [...prevState.messages, message]}
-              })
-              this.state.sendChannels.map(sendChannel => {
-                sendChannel.readyState === 'open' && sendChannel.send(JSON.stringify(message))
-              })
-              this.sendToPeer('new-message', JSON.stringify(message), {local: this.socket.id})
-            }}
-          />
+          {this.state.numberOfUsers === 1 ? 
+            <div style={{zIndex: 102,color:"black"}}>
+              OOPS, LOOKS LIKE NOBODY IS HERE
+            </div>
+            :
+            <div>
+              <div>
+                <Videos
+                  switchVideo={this.switchVideo}
+                  remoteStreams={remoteStreams}
+                ></Videos>
+              </div>
+              <br />
+              <Chat
+                  user={{
+                    //uid: this.socket && this.socket.id || ''
+                    uid: this.state.username
+                }}
+                messages={messages}
+                sendMessage={(message) => {
+                  this.setState(prevState => {
+                    return {messages: [...prevState.messages, message]}
+                  })
+                  this.state.sendChannels.map(sendChannel => {
+                    sendChannel.readyState === 'open' && sendChannel.send(JSON.stringify(message))
+                  })
+                  this.sendToPeer('new-message', JSON.stringify(message), {local: this.socket.id})
+                }}
+              />
+            </div>
+          }
         </div>
          }
       </div>
