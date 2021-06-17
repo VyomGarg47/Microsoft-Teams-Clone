@@ -34,7 +34,6 @@ io.on('connection',socket=>{
 })
 const peers = io.of('/webrtcPeer')
 // keep a reference of all socket connections
-//let connectedPeers = new Map()
 
 peers.on('connection', socket => {
 
