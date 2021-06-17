@@ -38,6 +38,7 @@ class Meet extends Component {
       askForUsername: true,
       username: "",
       numberOfUsers: 0,
+      users: [],
     };
     //DONT FORGET TO CHANGE TO YOUR URL
     this.serviceIP = "/webrtcPeer";
@@ -74,6 +75,7 @@ class Meet extends Component {
 
   whoisOnline = () => {
     // let all peers know I am joining
+    this.socket.emit('add-user', this.state.username);
     this.sendToPeer("onlinePeers", null, { local: this.socket.id });
   };
 
@@ -218,6 +220,7 @@ class Meet extends Component {
         status: status,
         messages: data.messages,
         numberOfUsers: numberOfUsers,
+        users: data.users
       });
     });
     this.socket.on("joined-peers", (data) => {
@@ -264,7 +267,12 @@ class Meet extends Component {
         };
       });
     });
-
+    this.socket.on('adduser',(usersList)=>{
+      console.log('Emit');
+      this.setState({
+        users: [...usersList]
+      })
+    })
     this.socket.on("online-peer", (socketID) => {
       // console.log('connected peers ...', socketID)
 
@@ -599,6 +607,17 @@ class Meet extends Component {
                     Copy invite link
                   </Button>
                 </div>
+              </div>
+              <div 
+                style={{
+                  margin: 10,
+                  backgroundColor: "#cdc4ff4f",
+                  padding: 10,
+                  borderRadius: 5,
+                }}>
+                  {this.state.users.map(item=>{
+                    return <li>{item}</li>
+                  })}
               </div>
               <div
                 style={{

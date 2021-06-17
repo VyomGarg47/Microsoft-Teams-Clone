@@ -9,6 +9,7 @@ const port = 8080;
 
 const rooms = {};
 const messages = {};
+const users = {};
 //app.get('/',(req,res) => res.send('Hello World'))
 app.use(express.static(__dirname + "/build")); //once app is build, the react server which was originally at 3000 will now serve at 8080
 app.get("/", (req, res, next) => {
@@ -44,7 +45,7 @@ peers.on("connection", (socket) => {
     (rooms[room] && rooms[room].set(socket.id, socket)) ||
     new Map().set(socket.id, socket); //if room is already in map, do nothing else create a new room
   messages[room] = messages[room] || [];
-
+  users[room] = users[room] || [];
   // connectedPeers.set(socket.id, socket)
 
   console.log(socket.id);
@@ -52,6 +53,7 @@ peers.on("connection", (socket) => {
     success: socket.id,
     peerCount: rooms[room].size,
     messages: messages[room],
+    users: users[room],
   });
 
   const broadcast = () => {
@@ -106,6 +108,14 @@ peers.on("connection", (socket) => {
     disconnectedPeer(socketIDToDisconnect);
   });
 
+  socket.on("add-user",(username) => {
+    users[room] = [...users[room],username];
+    const _connectedPeers = rooms[room];
+    for (const [_socketID, _socket] of _connectedPeers.entries()) {
+      _socket.emit("adduser", users[room]);  
+    }
+  })
+  
   socket.on("onlinePeers", (data) => {
     const _connectedPeers = rooms[room];
     for (const [socketID, _socket] of _connectedPeers.entries()) {
