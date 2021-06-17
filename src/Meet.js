@@ -75,7 +75,7 @@ class Meet extends Component {
 
   whoisOnline = () => {
     // let all peers know I am joining
-    this.socket.emit('add-user', this.state.username);
+    this.socket.emit("add-user", this.state.username);
     this.sendToPeer("onlinePeers", null, { local: this.socket.id });
   };
 
@@ -220,7 +220,7 @@ class Meet extends Component {
         status: status,
         messages: data.messages,
         numberOfUsers: numberOfUsers,
-        users: data.users
+        users: data.users,
       });
     });
     this.socket.on("joined-peers", (data) => {
@@ -267,12 +267,11 @@ class Meet extends Component {
         };
       });
     });
-    this.socket.on('adduser',(usersList)=>{
-      console.log('Emit');
+    this.socket.on("adduser", (usersList) => {
       this.setState({
-        users: [...usersList]
-      })
-    })
+        users: [...usersList],
+      });
+    });
     this.socket.on("online-peer", (socketID) => {
       // console.log('connected peers ...', socketID)
 
@@ -422,16 +421,6 @@ class Meet extends Component {
     });
   };
 
-  // ************************************* //
-  // DELETE ME
-  // ************************************* //
-  disconnectSocket = (socketToDisconnect) => {
-    this.sendToPeer("socket-to-disconnect", null, {
-      local: this.socket.id,
-      remote: socketToDisconnect,
-    });
-  };
-
   switchVideo = (_video) => {
     // console.log(_video)
     this.setState({
@@ -483,10 +472,10 @@ class Meet extends Component {
 
     if (disconnected) {
       // disconnect socket
+      //this.socket.emit("user-disconnected", this.state.username);
       this.socket.close();
       // stop local audio & video tracks
       this.stopTracks(localStream);
-
       // stop all remote audio & video tracks
       remoteStreams.forEach((rVideo) => this.stopTracks(rVideo.stream));
 
@@ -608,16 +597,17 @@ class Meet extends Component {
                   </Button>
                 </div>
               </div>
-              <div 
+              <div
                 style={{
                   margin: 10,
                   backgroundColor: "#cdc4ff4f",
                   padding: 10,
                   borderRadius: 5,
-                }}>
-                  {this.state.users.map(item=>{
-                    return <li>{item}</li>
-                  })}
+                }}
+              >
+                {this.state.users.map((item) => {
+                  return <li>{item}</li>;
+                })}
               </div>
               <div
                 style={{
@@ -632,7 +622,7 @@ class Meet extends Component {
             </div>
             {this.state.numberOfUsers === 1 ? (
               <div style={{ zIndex: 102, color: "black" }}>
-                OOPS, LOOKS LIKE NOBODY IS HERE
+                LOOKS LIKE NOBODY IS HERE
               </div>
             ) : (
               <div>
