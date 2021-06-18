@@ -102,9 +102,10 @@ peers.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("disconnected");
-    const username = IDtoUsers[room].get(socket.id);
-    //console.log(username);
-    users[room] = users[room].filter((item) => item != username);
+    if (IDtoUsers[room].has(socket.id)) {
+      const username = IDtoUsers[room].get(socket.id);
+      users[room] = users[room].filter((item) => item != username);
+    }
     IDtoUsers[room].delete(socket.id);
     rooms[room].delete(socket.id);
     messages[room] = rooms[room].size === 0 ? null : messages[room];

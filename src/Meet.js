@@ -36,7 +36,7 @@ class Meet extends Component {
       sendChannels: [],
       disconnected: false,
       askForUsername: true,
-      username: "",
+      username: "User_" + Math.random().toString(36).substring(2, 7),
       numberOfUsers: 0,
       users: [],
     };
@@ -235,37 +235,38 @@ class Meet extends Component {
 
     this.socket.on("peer-disconnected", (data) => {
       // close peer-connection with this peer
-      this.state.peerConnections[data.socketID].close();
+      if (this.state.peerConnections[data.socketID]) {
+        this.state.peerConnections[data.socketID].close();
+        // get and stop remote audio and video tracks of the disconnected peer
+        const rVideo = this.state.remoteStreams.filter(
+          (stream) => stream.id === data.socketID
+        );
+        rVideo && this.stopTracks(rVideo[0].stream);
 
-      // get and stop remote audio and video tracks of the disconnected peer
-      const rVideo = this.state.remoteStreams.filter(
-        (stream) => stream.id === data.socketID
-      );
-      rVideo && this.stopTracks(rVideo[0].stream);
+        // filter out the disconnected peer stream
+        const remoteStreams = this.state.remoteStreams.filter(
+          (stream) => stream.id !== data.socketID
+        );
 
-      // filter out the disconnected peer stream
-      const remoteStreams = this.state.remoteStreams.filter(
-        (stream) => stream.id !== data.socketID
-      );
+        this.setState((prevState) => {
+          // check if disconnected peer is the selected video and if there still connected peers, then select the first
+          const selectedVideo =
+            prevState.selectedVideo.id === data.socketID && remoteStreams.length
+              ? { selectedVideo: remoteStreams[0] }
+              : null;
 
-      this.setState((prevState) => {
-        // check if disconnected peer is the selected video and if there still connected peers, then select the first
-        const selectedVideo =
-          prevState.selectedVideo.id === data.socketID && remoteStreams.length
-            ? { selectedVideo: remoteStreams[0] }
-            : null;
-
-        return {
-          // remoteStream: remoteStreams.length > 0 && remoteStreams[0].stream || null,
-          remoteStreams,
-          ...selectedVideo,
-          status:
-            data.peerCount > 1
-              ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}`
-              : "Waiting for other peers to connect",
-          numberOfUsers: data.peerCount,
-        };
-      });
+          return {
+            // remoteStream: remoteStreams.length > 0 && remoteStreams[0].stream || null,
+            remoteStreams,
+            ...selectedVideo,
+            status:
+              data.peerCount > 1
+                ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}`
+                : "Waiting for other peers to connect",
+            numberOfUsers: data.peerCount,
+          };
+        });
+      }
     });
     this.socket.on("adduser", (usersList) => {
       this.setState({
@@ -498,7 +499,6 @@ class Meet extends Component {
     const statusText = (
       <div style={{ color: "yellow", padding: 5 }}>{status}</div>
     );
-
     return (
       <div>
         {this.state.askForUsername === true ? (
