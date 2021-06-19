@@ -485,13 +485,38 @@ class Meet extends Component {
         Object.values(peerConnections).forEach((pc) => pc.close());
 
       return (
-        <div>
-          You have successfully Disconnected. Room ID ={" "}
-          {window.location.pathname}
-          <br />
-          <a href={"//localhost:8080" + window.location.pathname}>
-            Click Here to Rejoin the meeting
-          </a>
+        <div className="cssanimation sequence fadeInBottom">
+          <div
+            className="border-radius"
+            style={{
+              background: "white",
+              width: "30%",
+              height: "auto",
+              padding: "20px",
+              minWidth: "500px",
+              minHeight: "200px",
+              textAlign: "center",
+              margin: "auto",
+              marginTop: "150px",
+              justifyContent: "center",
+            }}
+          >
+            <p
+              style={{
+                marginTop: "15px",
+                fontWeight: "bold",
+                fontSize: "20px",
+              }}
+            >
+              You have successfully disconnected.
+              <br /> Room ID = {window.location.pathname}
+              <br />
+              <br />
+              <a href={"//localhost:8080" + window.location.pathname}>
+                Click Here to Rejoin the meeting
+              </a>
+            </p>
+          </div>
         </div>
       );
     }
@@ -504,6 +529,7 @@ class Meet extends Component {
         {this.state.askForUsername === true ? (
           <div className="cssanimation sequence fadeInBottom">
             <div
+              className="border-radius"
               style={{
                 background: "white",
                 width: "30%",
@@ -512,7 +538,7 @@ class Meet extends Component {
                 minWidth: "400px",
                 textAlign: "center",
                 margin: "auto",
-                marginTop: "50px",
+                marginTop: "150px",
                 justifyContent: "center",
               }}
             >
