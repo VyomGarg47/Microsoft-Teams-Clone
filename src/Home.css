@@ -13,7 +13,7 @@ body {
   overflow: hidden; */
   background: linear-gradient(-45deg, #ee7752, #fd0f6a, #23a6d5, #23d5ab);
   background-size: 400% 400%;
-  animation: gradient 12s ease infinite;
+  animation: gradient 11s ease infinite;
 }
 
 @keyframes gradient {
@@ -29,9 +29,36 @@ body {
 }
 
 .container2 {
-  padding-top: 30px;
+  padding-top: 150px;
   margin: auto;
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.cssanimation,
+.cssanimation span {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+.cssanimation span {
+  display: inline-block;
+}
+
+.fadeInBottom {
+  animation-name: fadeInBottom;
+}
+@keyframes fadeInBottom {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.border-radius {
+  border-radius: 10px !important;
 }

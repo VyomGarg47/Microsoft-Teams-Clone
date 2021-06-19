@@ -24,19 +24,28 @@ class Home extends Component {
 
   render() {
     return (
-      <div className="container2">
+      <div className="container2 cssanimation sequence fadeInBottom">
         <div>
           <h1 style={{ fontSize: "45px", color: "white" }}>Video Meeting</h1>
-          <p style={{ fontWeight: "200", color: "white" }}>
+          <p
+            style={{
+              fontSize: "25px",
+              fontWeight: "200",
+              color: "white",
+              marginLeft: "20px",
+              marginRight: "20px",
+            }}
+          >
             Video conference website that lets you stay in touch with all your
             friends.
           </p>
         </div>
 
         <div
+          className="border-radius"
           style={{
             background: "white",
-            width: "30%",
+            width: "27%",
             height: "auto",
             padding: "20px",
             minWidth: "400px",
@@ -45,7 +54,7 @@ class Home extends Component {
             marginTop: "100px",
           }}
         >
-          <p style={{ margin: 0, fontWeight: "bold", paddingRight: "50px" }}>
+          <p style={{ margin: 0, fontWeight: "bold", fontSize: "20px" }}>
             Start or join a meeting
           </p>
           <Input placeholder="URL" onChange={(e) => this.handleChange(e)} />
