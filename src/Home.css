@@ -5,7 +5,27 @@ body {
 body {
   margin: 0;
   text-align: center;
-  background-color: whitesmoke;
+  /* background-color: whitesmoke; */
+  /* background-image: url("./img/1.jpg"); */
+  /* background: url(./img/2.jpg) no-repeat center center fixed;
+  background-size: cover;
+  height: 100%;
+  overflow: hidden; */
+  background: linear-gradient(-45deg, #ee7752, #fd0f6a, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 12s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 35% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 35% 50%;
+  }
 }
 
 .container2 {

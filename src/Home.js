@@ -26,8 +26,8 @@ class Home extends Component {
     return (
       <div className="container2">
         <div>
-          <h1 style={{ fontSize: "45px" }}>Video Meeting</h1>
-          <p style={{ fontWeight: "200" }}>
+          <h1 style={{ fontSize: "45px", color: "white" }}>Video Meeting</h1>
+          <p style={{ fontWeight: "200", color: "white" }}>
             Video conference website that lets you stay in touch with all your
             friends.
           </p>
