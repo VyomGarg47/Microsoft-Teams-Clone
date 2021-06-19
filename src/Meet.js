@@ -502,7 +502,7 @@ class Meet extends Component {
     return (
       <div>
         {this.state.askForUsername === true ? (
-          <div>
+          <div className="cssanimation sequence fadeInBottom">
             <div
               style={{
                 background: "white",
@@ -516,10 +516,8 @@ class Meet extends Component {
                 justifyContent: "center",
               }}
             >
-              <p
-                style={{ margin: 0, fontWeight: "bold", paddingRight: "50px" }}
-              >
-                Set your username
+              <p style={{ margin: 0, fontWeight: "bold", fontSize: "20px" }}>
+                What should we call you ?
               </p>
               <Input
                 placeholder="Username"
