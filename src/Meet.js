@@ -516,7 +516,7 @@ class Meet extends Component {
               {/* PRODUCTION */}
               <a
                 href={
-                  "https://webrtc-video-call-test.herokuapp.com/" +
+                  "https://webrtc-video-call-test.herokuapp.com" +
                   window.location.pathname
                 }
               >
