@@ -11,7 +11,7 @@ const rooms = {};
 const messages = {};
 const users = {};
 const IDtoUsers = {};
-//app.get('/',(req,res) => res.send('Hello World'))
+
 app.use(express.static(__dirname + "/build")); //once app is build, the react server which was originally at 3000 will now serve at 8080
 app.get("/", (req, res, next) => {
   //default room, if room is not specified
