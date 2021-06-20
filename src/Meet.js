@@ -41,7 +41,7 @@ class Meet extends Component {
       users: [],
     };
     //DONT FORGET TO CHANGE TO YOUR URL
-    this.serviceIP = "/webrtcPeer";
+    this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/";
 
     this.socket = null;
   }
