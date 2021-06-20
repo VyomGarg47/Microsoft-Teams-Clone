@@ -1,10 +1,10 @@
 const express = require("express");
-
+const http = require("http");
 var io = require("socket.io")({
   path: "/webrtc",
 });
-
 const app = express();
+const app2 = http.createServer(app);
 const port = 8080;
 
 const rooms = {};
@@ -28,7 +28,7 @@ app.post("/:room", (req, res, next) => {
 });
 
 //listens for any request to our port
-const server = app.listen(port, () =>
+const server = app2.listen(port, () =>
   console.log(`server running on port ${port}`)
 );
 
