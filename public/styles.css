@@ -7,7 +7,7 @@
   justify-content: center;
   height: 50vh;
 }
-.App p{
+.App p {
   font-size: 12px;
   width: 50%;
 }
@@ -37,7 +37,7 @@
   background-color: #000;
   color: #fff;
 }
-.error{
+.error {
   color: red;
   font-size: 10px;
   text-align: center;
@@ -52,7 +52,8 @@
 }
 .message {
   font-size: 15px !important;
-  color: #ffe500;
+  color: #ffffff;
+  margin: 10px;
 }
 body {
   background-color: #f5f5f5;
@@ -82,11 +83,11 @@ body {
   grid-row-start: 1;
   grid-row-end: 190;
   /* background: rgb(233, 229, 229); */
-  background: '#0000004d';
+  background: "#0000004d";
   border-radius: 5px;
   max-width: 450px;
   /* background-image: linear-gradient(to bottom, rgba(0,0,0,0), #00000040) */
-  background-color: blueviolet;
+  background-color: #424242;
 }
 .chatInputWrapper {
   display: grid;
@@ -200,7 +201,7 @@ body {
   box-shadow: 0px 2px 0px #d4d4d4;
 }
 .msg {
-  background: #cdc4ff4f;
+  background: #212121;
   min-width: fit-content;
   padding: 10px;
   border-radius: 10px;
@@ -209,7 +210,7 @@ body {
 .msg p {
   font-size: 0.8rem;
   margin: 0 0 0.2rem 0;
-  color: rgb(81, 84, 255);
+  color: #ea80fc;
 }
 .msg img {
   position: relative;
