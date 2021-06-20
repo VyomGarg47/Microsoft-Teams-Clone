@@ -40,8 +40,9 @@ class Meet extends Component {
       numberOfUsers: 0,
       users: [],
     };
-    //DONT FORGET TO CHANGE TO YOUR URL
+    //PRODUCTION
     this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
+    //this.serviceIP = "/webrtcPeer";
 
     this.socket = null;
   }
@@ -512,9 +513,18 @@ class Meet extends Component {
               <br /> Room ID = {window.location.pathname}
               <br />
               <br />
-              <a href={"//localhost:8080" + window.location.pathname}>
-                Click Here to Rejoin the meeting
+              {/* PRODUCTION */}
+              <a
+                href={
+                  "https://webrtc-video-call-test.herokuapp.com/" +
+                  window.location.pathname
+                }
+              >
+                Click here to join the meeting again.
               </a>
+              {/* <a href={"//localhost:8080" + window.location.pathname}>
+                Click Here to join the meeting again.
+              </a> */}
             </p>
           </div>
         </div>
