@@ -4,7 +4,7 @@ import Video from "./components/Video";
 import Videos from "./components/Videos";
 import Chat from "./components/chat";
 import Draggable from "./components/draggable";
-import { Input, Button } from "@material-ui/core";
+import { Input, Button, List } from "@material-ui/core";
 import { message } from "antd";
 import "antd/dist/antd.css";
 
@@ -640,7 +640,7 @@ class Meet extends Component {
                 }}
               >
                 {this.state.users.map((item) => {
-                  return <li>{item}</li>;
+                  return <List>{item}</List>;
                 })}
               </div>
               <div
