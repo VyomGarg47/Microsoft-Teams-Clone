@@ -102,13 +102,17 @@ peers.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("disconnected");
+    rooms[room].delete(socket.id);
+    messages[room] = rooms[room].size === 0 ? null : messages[room];
     if (IDtoUsers[room].has(socket.id)) {
       const username = IDtoUsers[room].get(socket.id);
       users[room] = users[room].filter((item) => item != username);
+      IDtoUsers[room].delete(socket.id);
+      const _connectedPeers = rooms[room];
+      for (const [_socketID, _socket] of _connectedPeers.entries()) {
+        _socket.emit("user-disconnected", username);
+      }
     }
-    IDtoUsers[room].delete(socket.id);
-    rooms[room].delete(socket.id);
-    messages[room] = rooms[room].size === 0 ? null : messages[room];
     disconnectedPeer(socket.id);
   });
 
