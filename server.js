@@ -126,7 +126,7 @@ peers.on("connection", (socket) => {
     // new Map().set(socket.id, socket); //if room is already in map, do nothing else create a new room
     const _connectedPeers = rooms[room];
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
-      _socket.emit("adduser", users[room]);
+      _socket.emit("adduser", users[room], username);
     }
   });
 

@@ -269,7 +269,10 @@ class Meet extends Component {
         });
       }
     });
-    this.socket.on("adduser", (usersList) => {
+    this.socket.on("adduser", (usersList, username) => {
+      if (username) {
+        message.info(`${username} joined`);
+      }
       this.setState({
         users: [...usersList],
       });
