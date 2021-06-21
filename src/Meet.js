@@ -590,9 +590,11 @@ class Meet extends Component {
                 videoType="localVideo"
                 videoStyles={{
                   width: 300,
+                  height: 255,
                 }}
                 frameStyle={{
                   width: 300,
+                  height: 255,
                   margin: 5,
                   borderRadius: 5,
                   backgroundColor: "black",
@@ -627,7 +629,6 @@ class Meet extends Component {
                       backgroundColor: "#3f51b5",
                       color: "whitesmoke",
                       marginLeft: "20px",
-
                       width: "120px",
                       fontSize: "10px",
                     }}
