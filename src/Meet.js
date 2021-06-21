@@ -200,7 +200,7 @@ class Meet extends Component {
       callback(null);
     }
   };
-  componentDidMount = () => {
+  connectToSocketServer = () => {
     this.socket = io.connect(this.serviceIP, {
       path: "/webrtc",
       query: {
@@ -428,7 +428,7 @@ class Meet extends Component {
       if (pc) pc.addIceCandidate(new RTCIceCandidate(data.candidate));
     });
   };
-
+  // componentDidMount = () => {};
   switchVideo = (_video) => {
     // console.log(_video)
     this.setState({
@@ -455,6 +455,7 @@ class Meet extends Component {
   startconnection = (e) => {
     this.setState({ askForUsername: false });
     this.getLocalStream();
+    this.connectToSocketServer();
   };
   copyUrl = () => {
     let text = window.location.href;
