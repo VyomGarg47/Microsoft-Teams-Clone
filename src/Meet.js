@@ -662,7 +662,31 @@ class Meet extends Component {
             </div>
             {this.state.numberOfUsers === 1 ? (
               <div style={{ zIndex: 102, color: "black" }}>
-                LOOKS LIKE NOBODY IS HERE
+                <div
+                  className="border-radius"
+                  style={{
+                    background: "white",
+                    width: "30%",
+                    height: "auto",
+                    padding: "20px",
+                    minWidth: "200px",
+                    minHeight: "100px",
+                    textAlign: "center",
+                    margin: "auto",
+                    marginTop: "150px",
+                    justifyContent: "center",
+                  }}
+                >
+                  <p
+                    style={{
+                      marginTop: "15px",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}
+                  >
+                    LOOKS LIKE NOBODY IS HERE
+                  </p>
+                </div>
               </div>
             ) : (
               <div>
