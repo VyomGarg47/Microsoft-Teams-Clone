@@ -93,7 +93,7 @@ class Video extends Component {
   };
   render() {
     const muteControls = this.props.showMuteControls && (
-      <div>
+      <div style={{ backgroundColor: "black" }}>
         <i
           onClick={this.mutemic}
           style={{

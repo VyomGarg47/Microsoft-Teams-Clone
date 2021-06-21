@@ -590,7 +590,7 @@ class Meet extends Component {
                 videoType="localVideo"
                 videoStyles={{
                   width: 300,
-                  height: 255,
+                  height: 245,
                 }}
                 frameStyle={{
                   width: 300,
