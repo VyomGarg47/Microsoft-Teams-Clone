@@ -620,14 +620,14 @@ class Meet extends Component {
                   borderRadius: 5,
                 }}
               >
-                <div style={{ paddingTop: "20px" }}>
+                <div>
                   <Input value={window.location.href} disable="true"></Input>
                   <Button
                     style={{
                       backgroundColor: "#3f51b5",
                       color: "whitesmoke",
                       marginLeft: "20px",
-                      marginTop: "10px",
+
                       width: "120px",
                       fontSize: "10px",
                     }}
