@@ -14,7 +14,6 @@ class Meet extends Component {
     this.state = {
       localStream: null, //used to hold local stream objects to avoid recreating the stream whenever new offer comes
       remoteStream: null, //used to hold remote stream objects to avoid recreating the stream whenever new offer comes
-
       remoteStreams: [], //holds all Video Streams (all remote streams), empty array
       peerConnections: {}, //holds all peer Connections
       selectedVideo: null,
@@ -43,17 +42,15 @@ class Meet extends Component {
     //PRODUCTION
     this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
     //this.serviceIP = "/webrtcPeer";
-
     this.socket = null;
   }
-  getLocalStream = async () => {
+  getLocalStream = () => {
     // called when getUserMedia() successfully returns
     const success = (stream) => {
       window.localStream = stream; //this is a global variable available through the app, attacking stream to this local variable
       this.setState({
         localStream: stream, //updates the localstream
       });
-
       this.whoisOnline();
     };
     // called when getUserMedia() fails
@@ -67,25 +64,21 @@ class Meet extends Component {
         mirror: true,
       },
     };
-    try {
-      await navigator.mediaDevices
-        .getUserMedia(constraints) //capture audio and video
-        .then(success)
-        .catch(failure);
-    } catch (e) {
-      console.log(e);
-    }
+    navigator.mediaDevices
+      .getUserMedia(constraints) //capture audio and video
+      .then(success)
+      .catch(failure);
   };
 
   whoisOnline = () => {
     // let all peers know I am joining
+    console.log("INSIDE WHO IS ONLINE");
     this.socket.emit("add-user", this.state.username);
     this.sendToPeer("onlinePeers", null, { local: this.socket.id });
   };
 
   sendToPeer = (messageType, payload, socketID) => {
     this.socket.emit(messageType, {
-      //message send to server
       socketID,
       payload,
     });
@@ -203,7 +196,8 @@ class Meet extends Component {
       callback(null);
     }
   };
-  componentDidMount = () => {
+  connectToSocketServer = () => {
+    console.log("CONNECT TO SOCKET SERVER");
     this.socket = io.connect(this.serviceIP, {
       path: "/webrtc",
       query: {
@@ -211,7 +205,7 @@ class Meet extends Component {
       },
     });
     this.socket.on("connection-success", (data) => {
-      //this.getLocalStream()
+      this.getLocalStream();
 
       //console.log(data.success)
       const status =
@@ -352,6 +346,7 @@ class Meet extends Component {
     });
 
     this.socket.on("offer", (data) => {
+      console.log("OFFER");
       this.createPeerConnection(data.socketID, (pc) => {
         pc.addStream(this.state.localStream);
 
@@ -418,14 +413,13 @@ class Meet extends Component {
     });
 
     this.socket.on("answer", async (data) => {
+      console.log("ANSWER");
       // get remote's peerConnection
       const pc = this.state.peerConnections[data.socketID];
       // console.log(data.sdp)
-      try {
-        await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
-      } catch (e) {
-        console.log(e);
-      }
+      pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(
+        () => {}
+      );
     });
 
     this.socket.on("candidate", (data) => {
@@ -461,8 +455,7 @@ class Meet extends Component {
 
   startconnection = (e) => {
     this.setState({ askForUsername: false });
-    this.getLocalStream();
-    //this.connectToSocketServer();
+    this.connectToSocketServer();
   };
   copyUrl = () => {
     let text = window.location.href;
