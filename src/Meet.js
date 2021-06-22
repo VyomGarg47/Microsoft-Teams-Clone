@@ -46,7 +46,7 @@ class Meet extends Component {
 
     this.socket = null;
   }
-  getLocalStream = () => {
+  getLocalStream = async () => {
     // called when getUserMedia() successfully returns
     const success = (stream) => {
       window.localStream = stream; //this is a global variable available through the app, attacking stream to this local variable
@@ -67,11 +67,14 @@ class Meet extends Component {
         mirror: true,
       },
     };
-
-    navigator.mediaDevices
-      .getUserMedia(constraints) //capture audio and video
-      .then(success)
-      .catch(failure);
+    try {
+      await navigator.mediaDevices
+        .getUserMedia(constraints) //capture audio and video
+        .then(success)
+        .catch(failure);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   whoisOnline = () => {
