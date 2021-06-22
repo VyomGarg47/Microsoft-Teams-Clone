@@ -38,7 +38,7 @@ class Meet extends Component {
       askForUsername: true,
       username: "User_" + Math.random().toString(36).substring(2, 7),
       numberOfUsers: 1,
-      users: [],
+      IDtoUsers: new Map(),
     };
     //PRODUCTION
     //this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
@@ -221,7 +221,6 @@ class Meet extends Component {
         status: status,
         messages: data.messages,
         numberOfUsers: numberOfUsers,
-        users: data.users,
       });
     });
     this.socket.on("joined-peers", (data) => {
@@ -236,6 +235,11 @@ class Meet extends Component {
 
     this.socket.on("peer-disconnected", (data) => {
       // close peer-connection with this peer
+      message.info(`${data.username} has left the meeting`);
+      const receivedMap = new Map(data.clientsideList);
+      this.setState({
+        IDtoUsers: receivedMap,
+      });
       if (this.state.peerConnections[data.socketID]) {
         this.state.peerConnections[data.socketID].close();
         // get and stop remote audio and video tracks of the disconnected peer
@@ -269,16 +273,14 @@ class Meet extends Component {
         });
       }
     });
-    this.socket.on("adduser", (usersList, username) => {
+    this.socket.on("adduser", (IDtoUsersList, username) => {
       if (username) {
         message.info(`${username} joined`);
       }
+      const receivedMap = new Map(IDtoUsersList);
       this.setState({
-        users: [...usersList],
+        IDtoUsers: receivedMap,
       });
-    });
-    this.socket.on("user-disconnected", (username) => {
-      message.info(`${username} has left the meeting`);
     });
     this.socket.on("online-peer", (socketID) => {
       // console.log('connected peers ...', socketID)
@@ -647,9 +649,12 @@ class Meet extends Component {
                   borderRadius: 5,
                 }}
               >
-                {this.state.users.map((item) => {
-                  return <List>{item}</List>;
-                })}
+                {/* {Object.keys(this.state.IDtoUsers).map((item) => (
+                  <List>{this.state.IDtoUsers[item]}</List>
+                ))} */}
+                {[...this.state.IDtoUsers.keys()].map((k) => (
+                  <List>{this.state.IDtoUsers.get(k)}</List>
+                ))}
               </div>
               <div
                 style={{
