@@ -421,9 +421,7 @@ class Meet extends Component {
       // get remote's peerConnection
       const pc = this.state.peerConnections[data.socketID];
       // console.log(data.sdp)
-      pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(
-        () => {}
-      );
+      await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
     });
 
     this.socket.on("candidate", (data) => {
