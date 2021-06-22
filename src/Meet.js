@@ -41,8 +41,8 @@ class Meet extends Component {
       IDtoUsers: new Map(),
     };
     //PRODUCTION
-    //this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
-    this.serviceIP = "/webrtcPeer";
+    this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
+    //this.serviceIP = "/webrtcPeer";
 
     this.socket = null;
   }
@@ -523,17 +523,17 @@ class Meet extends Component {
               <br />
               <br />
               {/* PRODUCTION */}
-              {/* <a
+              <a
                 href={
                   "https://webrtc-video-call-test.herokuapp.com" +
                   window.location.pathname
                 }
               >
                 Click here to join the meeting again.
-              </a> */}
-              <a href={"//localhost:8080" + window.location.pathname}>
-                Click Here to join the meeting again.
               </a>
+              {/* <a href={"//localhost:8080" + window.location.pathname}>
+                Click Here to join the meeting again.
+              </a> */}
             </p>
           </div>
         </div>
