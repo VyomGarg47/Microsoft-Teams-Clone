@@ -417,11 +417,15 @@ class Meet extends Component {
       });
     });
 
-    this.socket.on("answer", (data) => {
+    this.socket.on("answer", async (data) => {
       // get remote's peerConnection
       const pc = this.state.peerConnections[data.socketID];
       // console.log(data.sdp)
-      await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
+      try {
+        await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
+      } catch (e) {
+        console.log(e);
+      }
     });
 
     this.socket.on("candidate", (data) => {
