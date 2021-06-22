@@ -203,7 +203,7 @@ class Meet extends Component {
       callback(null);
     }
   };
-  connectToSocketServer = () => {
+  componentDidMount = () => {
     this.socket = io.connect(this.serviceIP, {
       path: "/webrtc",
       query: {
@@ -462,7 +462,7 @@ class Meet extends Component {
   startconnection = (e) => {
     this.setState({ askForUsername: false });
     this.getLocalStream();
-    this.connectToSocketServer();
+    //this.connectToSocketServer();
   };
   copyUrl = () => {
     let text = window.location.href;
