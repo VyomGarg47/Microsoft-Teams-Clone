@@ -4,8 +4,8 @@ class Video extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mic: true,
-      camera: true,
+      mic: this.props.startmic,
+      camera: this.props.startvid,
       // currentStream: new MediaStream(),
       // videoTrack: false,
       videoVisible: true,
@@ -77,6 +77,7 @@ class Video extends Component {
       if (stream) stream[0].enabled = !prevState.mic;
       return { mic: !prevState.mic };
     });
+    this.props.changeMic();
   };
 
   mutecamera = (e) => {
@@ -87,6 +88,7 @@ class Video extends Component {
       if (stream) stream[0].enabled = !prevState.camera;
       return { camera: !prevState.camera };
     });
+    this.props.changeCamera();
   };
   sendData = (e) => {
     this.props.parentCallback(true);
@@ -102,7 +104,7 @@ class Video extends Component {
             fontSize: 20,
             color: (this.state.mic && "white") || "red",
           }}
-          class="material-icons"
+          className="material-icons"
         >
           {(this.state.mic && "mic") || "mic_off"}
         </i>
@@ -114,14 +116,14 @@ class Video extends Component {
             fontSize: 20,
             color: (this.state.camera && "white") || "red",
           }}
-          class="material-icons"
+          className="material-icons"
         >
           {(this.state.camera && "videocam") || "videocam_off"}
         </i>
         <i
           onClick={this.sendData}
           style={{ cursor: "pointer", paddingLeft: 15, color: "red" }}
-          class="material-icons"
+          className="material-icons"
         >
           highlight_off
         </i>

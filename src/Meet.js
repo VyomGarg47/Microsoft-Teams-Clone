@@ -38,11 +38,13 @@ class Meet extends Component {
       username: "User_" + Math.random().toString(36).substring(2, 7),
       numberOfUsers: 1,
       IDtoUsers: new Map(),
+      micstart: true,
+      vidstart: true,
     };
-    //PRODUCTION
-    this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
     this.socket = null;
+    //PRODUCTION
+    //this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
@@ -51,7 +53,7 @@ class Meet extends Component {
       this.setState({
         localStream: stream, //updates the localstream
       });
-      this.whoisOnline();
+      //this.connectToSocketServer();
     };
     // called when getUserMedia() fails
     const failure = (e) => {
@@ -72,7 +74,6 @@ class Meet extends Component {
 
   whoisOnline = () => {
     // let all peers know I am joining
-    console.log("INSIDE WHO IS ONLINE");
     this.socket.emit("add-user", this.state.username);
     this.sendToPeer("onlinePeers", null, { local: this.socket.id });
   };
@@ -196,6 +197,9 @@ class Meet extends Component {
       callback(null);
     }
   };
+  componentDidMount = () => {
+    this.getLocalStream();
+  };
   connectToSocketServer = () => {
     console.log("CONNECT TO SOCKET SERVER");
     this.socket = io.connect(this.serviceIP, {
@@ -205,7 +209,7 @@ class Meet extends Component {
       },
     });
     this.socket.on("connection-success", (data) => {
-      this.getLocalStream();
+      this.whoisOnline();
 
       //console.log(data.success)
       const status =
@@ -346,7 +350,6 @@ class Meet extends Component {
     });
 
     this.socket.on("offer", (data) => {
-      console.log("OFFER");
       this.createPeerConnection(data.socketID, (pc) => {
         pc.addStream(this.state.localStream);
 
@@ -413,7 +416,6 @@ class Meet extends Component {
     });
 
     this.socket.on("answer", async (data) => {
-      console.log("ANSWER");
       // get remote's peerConnection
       const pc = this.state.peerConnections[data.socketID];
       // console.log(data.sdp)
@@ -446,7 +448,14 @@ class Meet extends Component {
   callbackFunction = (data) => {
     this.setState({ disconnected: data });
   };
-
+  changeMicBeforeJoin = () => {
+    const temp = this.state.micstart;
+    this.setState({ micstart: !temp });
+  };
+  changeCameraBeforeJoin = () => {
+    const temp = this.state.vidstart;
+    this.setState({ vidstart: !temp });
+  };
   handleUsername = (e) => {
     this.setState({
       username: e.target.value,
@@ -456,6 +465,8 @@ class Meet extends Component {
   startconnection = (e) => {
     this.setState({ askForUsername: false });
     this.connectToSocketServer();
+    console.log(this.state.micstart);
+    console.log(this.state.vidstart);
   };
   copyUrl = () => {
     let text = window.location.href;
@@ -521,17 +532,17 @@ class Meet extends Component {
               <br />
               <br />
               {/* PRODUCTION */}
-              <a
+              {/* <a
                 href={
                   "https://webrtc-video-call-test.herokuapp.com" +
                   window.location.pathname
                 }
               >
                 Click here to join the meeting again.
-              </a>
-              {/* <a href={"//localhost:8080" + window.location.pathname}>
-                Click Here to join the meeting again.
               </a> */}
+              <a href={"//localhost:8080" + window.location.pathname}>
+                Click Here to join the meeting again.
+              </a>
             </p>
           </div>
         </div>
@@ -575,6 +586,38 @@ class Meet extends Component {
               >
                 Connect
               </Button>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "20px",
+                  marginBottom: "35px",
+                }}
+              >
+                <Video
+                  videoType="localVideo"
+                  videoStyles={{
+                    width: 500,
+                    height: 400,
+                  }}
+                  frameStyle={{
+                    width: 500,
+                    height: 410,
+                    margin: 5,
+                    borderRadius: 5,
+                    backgroundColor: "black",
+                  }}
+                  showMuteControls={true}
+                  videoStream={localStream}
+                  parentCallback={this.callbackFunction}
+                  changeMic={this.changeMicBeforeJoin}
+                  changeCamera={this.changeCameraBeforeJoin}
+                  startmic={true}
+                  startvid={true}
+                  autoPlay
+                  muted
+                ></Video>
+              </div>
             </div>
           </div>
         ) : (
@@ -602,8 +645,12 @@ class Meet extends Component {
                 }}
                 showMuteControls={true}
                 // ref={this.localVideoref}
+                startmic={this.state.micstart}
+                startvid={this.state.vidstart}
                 videoStream={localStream}
                 parentCallback={this.callbackFunction}
+                changeMic={this.changeMicBeforeJoin}
+                changeCamera={this.changeCameraBeforeJoin}
                 autoPlay
                 muted
               ></Video>
@@ -647,11 +694,14 @@ class Meet extends Component {
                   borderRadius: 5,
                 }}
               >
-                {/* {Object.keys(this.state.IDtoUsers).map((item) => (
-                  <List>{this.state.IDtoUsers[item]}</List>
-                ))} */}
                 {[...this.state.IDtoUsers.keys()].map((k) => (
-                  <List>{this.state.IDtoUsers.get(k)}</List>
+                  <div>
+                    {this.state.IDtoUsers.get(k) === this.state.username ? (
+                      <List>{this.state.IDtoUsers.get(k)} (You)</List>
+                    ) : (
+                      <List>{this.state.IDtoUsers.get(k)}</List>
+                    )}
+                  </div>
                 ))}
               </div>
               <div
@@ -666,9 +716,12 @@ class Meet extends Component {
               </div>
             </div>
             {this.state.numberOfUsers === 1 ? (
-              <div style={{ zIndex: 102, color: "black" }}>
+              <div
+                className="cssanimation sequence fadeInBottom"
+                style={{ zIndex: 102, color: "black" }}
+              >
                 <div
-                  className="border-radius"
+                  className="border-radius "
                   style={{
                     background: "white",
                     width: "30%",
