@@ -120,13 +120,17 @@ class Video extends Component {
         >
           {(this.state.camera && "videocam") || "videocam_off"}
         </i>
-        <i
-          onClick={this.sendData}
-          style={{ cursor: "pointer", paddingLeft: 15, color: "red" }}
-          className="material-icons"
-        >
-          highlight_off
-        </i>
+        {this.props.showEndCall === true ? (
+          <i
+            onClick={this.sendData}
+            style={{ cursor: "pointer", paddingLeft: 15, color: "red" }}
+            className="material-icons"
+          >
+            highlight_off
+          </i>
+        ) : (
+          <div></div>
+        )}
       </div>
     );
 

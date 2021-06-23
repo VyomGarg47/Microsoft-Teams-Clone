@@ -614,6 +614,7 @@ class Meet extends Component {
                   changeCamera={this.changeCameraBeforeJoin}
                   startmic={true}
                   startvid={true}
+                  showEndCall={false}
                   autoPlay
                   muted
                 ></Video>
@@ -651,6 +652,7 @@ class Meet extends Component {
                 parentCallback={this.callbackFunction}
                 changeMic={this.changeMicBeforeJoin}
                 changeCamera={this.changeCameraBeforeJoin}
+                showEndCall={true}
                 autoPlay
                 muted
               ></Video>
