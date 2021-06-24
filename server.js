@@ -1,5 +1,6 @@
 const express = require("express");
 const http = require("http");
+const compression = require("compression");
 var io = require("socket.io")({
   path: "/webrtc",
 });
@@ -10,7 +11,7 @@ const port = process.env.PORT || 8080;
 const rooms = {};
 const messages = {};
 const IDtoUsers = {};
-
+app.use(compression({ threshold: 0 }));
 app.use(express.static(__dirname + "/build")); //once app is build, the react server which was originally at 3000 will now serve at 8080
 app.get("/", (req, res, next) => {
   //default room, if room is not specified
