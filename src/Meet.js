@@ -40,6 +40,7 @@ class Meet extends Component {
       IDtoUsers: new Map(),
       micstart: true,
       vidstart: true,
+      sharingScreen: false,
     };
     this.socket = null;
     //PRODUCTION
@@ -495,12 +496,14 @@ class Meet extends Component {
       window.localStream = stream; //this is a global variable available through the app, attacking stream to this local variable
       this.setState({
         localStream: stream,
+        sharingScreen: true,
       });
       screenTrack.onended = () => {
         console.log("STREAM ENDED");
         window.localStream = currentlocalstream; //this is a global variable available through the app, attacking stream to this local variable
         this.setState({
           localStream: currentlocalstream, //updates the localstream
+          sharingScreen: false,
         });
         const newscreenTrack = currentlocalstream.getTracks()[1];
         for (const id in peerConnectionList) {
@@ -722,6 +725,15 @@ class Meet extends Component {
                   </Button>
                 </div>
               </div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.shareScreen}
+                style={{ margin: "20px" }}
+                disabled={this.state.sharingScreen}
+              >
+                Share Screen
+              </Button>
               <div
                 style={{
                   margin: 10,
@@ -740,14 +752,6 @@ class Meet extends Component {
                   </div>
                 ))}
               </div>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.shareScreen}
-                style={{ margin: "20px" }}
-              >
-                Share Screen
-              </Button>
               <div
                 style={{
                   margin: 10,
