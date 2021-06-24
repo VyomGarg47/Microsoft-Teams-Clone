@@ -43,8 +43,8 @@ class Meet extends Component {
     };
     this.socket = null;
     //PRODUCTION
-    this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
@@ -480,6 +480,40 @@ class Meet extends Component {
     );
   };
 
+  shareScreen = () => {
+    let peerConnectionList = this.state.peerConnections;
+    const currentlocalstream = this.state.localStream;
+    navigator.mediaDevices.getDisplayMedia({ cursor: true }).then((stream) => {
+      const screenTrack = stream.getTracks()[0];
+      for (const id in peerConnectionList) {
+        peerConnectionList[id].getSenders().forEach(async (s) => {
+          if (s.track && s.track.kind === "video") {
+            await s.replaceTrack(screenTrack);
+          }
+        });
+      }
+      window.localStream = stream; //this is a global variable available through the app, attacking stream to this local variable
+      this.setState({
+        localStream: stream,
+      });
+      screenTrack.onended = () => {
+        console.log("STREAM ENDED");
+        window.localStream = currentlocalstream; //this is a global variable available through the app, attacking stream to this local variable
+        this.setState({
+          localStream: currentlocalstream, //updates the localstream
+        });
+        const newscreenTrack = currentlocalstream.getTracks()[1];
+        for (const id in peerConnectionList) {
+          peerConnectionList[id].getSenders().forEach(async (s) => {
+            if (s.track && s.track.kind === "video") {
+              await s.replaceTrack(newscreenTrack);
+            }
+          });
+        }
+      };
+    });
+  };
+
   render() {
     const {
       status,
@@ -532,17 +566,17 @@ class Meet extends Component {
               <br />
               <br />
               {/* PRODUCTION */}
-              <a
+              {/* <a
                 href={
                   "https://webrtc-video-call-test.herokuapp.com" +
                   window.location.pathname
                 }
               >
                 Click here to join the meeting again.
-              </a>
-              {/* <a href={"//localhost:8080" + window.location.pathname}>
-                Click Here to join the meeting again.
               </a> */}
+              <a href={"//localhost:8080" + window.location.pathname}>
+                Click Here to join the meeting again.
+              </a>
             </p>
           </div>
         </div>
@@ -706,6 +740,14 @@ class Meet extends Component {
                   </div>
                 ))}
               </div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.shareScreen}
+                style={{ margin: "20px" }}
+              >
+                Share Screen
+              </Button>
               <div
                 style={{
                   margin: 10,
