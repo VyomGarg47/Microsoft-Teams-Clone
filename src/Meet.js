@@ -3,7 +3,6 @@ import io from "socket.io-client";
 import Video from "./components/Video";
 import Videos from "./components/Videos";
 import Chat from "./components/chat";
-import Draggable from "./components/draggable";
 import Board from "./components/Board";
 import { Input, Button, List } from "@material-ui/core";
 import { message } from "antd";
@@ -727,12 +726,11 @@ class Meet extends Component {
             <div style={{ zIndex: 150, position: "relative" }}>
               {this.state.openCanvas && showCanvas()}
             </div>
-            <Draggable
+            <div
               style={{
                 zIndex: 101,
                 position: "absolute",
                 right: 0,
-                cursor: "move",
               }}
             >
               <Video
@@ -760,7 +758,7 @@ class Meet extends Component {
                 autoPlay
                 muted
               ></Video>
-            </Draggable>
+            </div>
             <br />
             <div
               style={{
