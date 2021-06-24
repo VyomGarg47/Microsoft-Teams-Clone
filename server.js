@@ -98,7 +98,12 @@ peers.on("connection", (socket) => {
     IDtoUsers[room].delete(socket.id);
     disconnectedPeer(socket.id, username);
   });
-
+  socket.on("canvas-data", (data) => {
+    const _connectedPeers = rooms[room];
+    for (const [_socketID, _socket] of _connectedPeers.entries()) {
+      _socket.emit("canvas-data", data);
+    }
+  });
   socket.on("add-user", (username) => {
     IDtoUsers[room] =
       (IDtoUsers[room] && IDtoUsers[room].set(socket.id, username)) ||

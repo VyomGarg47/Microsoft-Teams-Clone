@@ -4,11 +4,15 @@ import Video from "./components/Video";
 import Videos from "./components/Videos";
 import Chat from "./components/chat";
 import Draggable from "./components/draggable";
+import Board from "./components/Board";
 import { Input, Button, List } from "@material-ui/core";
 import { message } from "antd";
 import "antd/dist/antd.css";
 
 class Meet extends Component {
+  timout;
+  ctx;
+  isDrawing = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -41,11 +45,13 @@ class Meet extends Component {
       micstart: true,
       vidstart: true,
       sharingScreen: false,
+      color: "#000000",
+      size: "5",
     };
     this.socket = null;
     //PRODUCTION
-    this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
@@ -284,6 +290,7 @@ class Meet extends Component {
         IDtoUsers: receivedMap,
       });
     });
+
     this.socket.on("online-peer", (socketID) => {
       // console.log('connected peers ...', socketID)
 
@@ -517,7 +524,64 @@ class Meet extends Component {
     });
   };
 
+  changeColor(params) {
+    this.setState({
+      color: params.target.value,
+    });
+  }
+
+  changeSize(params) {
+    this.setState({
+      size: params.target.value,
+    });
+  }
+  closeCanvas = () => {
+    this.setState({
+      openCanvas: false,
+    });
+  };
   render() {
+    const showCanvas = () => {
+      return (
+        <div className="container-canvas">
+          <div className="tools-section">
+            <div className="color-picker-container">
+              Select Brush Color : &nbsp;
+              <input
+                type="color"
+                value={this.state.color}
+                onChange={this.changeColor.bind(this)}
+              />
+            </div>
+
+            <div className="brushsize-container">
+              Select Brush Size : &nbsp;
+              <select
+                value={this.state.size}
+                onChange={this.changeSize.bind(this)}
+              >
+                <option> 5 </option>
+                <option> 10 </option>
+                <option> 15 </option>
+                <option> 20 </option>
+                <option> 25 </option>
+                <option> 30 </option>
+              </select>
+            </div>
+          </div>
+          <div className="close-canvas-container">
+            <button onClick={() => this.closeCanvas()}>Close</button>
+          </div>
+          <div className="board-container">
+            <Board
+              color={this.state.color}
+              size={this.state.size}
+              socket={this.socket}
+            ></Board>
+          </div>
+        </div>
+      );
+    };
     const {
       status,
       messages,
@@ -569,17 +633,17 @@ class Meet extends Component {
               <br />
               <br />
               {/* PRODUCTION */}
-              <a
+              {/* <a
                 href={
                   "https://webrtc-video-call-test.herokuapp.com" +
                   window.location.pathname
                 }
               >
                 Click here to join the meeting again.
-              </a>
-              {/* <a href={"//localhost:8080" + window.location.pathname}>
-                Click Here to join the meeting again.
               </a> */}
+              <a href={"//localhost:8080" + window.location.pathname}>
+                Click Here to join the meeting again.
+              </a>
             </p>
           </div>
         </div>
@@ -660,6 +724,9 @@ class Meet extends Component {
           </div>
         ) : (
           <div>
+            <div style={{ zIndex: 150, position: "relative" }}>
+              {this.state.openCanvas && showCanvas()}
+            </div>
             <Draggable
               style={{
                 zIndex: 101,
@@ -733,6 +800,18 @@ class Meet extends Component {
                 disabled={this.state.sharingScreen}
               >
                 Share Screen
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  this.setState({
+                    openCanvas: true,
+                  });
+                }}
+                style={{ margin: "20px" }}
+              >
+                Open Canvas
               </Button>
               <div
                 style={{

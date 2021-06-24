@@ -293,3 +293,53 @@ input.textarea {
   color: white;
   font-weight: 400;
 }
+
+.container-canvas {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #03a9f4, #4caf50);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.color-picker-container {
+  text-align: center;
+  display: inline;
+  color: white;
+}
+
+.close-canvas-container {
+  text-align: center;
+  display: inline;
+  color: red;
+}
+
+.brushsize-container {
+  display: inline;
+  color: black;
+  margin-left: 12px;
+}
+
+.tools-section {
+  text-align: center;
+}
+
+.board-container {
+  width: 90%;
+  height: 90%;
+  margin: auto;
+  margin-top: 1%;
+  background: white;
+}
+
+.board {
+  width: 100%;
+  height: 100%;
+}
+
+.sketch {
+  width: 100%;
+  height: 100%;
+}
