@@ -47,7 +47,6 @@ peers.on("connection", (socket) => {
     new Map().set(socket.id, socket); //if room is already in map, do nothing else create a new room
 
   messages[room] = messages[room] || [];
-  // connectedPeers.set(socket.id, socket)
 
   console.log(socket.id);
   socket.emit("connection-success", {
@@ -56,26 +55,10 @@ peers.on("connection", (socket) => {
     messages: messages[room],
   });
 
-  const broadcast = () => {
-    const _connectedPeers = rooms[room];
-
-    for (const [socketID, _socket] of _connectedPeers.entries()) {
-      // if (socketID !== socket.id) {
-      _socket.emit("joined-peers", {
-        peerCount: rooms[room].size, //connectedPeers.size,
-      });
-      // }
-    }
-  };
-  broadcast();
-
-  // const disconnectedPeer = (socketID) => socket.broadcast.emit('peer-disconnected', {
-  //   peerCount: connectedPeers.size,
-  //   socketID: socketID
-  // })
   const disconnectedPeer = (socketID, username) => {
     const _connectedPeers = rooms[room];
     const clientsideList = Array.from(IDtoUsers[room]);
+    //emitting to every peer on this room the disconnected peer
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("peer-disconnected", {
         peerCount: rooms[room].size,
@@ -87,7 +70,6 @@ peers.on("connection", (socket) => {
   };
 
   socket.on("new-message", (data) => {
-    console.log("new-message", JSON.parse(data.payload));
     messages[room] = [...messages[room], JSON.parse(data.payload)];
   });
 
@@ -99,12 +81,14 @@ peers.on("connection", (socket) => {
     IDtoUsers[room].delete(socket.id);
     disconnectedPeer(socket.id, username);
   });
+
   socket.on("canvas-data", (data) => {
     const _connectedPeers = rooms[room];
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("canvas-data", data);
     }
   });
+
   socket.on("add-user", (username) => {
     IDtoUsers[room] =
       (IDtoUsers[room] && IDtoUsers[room].set(socket.id, username)) ||
@@ -118,7 +102,6 @@ peers.on("connection", (socket) => {
   socket.on("onlinePeers", (data) => {
     const _connectedPeers = rooms[room];
     for (const [socketID, _socket] of _connectedPeers.entries()) {
-      // don't send to self
       if (socketID !== data.socketID.local) {
         console.log("online-peer", data.socketID, socketID);
         socket.emit("online-peer", socketID);
@@ -127,44 +110,26 @@ peers.on("connection", (socket) => {
   });
 
   socket.on("offer", (data) => {
-    const _connectedPeers = rooms[room];
-    for (const [socketID, socket] of _connectedPeers.entries()) {
-      // don't send to self
-      if (socketID === data.socketID.remote) {
-        // console.log('Offer', socketID, data.socketID, data.payload.type)
-        socket.emit("offer", {
-          sdp: data.payload,
-          socketID: data.socketID.local,
-        });
-      }
-    }
+    const socket = rooms[room].get(data.socketID.remote);
+    socket.emit("offer", {
+      sdp: data.payload,
+      socketID: data.socketID.local,
+    });
   });
 
   socket.on("answer", (data) => {
-    console.log(data);
-    const _connectedPeers = rooms[room];
-    for (const [socketID, socket] of _connectedPeers.entries()) {
-      if (socketID === data.socketID.remote) {
-        console.log("Answer", socketID, data.socketID, data.payload.type);
-        socket.emit("answer", {
-          sdp: data.payload,
-          socketID: data.socketID.local,
-        });
-      }
-    }
+    const socket = rooms[room].get(data.socketID.remote);
+    socket.emit("answer", {
+      sdp: data.payload,
+      socketID: data.socketID.local,
+    });
   });
 
   socket.on("candidate", (data) => {
-    console.log(data);
-    const _connectedPeers = rooms[room];
-    // send candidate to the other peer(s) if any
-    for (const [socketID, socket] of _connectedPeers.entries()) {
-      if (socketID === data.socketID.remote) {
-        socket.emit("candidate", {
-          candidate: data.payload,
-          socketID: data.socketID.local,
-        });
-      }
-    }
+    const socket = rooms[room].get(data.socketID.remote);
+    socket.emit("candidate", {
+      candidate: data.payload,
+      socketID: data.socketID.local,
+    });
   });
 });

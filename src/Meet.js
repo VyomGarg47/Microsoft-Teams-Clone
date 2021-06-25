@@ -243,9 +243,9 @@ class Meet extends Component {
       // close peer-connection with this peer
       message.info(`${data.username} has left the meeting`);
       const receivedMap = new Map(data.clientsideList);
-      this.setState({
-        IDtoUsers: receivedMap,
-      });
+      // this.setState({
+      //   IDtoUsers: receivedMap,
+      // });
       if (this.state.peerConnections[data.socketID]) {
         this.state.peerConnections[data.socketID].close();
         // get and stop remote audio and video tracks of the disconnected peer
@@ -275,6 +275,7 @@ class Meet extends Component {
                 ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}`
                 : "Waiting for other peers to connect",
             numberOfUsers: data.peerCount,
+            IDtoUsers: receivedMap,
           };
         });
       }
@@ -283,9 +284,15 @@ class Meet extends Component {
       if (username) {
         message.info(`${username} joined`);
       }
+      const peerCount = IDtoUsersList.length;
       const receivedMap = new Map(IDtoUsersList);
       this.setState({
         IDtoUsers: receivedMap,
+        status:
+          peerCount > 1
+            ? `Total Connected Peers to room ${window.location.pathname}: ${peerCount}`
+            : "Waiting for other peers to connect",
+        numberOfUsers: peerCount,
       });
     });
 
@@ -421,7 +428,7 @@ class Meet extends Component {
       });
     });
 
-    this.socket.on("answer", async (data) => {
+    this.socket.on("answer", (data) => {
       // get remote's peerConnection
       const pc = this.state.peerConnections[data.socketID];
       // console.log(data.sdp)
