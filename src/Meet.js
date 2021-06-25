@@ -4,11 +4,11 @@ import Video from "./components/Video";
 import Videos from "./components/Videos";
 import Chat from "./components/chat";
 import Board from "./components/Board";
-import message from "antd/es/message";
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
-import "antd/dist/antd.css";
+import { ToastContainer, toast, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 class Meet extends Component {
   constructor(props) {
@@ -241,7 +241,15 @@ class Meet extends Component {
 
     this.socket.on("peer-disconnected", (data) => {
       // close peer-connection with this peer
-      message.info(`${data.username} has left the meeting`);
+      toast.info(`${data.username} has left the meeting`, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      });
       const receivedMap = new Map(data.clientsideList);
       // this.setState({
       //   IDtoUsers: receivedMap,
@@ -282,7 +290,15 @@ class Meet extends Component {
     });
     this.socket.on("adduser", (IDtoUsersList, username) => {
       if (username) {
-        message.info(`${username} joined`);
+        toast.info(`${username} joined`, {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+        });
       }
       const peerCount = IDtoUsersList.length;
       const receivedMap = new Map(IDtoUsersList);
@@ -485,10 +501,26 @@ class Meet extends Component {
     let text = window.location.href;
     navigator.clipboard.writeText(text).then(
       function () {
-        message.success("Link copied to clipboard!");
+        toast.success("Link copied to clipboard!", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+        });
       },
       () => {
-        message.error("Failed to copy");
+        toast.error("Failed to copy!", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+        });
       }
     );
   };
@@ -660,6 +692,7 @@ class Meet extends Component {
     );
     return (
       <div>
+        <ToastContainer transition={Slide} />
         {this.state.askForUsername === true ? (
           <div className="cssanimation sequence fadeInBottom">
             <div

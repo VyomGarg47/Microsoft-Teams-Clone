@@ -1,4 +1,10 @@
 import React, { Component } from "react";
+import IconButton from "@material-ui/core/IconButton";
+import VideocamIcon from "@material-ui/icons/Videocam";
+import VideocamOffIcon from "@material-ui/icons/VideocamOff";
+import MicIcon from "@material-ui/icons/Mic";
+import MicOffIcon from "@material-ui/icons/MicOff";
+import CallEndIcon from "@material-ui/icons/CallEnd";
 
 class Video extends Component {
   constructor(props) {
@@ -96,41 +102,23 @@ class Video extends Component {
   render() {
     const muteControls = this.props.showMuteControls && (
       <div style={{ backgroundColor: "black" }}>
-        <i
+        <IconButton
+          style={{ color: (this.state.mic && "white") || "red" }}
           onClick={this.mutemic}
-          style={{
-            cursor: "pointer",
-            padding: 5,
-            fontSize: 20,
-            color: (this.state.mic && "white") || "red",
-          }}
-          className="material-icons"
         >
-          {(this.state.mic && "mic") || "mic_off"}
-        </i>
-        <i
+          {this.state.mic === true ? <MicIcon /> : <MicOffIcon />}
+        </IconButton>
+        <IconButton
+          style={{ color: (this.state.camera && "white") || "red" }}
           onClick={this.mutecamera}
-          style={{
-            cursor: "pointer",
-            padding: 5,
-            fontSize: 20,
-            color: (this.state.camera && "white") || "red",
-          }}
-          className="material-icons"
         >
-          {(this.state.camera && "videocam") || "videocam_off"}
-        </i>
+          {this.state.camera === true ? <VideocamIcon /> : <VideocamOffIcon />}
+        </IconButton>
         {this.props.showEndCall === true ? (
-          <i
-            onClick={this.sendData}
-            style={{ cursor: "pointer", paddingLeft: 15, color: "red" }}
-            className="material-icons"
-          >
-            highlight_off
-          </i>
-        ) : (
-          <div></div>
-        )}
+          <IconButton style={{ color: "red" }} onClick={this.sendData}>
+            <CallEndIcon />
+          </IconButton>
+        ) : null}
       </div>
     );
 
