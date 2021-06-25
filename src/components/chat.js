@@ -1,6 +1,6 @@
 // https://www.freecodecamp.org/news/building-a-modern-chat-application-with-react-js-558896622194/
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import DragDrop from "./dragDrop";
 
 const Chat = (props) => {

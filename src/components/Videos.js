@@ -48,6 +48,7 @@ class Videos extends Component {
             videoMuted={this.videoMuted}
             videoType="remoteVideo"
             videoStream={rVideo.stream}
+            showControls={true}
             frameStyle={{
               backgroundColor: "#ffffff12",
               maxWidth: 120,
@@ -113,6 +114,7 @@ class Videos extends Component {
       <div>
         <Video
           videoType="previewVideo"
+          showControls={false}
           frameStyle={{
             zIndex: 1,
             position: "fixed",

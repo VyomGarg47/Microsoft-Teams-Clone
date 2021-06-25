@@ -714,6 +714,7 @@ class Meet extends Component {
                   startmic={true}
                   startvid={true}
                   showEndCall={false}
+                  showControls={true}
                   autoPlay
                   muted
                 ></Video>
@@ -755,6 +756,7 @@ class Meet extends Component {
                 changeCamera={this.changeCameraBeforeJoin}
                 showEndCall={true}
                 autoPlay
+                showControls={true}
                 muted
               ></Video>
             </div>
@@ -889,7 +891,7 @@ class Meet extends Component {
                     this.setState((prevState) => {
                       return { messages: [...prevState.messages, message] };
                     });
-                    this.state.sendChannels.map((sendChannel) => {
+                    this.state.sendChannels.forEach((sendChannel) => {
                       sendChannel.readyState === "open" &&
                         sendChannel.send(JSON.stringify(message));
                     });
