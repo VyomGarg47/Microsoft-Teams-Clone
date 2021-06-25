@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Input, Button } from "@material-ui/core";
+import Input from "@material-ui/core/Input";
+import Button from "@material-ui/core/Button";
 import "./Home.css";
 
 class Home extends Component {

@@ -4,14 +4,13 @@ import Video from "./components/Video";
 import Videos from "./components/Videos";
 import Chat from "./components/chat";
 import Board from "./components/Board";
-import { Input, Button, List } from "@material-ui/core";
-import { message } from "antd";
+import message from "antd/es/message";
+import Input from "@material-ui/core/Input";
+import Button from "@material-ui/core/Button";
+import List from "@material-ui/core/List";
 import "antd/dist/antd.css";
 
 class Meet extends Component {
-  timout;
-  ctx;
-  isDrawing = false;
   constructor(props) {
     super(props);
     this.state = {
