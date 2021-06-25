@@ -8,6 +8,8 @@ import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import { ToastContainer, toast, Slide } from "react-toastify";
+import connectSound from "./sounds/connect.mp3";
+import disconnectSound from "./sounds/disconnect.mp3";
 import "react-toastify/dist/ReactToastify.min.css";
 
 class Meet extends Component {
@@ -490,12 +492,18 @@ class Meet extends Component {
       username: e.target.value,
     });
   };
-
+  playConnectSound = () => {
+    const audioEl = new Audio(connectSound);
+    audioEl.play();
+  };
+  playDisconnectSound = () => {
+    const audioEl = new Audio(disconnectSound);
+    audioEl.play();
+  };
   startconnection = (e) => {
     this.setState({ askForUsername: false });
     this.connectToSocketServer();
-    console.log(this.state.micstart);
-    console.log(this.state.vidstart);
+    this.playConnectSound();
   };
   copyUrl = () => {
     let text = window.location.href;
@@ -631,10 +639,14 @@ class Meet extends Component {
     if (disconnected) {
       // disconnect socket
       //this.socket.emit("user-disconnected", this.state.username);
+      //this.playDisconnectSound();
       this.socket.close();
       // stop local audio & video tracks
       this.stopTracks(localStream);
       // stop all remote audio & video tracks
+
+      this.playDisconnectSound();
+
       remoteStreams.forEach((rVideo) => this.stopTracks(rVideo.stream));
 
       // stop all remote peerconnections
