@@ -637,16 +637,11 @@ class Meet extends Component {
     } = this.state;
 
     if (disconnected) {
-      // disconnect socket
-      //this.socket.emit("user-disconnected", this.state.username);
-      //this.playDisconnectSound();
       this.socket.close();
       // stop local audio & video tracks
       this.stopTracks(localStream);
-      // stop all remote audio & video tracks
-
       this.playDisconnectSound();
-
+      // stop all remote audio & video tracks
       remoteStreams.forEach((rVideo) => this.stopTracks(rVideo.stream));
 
       // stop all remote peerconnections
