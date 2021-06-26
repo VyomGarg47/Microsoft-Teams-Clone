@@ -11,6 +11,7 @@ import { ToastContainer, toast, Slide } from "react-toastify";
 import connectSound from "./sounds/connect.mp3";
 import disconnectSound from "./sounds/disconnect.mp3";
 import "react-toastify/dist/ReactToastify.min.css";
+import screenfull from "screenfull";
 
 class Meet extends Component {
   constructor(props) {
@@ -847,6 +848,7 @@ class Meet extends Component {
               >
                 Share Screen
               </Button>
+              <br />
               <Button
                 variant="contained"
                 color="primary"
@@ -858,6 +860,21 @@ class Meet extends Component {
                 style={{ margin: "20px" }}
               >
                 Open Canvas
+              </Button>
+              <br />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  if (screenfull.isEnabled) {
+                    screenfull.request();
+                  } else {
+                    // Ignore or do something else
+                  }
+                }}
+                style={{ margin: "20px" }}
+              >
+                Full screen
               </Button>
               <div
                 style={{
