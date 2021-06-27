@@ -12,9 +12,11 @@ import connectSound from "./sounds/connect.mp3";
 import disconnectSound from "./sounds/disconnect.mp3";
 import "react-toastify/dist/ReactToastify.min.css";
 import screenfull from "screenfull";
-import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
-
-//const [blob, setBlob] = useState(null);
+import RecordRTC from "recordrtc/RecordRTC";
+import ScreenShareIcon from "@material-ui/icons/ScreenShare";
+import Fullscreen from "@material-ui/icons/Fullscreen";
+import RadioButtonChecked from "@material-ui/icons/RadioButtonChecked";
+import Note from "@material-ui/icons/Note";
 
 class Meet extends Component {
   constructor(props) {
@@ -870,6 +872,7 @@ class Meet extends Component {
                 onClick={this.shareScreen}
                 style={{ margin: "20px" }}
                 disabled={this.state.sharingScreen}
+                startIcon={<ScreenShareIcon />}
               >
                 Share Screen
               </Button>
@@ -877,6 +880,7 @@ class Meet extends Component {
               <Button
                 variant="contained"
                 color="primary"
+                startIcon={<Note />}
                 onClick={() => {
                   this.setState({
                     openCanvas: true,
@@ -898,6 +902,7 @@ class Meet extends Component {
                   }
                 }}
                 style={{ margin: "20px" }}
+                startIcon={<Fullscreen />}
               >
                 Full screen
               </Button>
@@ -906,6 +911,7 @@ class Meet extends Component {
                 variant="contained"
                 color="primary"
                 //onClick={this.startRecording}
+                startIcon={<RadioButtonChecked />}
                 onClick={() => {
                   if (this.state.recordingVideo === false) {
                     this.startRecording();
