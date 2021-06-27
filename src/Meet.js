@@ -1,4 +1,4 @@
-import React, { Component, useRef, useState } from "react";
+import React, { Component } from "react";
 import io from "socket.io-client";
 import Video from "./components/Video";
 import Videos from "./components/Videos";
