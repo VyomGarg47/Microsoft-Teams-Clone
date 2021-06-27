@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useRef, useState } from "react";
 import io from "socket.io-client";
 import Video from "./components/Video";
 import Videos from "./components/Videos";
@@ -12,6 +12,9 @@ import connectSound from "./sounds/connect.mp3";
 import disconnectSound from "./sounds/disconnect.mp3";
 import "react-toastify/dist/ReactToastify.min.css";
 import screenfull from "screenfull";
+import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
+
+//const [blob, setBlob] = useState(null);
 
 class Meet extends Component {
   constructor(props) {
@@ -48,6 +51,8 @@ class Meet extends Component {
       sharingScreen: false,
       color: "#000000",
       size: "5",
+      recordVideo: null,
+      recordingVideo: false,
     };
     this.socket = null;
     //PRODUCTION
@@ -570,6 +575,26 @@ class Meet extends Component {
     });
   };
 
+  startRecording = () => {
+    this.state.recordVideo = RecordRTC(this.state.localStream, {
+      type: "video",
+      mimeType: "video/webm; codecs=vp9",
+    });
+    this.state.recordVideo.startRecording();
+    this.setState({
+      recordingVideo: true,
+    });
+  };
+
+  stopRecording = () => {
+    this.setState({
+      recordingVideo: false,
+    });
+    this.state.recordVideo.stopRecording(() => {
+      this.state.recordVideo.save();
+    });
+  };
+
   changeColor(params) {
     this.setState({
       color: params.target.value,
@@ -875,6 +900,24 @@ class Meet extends Component {
                 style={{ margin: "20px" }}
               >
                 Full screen
+              </Button>
+              <br />
+              <Button
+                variant="contained"
+                color="primary"
+                //onClick={this.startRecording}
+                onClick={() => {
+                  if (this.state.recordingVideo === false) {
+                    this.startRecording();
+                  } else {
+                    this.stopRecording();
+                  }
+                }}
+                style={{ margin: "20px" }}
+              >
+                {this.state.recordingVideo === false
+                  ? "Start Recording"
+                  : "Stop Recording"}
               </Button>
               <div
                 style={{
