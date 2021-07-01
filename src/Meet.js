@@ -53,10 +53,10 @@ class Meet extends Component {
       sharingScreen: false,
       color: "#000000",
       size: "5",
-      recordVideo: null,
       recordingVideo: false,
     };
     this.socket = null;
+    this.recordVideo = null;
     //PRODUCTION
     this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
     //this.serviceIP = "/webrtcPeer";
@@ -578,11 +578,11 @@ class Meet extends Component {
   };
 
   startRecording = () => {
-    this.state.recordVideo = RecordRTC(this.state.localStream, {
+    this.recordVideo = RecordRTC(this.state.localStream, {
       type: "video",
       mimeType: "video/webm; codecs=vp9",
     });
-    this.state.recordVideo.startRecording();
+    this.recordVideo.startRecording();
     this.setState({
       recordingVideo: true,
     });
@@ -592,8 +592,8 @@ class Meet extends Component {
     this.setState({
       recordingVideo: false,
     });
-    this.state.recordVideo.stopRecording(() => {
-      this.state.recordVideo.save();
+    this.recordVideo.stopRecording(() => {
+      this.recordVideo.save();
     });
   };
 
