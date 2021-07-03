@@ -22,4 +22,5 @@ jobs:
       - uses: actions/setup-node@v1
       - run: npm install && npm install -g @lhci/cli@0.7.x
       - run: npm run build
+      - run: node server.js
       - run: lhci autorun
