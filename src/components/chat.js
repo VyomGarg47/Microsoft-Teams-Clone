@@ -103,8 +103,8 @@ const Chat = (props) => {
         style={{
           zIndex: 10,
           position: "absolute",
-          right: 5,
-          top: 300,
+          right: 24,
+          top: 440,
           bottom: 10,
           width: 300,
           // height: 650,

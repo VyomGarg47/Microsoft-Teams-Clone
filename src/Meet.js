@@ -58,8 +58,8 @@ class Meet extends Component {
     this.socket = null;
     this.recordVideo = null;
     //PRODUCTION
-    this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
@@ -705,17 +705,17 @@ class Meet extends Component {
               <br />
               <br />
               {/* PRODUCTION */}
-              <a
+              {/* <a
                 href={
                   "https://webrtc-video-call-test.herokuapp.com" +
                   window.location.pathname
                 }
               >
                 Click here to join the meeting again.
-              </a>
-              {/* <a href={"//localhost:8080" + window.location.pathname}>
-                Click Here to join the meeting again.
               </a> */}
+              <a href={"//localhost:8080" + window.location.pathname}>
+                Click Here to join the meeting again.
+              </a>
             </p>
           </div>
         </div>
@@ -733,51 +733,53 @@ class Meet extends Component {
             <div
               className="border-radius"
               style={{
+                maxWidth: 700,
                 background: "white",
-                width: "30%",
+                width: "50%",
                 height: "auto",
-                padding: "20px",
-                minWidth: "400px",
+                padding: "10px",
+                minWidth: "320px",
                 textAlign: "center",
                 margin: "auto",
-                marginTop: "150px",
+                marginTop: "100px",
                 justifyContent: "center",
               }}
             >
-              <p style={{ margin: 0, fontWeight: "bold", fontSize: "20px" }}>
+              <p
+                style={{
+                  marginTop: 10,
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  marginBottom: 10,
+                }}
+              >
                 What should we call you ?
               </p>
               <Input
                 placeholder="Username"
                 value={this.state.username}
                 onChange={(e) => this.handleUsername(e)}
+                inputProps={{ min: 0, style: { textAlign: "center" } }}
               />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.startconnection}
-                style={{ margin: "20px" }}
-              >
-                Connect
-              </Button>
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  margin: "20px",
-                  marginBottom: "35px",
+                  margin: "10px",
+                  marginBottom: "20px",
                 }}
               >
                 <Video
-                  videoType="localVideo"
                   videoStyles={{
-                    width: 500,
-                    height: 400,
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    objectFit: "cover",
+                    marginLeft: "-50%",
                   }}
+                  videoType="localVideo"
                   frameStyle={{
-                    width: 500,
-                    height: 410,
-                    margin: 5,
+                    position: "relative",
+                    width: "100%",
+                    height: 400,
                     borderRadius: 5,
                     backgroundColor: "black",
                   }}
@@ -794,18 +796,174 @@ class Meet extends Component {
                   muted
                 ></Video>
               </div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.startconnection}
+                style={{ margin: "5px" }}
+              >
+                Join meeting
+              </Button>
             </div>
           </div>
         ) : (
           <div>
+            <div
+              className="navbar-meet"
+              style={{
+                backgroundColor: "black",
+                justifyContent: "center",
+                margin: 0,
+              }}
+            >
+              <p style={{ color: "white" }}>Meeting</p>
+            </div>
+            <div
+              className="navbar-meet"
+              style={{
+                margin: 0,
+                backgroundColor: "#212121",
+                //backgroundColor: "#424242",
+                zIndex: 104,
+              }}
+            >
+              <Button
+                style={{
+                  backgroundColor: "#424242",
+                  color: "white",
+                  marginBottom: 10,
+                }}
+                onClick={this.shareScreen}
+                className="side-panel-button"
+                disabled={this.state.sharingScreen}
+                startIcon={<ScreenShareIcon />}
+              >
+                Share Screen
+              </Button>
+              <Button
+                style={{
+                  backgroundColor: "#424242",
+                  color: "white",
+                  marginBottom: 10,
+                }}
+                startIcon={<Note />}
+                onClick={() => {
+                  this.setState({
+                    openCanvas: true,
+                  });
+                }}
+                className="side-panel-button"
+              >
+                Open WhiteBoard
+              </Button>
+              <Button
+                style={{
+                  backgroundColor: "#424242",
+                  color: "white",
+                  marginBottom: 10,
+                }}
+                onClick={() => {
+                  if (screenfull.isEnabled) {
+                    screenfull.toggle();
+                  } else {
+                    // Ignore or do something else
+                  }
+                }}
+                className="side-panel-button"
+                startIcon={<Fullscreen />}
+              >
+                Full screen
+              </Button>
+              <Button
+                className="side-panel-button"
+                style={{
+                  backgroundColor: "#424242",
+                  color: "white",
+                  marginBottom: 10,
+                }}
+                startIcon={<RadioButtonChecked />}
+                onClick={() => {
+                  if (this.state.recordingVideo === false) {
+                    this.startRecording();
+                  } else {
+                    this.stopRecording();
+                  }
+                }}
+              >
+                {this.state.recordingVideo === false
+                  ? "Start Recording"
+                  : "Stop Recording"}
+              </Button>
+            </div>
             <div style={{ zIndex: 150, position: "relative" }}>
               {this.state.openCanvas && showCanvas()}
             </div>
             <div
               style={{
-                zIndex: 101,
+                margin: 5,
                 position: "absolute",
-                right: 0,
+                left: 17,
+                backgroundColor: "#212121",
+                width: 300,
+                height: "100%",
+              }}
+            >
+              <div
+                style={{
+                  margin: 10,
+                  backgroundColor: "white",
+                  padding: 10,
+                  borderRadius: 5,
+                }}
+              >
+                <Input value={window.location.href} disable="true"></Input>
+                <Button
+                  style={{
+                    backgroundColor: "#3f51b5",
+                    color: "whitesmoke",
+                    marginLeft: "20px",
+                    width: "120px",
+                    fontSize: "10px",
+                  }}
+                  onClick={this.copyUrl}
+                >
+                  Copy invite link
+                </Button>
+              </div>
+              <div
+                style={{
+                  margin: 10,
+                  backgroundColor: "#cdc4ff4f",
+                  padding: 10,
+                  borderRadius: 5,
+                }}
+              >
+                {statusText}
+              </div>
+              <div
+                style={{
+                  margin: 10,
+                  backgroundColor: "#cdc4ff4f",
+                  padding: 10,
+                  borderRadius: 5,
+                }}
+              >
+                {[...this.state.IDtoUsers.keys()].map((k) => (
+                  <div>
+                    {this.state.IDtoUsers.get(k) === this.state.username ? (
+                      <List>{this.state.IDtoUsers.get(k)} (You)</List>
+                    ) : (
+                      <List>{this.state.IDtoUsers.get(k)}</List>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                zIndex: 101,
+                right: 19,
               }}
             >
               <Video
@@ -835,186 +993,33 @@ class Meet extends Component {
                 muted
               ></Video>
             </div>
-            <br />
-            <div
-              style={{
-                zIndex: 3,
-                position: "absolute",
+            <Chat
+              user={{
+                //uid: this.socket && this.socket.id || ''
+                uid: this.state.username,
               }}
-            >
-              <div
-                style={{
-                  margin: 10,
-                  backgroundColor: "#cdc4ff4f",
-                  padding: 10,
-                  borderRadius: 5,
-                }}
-              >
-                <div>
-                  <Input value={window.location.href} disable="true"></Input>
-                  <Button
-                    style={{
-                      backgroundColor: "#3f51b5",
-                      color: "whitesmoke",
-                      marginLeft: "20px",
-                      width: "120px",
-                      fontSize: "10px",
-                    }}
-                    onClick={this.copyUrl}
-                  >
-                    Copy invite link
-                  </Button>
-                </div>
-              </div>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.shareScreen}
-                style={{ margin: "20px" }}
-                disabled={this.state.sharingScreen}
-                startIcon={<ScreenShareIcon />}
-              >
-                Share Screen
-              </Button>
-              <br />
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<Note />}
-                onClick={() => {
-                  this.setState({
-                    openCanvas: true,
-                  });
-                }}
-                style={{ margin: "20px" }}
-              >
-                Open Canvas
-              </Button>
-              <br />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  if (screenfull.isEnabled) {
-                    screenfull.request();
-                  } else {
-                    // Ignore or do something else
-                  }
-                }}
-                style={{ margin: "20px" }}
-                startIcon={<Fullscreen />}
-              >
-                Full screen
-              </Button>
-              <br />
-              <Button
-                variant="contained"
-                color="primary"
-                //onClick={this.startRecording}
-                startIcon={<RadioButtonChecked />}
-                onClick={() => {
-                  if (this.state.recordingVideo === false) {
-                    this.startRecording();
-                  } else {
-                    this.stopRecording();
-                  }
-                }}
-                style={{ margin: "20px" }}
-              >
-                {this.state.recordingVideo === false
-                  ? "Start Recording"
-                  : "Stop Recording"}
-              </Button>
-              <div
-                style={{
-                  margin: 10,
-                  backgroundColor: "#cdc4ff4f",
-                  padding: 10,
-                  borderRadius: 5,
-                }}
-              >
-                {[...this.state.IDtoUsers.keys()].map((k) => (
-                  <div>
-                    {this.state.IDtoUsers.get(k) === this.state.username ? (
-                      <List>{this.state.IDtoUsers.get(k)} (You)</List>
-                    ) : (
-                      <List>{this.state.IDtoUsers.get(k)}</List>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div
-                style={{
-                  margin: 10,
-                  backgroundColor: "#cdc4ff4f",
-                  padding: 10,
-                  borderRadius: 5,
-                }}
-              >
-                {statusText}
+              messages={messages}
+              sendMessage={(message) => {
+                this.setState((prevState) => {
+                  return { messages: [...prevState.messages, message] };
+                });
+                this.state.sendChannels.forEach((sendChannel) => {
+                  sendChannel.readyState === "open" &&
+                    sendChannel.send(JSON.stringify(message));
+                });
+                this.sendToPeer("new-message", JSON.stringify(message), {
+                  local: this.socket.id,
+                });
+              }}
+            />
+            <div>
+              <div>
+                <Videos
+                  switchVideo={this.switchVideo}
+                  remoteStreams={remoteStreams}
+                ></Videos>
               </div>
             </div>
-            {this.state.numberOfUsers === 1 ? (
-              <div
-                className="cssanimation sequence fadeInBottom"
-                style={{ zIndex: 102, color: "black" }}
-              >
-                <div
-                  className="border-radius "
-                  style={{
-                    background: "white",
-                    width: "30%",
-                    height: "auto",
-                    padding: "20px",
-                    minWidth: "200px",
-                    minHeight: "100px",
-                    textAlign: "center",
-                    margin: "auto",
-                    marginTop: "150px",
-                    justifyContent: "center",
-                  }}
-                >
-                  <p
-                    style={{
-                      marginTop: "15px",
-                      fontWeight: "bold",
-                      fontSize: "20px",
-                    }}
-                  >
-                    LOOKS LIKE NOBODY IS HERE
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div>
-                  <Videos
-                    switchVideo={this.switchVideo}
-                    remoteStreams={remoteStreams}
-                  ></Videos>
-                </div>
-                <br />
-                <Chat
-                  user={{
-                    //uid: this.socket && this.socket.id || ''
-                    uid: this.state.username,
-                  }}
-                  messages={messages}
-                  sendMessage={(message) => {
-                    this.setState((prevState) => {
-                      return { messages: [...prevState.messages, message] };
-                    });
-                    this.state.sendChannels.forEach((sendChannel) => {
-                      sendChannel.readyState === "open" &&
-                        sendChannel.send(JSON.stringify(message));
-                    });
-                    this.sendToPeer("new-message", JSON.stringify(message), {
-                      local: this.socket.id,
-                    });
-                  }}
-                />
-              </div>
-            )}
           </div>
         )}
       </div>

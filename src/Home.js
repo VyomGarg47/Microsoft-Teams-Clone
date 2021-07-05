@@ -49,11 +49,11 @@ class Home extends Component {
             background: "white",
             width: "27%",
             height: "auto",
-            padding: "20px",
-            minWidth: "400px",
+            padding: "10px",
+            minWidth: "325px",
             textAlign: "center",
             margin: "auto",
-            marginTop: "100px",
+            marginTop: "50px",
           }}
         >
           <p style={{ margin: 0, fontWeight: "bold", fontSize: "20px" }}>

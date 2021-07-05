@@ -117,15 +117,27 @@ class Videos extends Component {
           showControls={false}
           frameStyle={{
             zIndex: 1,
+            // position: "absolute",
+            // top: 160,
+            // left: 40,
+            // right: 350,
+            // bottom: 200,
+            // backgroundColor: "black",
             position: "fixed",
-            bottom: 0,
-            minWidth: "100%",
-            minHeight: "100%",
+            left: 345,
+            right: 350,
+            top: 130,
+            bottom: 143,
+            borderRadius: 5,
             backgroundColor: "black",
+            //transform: "translatex(-50%)",
           }}
           videoStyles={{
-            minWidth: "100%",
-            minHeight: "100%",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            objectFit: "cover",
+            marginLeft: "-50%",
             visibility: (this.state.videoVisible && "visible") || "hidden",
           }}
           videoStream={
@@ -138,11 +150,12 @@ class Videos extends Component {
             position: "fixed",
             padding: "6px 3px",
             backgroundColor: "#424242",
-            maxHeight: 130,
+            maxHeight: 120,
+            height: 120,
             top: "auto",
             right: 350,
-            left: 500,
-            bottom: 10,
+            left: 345,
+            bottom: 5,
             overflowX: "scroll",
             whiteSpace: "nowrap",
           }}

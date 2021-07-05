@@ -5,6 +5,8 @@ import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicIcon from "@material-ui/icons/Mic";
 import MicOffIcon from "@material-ui/icons/MicOff";
 import CallEndIcon from "@material-ui/icons/CallEnd";
+import { Widgets } from "@material-ui/icons";
+import { Hidden } from "@material-ui/core";
 
 class Video extends Component {
   constructor(props) {
@@ -131,6 +133,11 @@ class Video extends Component {
           muted={this.props.muted}
           autoPlay
           style={{
+            // position: "relative",
+            // right: 0,
+            // bottom: 0,
+            // minWidth: "100%",
+            // minHeight: "100%",
             visibility: (this.state.videoVisible && "visible") || "hidden",
             ...this.props.videoStyles,
           }}
