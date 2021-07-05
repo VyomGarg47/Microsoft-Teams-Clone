@@ -5,8 +5,6 @@ import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicIcon from "@material-ui/icons/Mic";
 import MicOffIcon from "@material-ui/icons/MicOff";
 import CallEndIcon from "@material-ui/icons/CallEnd";
-import { Widgets } from "@material-ui/icons";
-import { Hidden } from "@material-ui/core";
 
 class Video extends Component {
   constructor(props) {
