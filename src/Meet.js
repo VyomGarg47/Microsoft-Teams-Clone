@@ -252,7 +252,7 @@ class Meet extends Component {
     this.socket.on("peer-disconnected", (data) => {
       // close peer-connection with this peer
       toast.info(`${data.username} has left the meeting`, {
-        position: "top-center",
+        position: "bottom-left",
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -301,7 +301,7 @@ class Meet extends Component {
     this.socket.on("adduser", (IDtoUsersList, username) => {
       if (username) {
         toast.info(`${username} joined`, {
-          position: "top-center",
+          position: "bottom-left",
           autoClose: 1500,
           hideProgressBar: false,
           closeOnClick: true,
@@ -518,7 +518,7 @@ class Meet extends Component {
     navigator.clipboard.writeText(text).then(
       function () {
         toast.success("Link copied to clipboard!", {
-          position: "top-center",
+          position: "bottom-left",
           autoClose: 1500,
           hideProgressBar: false,
           closeOnClick: true,
@@ -529,7 +529,7 @@ class Meet extends Component {
       },
       () => {
         toast.error("Failed to copy!", {
-          position: "top-center",
+          position: "bottom-left",
           autoClose: 1500,
           hideProgressBar: false,
           closeOnClick: true,
