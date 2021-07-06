@@ -58,8 +58,8 @@ class Meet extends Component {
     this.socket = null;
     this.recordVideo = null;
     //PRODUCTION
-    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    this.serviceIP = "/webrtcPeer";
+    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    //this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
@@ -615,17 +615,17 @@ class Meet extends Component {
               <br />
               <br />
               {/* PRODUCTION */}
-              {/* <a
+              <a
                 href={
                   "https://teams-clone-engage2k21.herokuapp.com" +
                   window.location.pathname
                 }
               >
                 Click here to join the meeting again.
-              </a> */}
-              <a href={"//localhost:8080" + window.location.pathname}>
-                Click Here to join the meeting again.
               </a>
+              {/* <a href={"//localhost:8080" + window.location.pathname}>
+                Click Here to join the meeting again.
+              </a> */}
             </p>
           </div>
         </div>
