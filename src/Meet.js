@@ -669,7 +669,7 @@ class Meet extends Component {
                   marginBottom: 10,
                 }}
               >
-                What should we call you ?
+                Ready to Join ?
               </p>
               <Input
                 placeholder="Username"

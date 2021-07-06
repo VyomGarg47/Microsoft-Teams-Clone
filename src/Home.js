@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
 import "./Home.css";
-
+import Picture1 from "./images/Picture7.png";
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -69,6 +69,14 @@ class Home extends Component {
             Go
           </Button>
         </div>
+        <img
+          src={Picture1}
+          alt="Picture1"
+          style={{
+            margin: 50,
+            width: 300,
+          }}
+        ></img>
       </div>
     );
   }
