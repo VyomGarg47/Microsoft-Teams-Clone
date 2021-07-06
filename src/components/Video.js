@@ -104,13 +104,13 @@ class Video extends Component {
     const muteControls = this.props.showMuteControls && (
       <div style={{ backgroundColor: "black" }}>
         <IconButton
-          style={{ color: (this.state.mic && "white") || "red" }}
+          style={{ color: (this.state.mic && "white") || "#bf3459" }}
           onClick={this.mutemic}
         >
           {this.state.mic === true ? <MicIcon /> : <MicOffIcon />}
         </IconButton>
         <IconButton
-          style={{ color: (this.state.camera && "white") || "red" }}
+          style={{ color: (this.state.camera && "white") || "#bf3459" }}
           onClick={this.mutecamera}
         >
           {this.state.camera === true ? <VideocamIcon /> : <VideocamOffIcon />}
@@ -123,20 +123,7 @@ class Video extends Component {
           >
             Leave
           </Button>
-        ) : //   <Button
-        //   style={{
-        //     backgroundColor: "#424242",
-        //     color: "white",
-        //     marginBottom: 10,
-        //   }}
-        //   onClick={this.shareScreen}
-        //   className="side-panel-button"
-        //   disabled={this.state.sharingScreen}
-        //   startIcon={<ScreenShareIcon />}
-        // >
-        //   Share Screen
-        // </Button>
-        null}
+        ) : null}
       </div>
     );
 

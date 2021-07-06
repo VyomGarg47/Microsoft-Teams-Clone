@@ -120,7 +120,7 @@ class Videos extends Component {
             position: "fixed",
             left: 345,
             right: 350,
-            top: 130,
+            top: 103,
             bottom: 143,
             borderRadius: 5,
             backgroundColor: "black",
@@ -129,7 +129,7 @@ class Videos extends Component {
             width: "100%",
             height: "100%",
             position: "absolute",
-            objectFit: "cover",
+            objectFit: "contain",
             marginLeft: "-50%",
             visibility: (this.state.videoVisible && "visible") || "hidden",
           }}

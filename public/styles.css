@@ -289,8 +289,8 @@ input.textarea {
   background: #0000006b;
   border: none;
   outline: none;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 0px;
+  padding-right: 0px;
   color: white;
   font-weight: 400;
 }

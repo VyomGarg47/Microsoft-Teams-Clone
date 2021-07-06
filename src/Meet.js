@@ -831,7 +831,9 @@ class Meet extends Component {
                 style={{
                   backgroundColor: "#424242",
                   color: "white",
-                  marginBottom: 10,
+                  marginTop: 5,
+                  marginLeft: 5,
+                  marginBottom: 5,
                 }}
                 onClick={this.shareScreen}
                 className="side-panel-button"
@@ -844,7 +846,8 @@ class Meet extends Component {
                 style={{
                   backgroundColor: "#424242",
                   color: "white",
-                  marginBottom: 10,
+                  marginTop: 5,
+                  marginBottom: 5,
                 }}
                 startIcon={<Note />}
                 onClick={() => {
@@ -860,7 +863,8 @@ class Meet extends Component {
                 style={{
                   backgroundColor: "#424242",
                   color: "white",
-                  marginBottom: 10,
+                  marginTop: 5,
+                  marginBottom: 5,
                 }}
                 onClick={() => {
                   if (screenfull.isEnabled) {
@@ -879,7 +883,9 @@ class Meet extends Component {
                 style={{
                   backgroundColor: "#424242",
                   color: "white",
-                  marginBottom: 10,
+                  marginTop: 5,
+                  marginBottom: 5,
+                  marginRight: 5,
                 }}
                 startIcon={<RadioButtonChecked />}
                 onClick={() => {
