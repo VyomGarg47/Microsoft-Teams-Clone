@@ -101,13 +101,7 @@ const Chat = (props) => {
       <div
         className="chatWindow"
         style={{
-          zIndex: 10,
-          position: "absolute",
-          right: 19,
-          top: 385,
-          bottom: 5,
-          width: 300,
-          // height: 650,
+          ...props.chatstyle,
         }}
       >
         <div style={{ backgroundColor: "black" }}>

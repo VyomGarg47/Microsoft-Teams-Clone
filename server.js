@@ -13,6 +13,7 @@ const port = process.env.PORT || 8080;
 const rooms = {};
 const messages = {};
 const IDtoUsers = {};
+const IDtoUsersRoom = {};
 app.use(compression({ threshold: 0 }));
 app.use(express.static(__dirname + "/build")); //once app is build, the react server which was originally at 3000 will now serve at 8080
 app.get("*", (req, res) => {
@@ -64,12 +65,28 @@ peers.on("connection", (socket) => {
   const disconnectedPeer = (socketID, username) => {
     const _connectedPeers = rooms[room];
     const clientsideList = Array.from(IDtoUsers[room]);
+    const clientsideListchatroom = Array.from(IDtoUsersRoom[room]);
     //emitting to every peer on this room the disconnected peer
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("peer-disconnected", {
         peerCount: rooms[room].size,
         socketID,
         clientsideList,
+        clientsideListchatroom,
+        username,
+      });
+    }
+  };
+
+  const disconnectedPeerRoom = (socketID, username) => {
+    const _connectedPeers = rooms[room];
+    const clientsideListchatroom = Array.from(IDtoUsersRoom[room]);
+    //emitting to every peer on this room the disconnected peer
+    for (const [_socketID, _socket] of _connectedPeers.entries()) {
+      _socket.emit("peer-disconnected-chatroom", {
+        peerCount: rooms[room].size,
+        socketID,
+        clientsideListchatroom,
         username,
       });
     }
@@ -89,9 +106,16 @@ peers.on("connection", (socket) => {
     console.log("disconnected");
     rooms[room].delete(socket.id);
     //messages[room] = rooms[room].size === 0 ? null : messages[room];
-    const username = IDtoUsers[room].get(socket.id);
-    IDtoUsers[room].delete(socket.id);
-    disconnectedPeer(socket.id, username);
+    if (IDtoUsers[room] && IDtoUsers[room].has(socket.id)) {
+      const username = IDtoUsers[room].get(socket.id);
+      IDtoUsers[room].delete(socket.id);
+      disconnectedPeer(socket.id, username);
+    }
+    if (IDtoUsersRoom[room] && IDtoUsersRoom[room].has(socket.id)) {
+      const username = IDtoUsersRoom[room].get(socket.id);
+      IDtoUsersRoom[room].delete(socket.id);
+      disconnectedPeerRoom(socket.id, username);
+    }
   });
 
   socket.on("canvas-data", (data) => {
@@ -108,6 +132,20 @@ peers.on("connection", (socket) => {
     const _connectedPeers = rooms[room];
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("adduser", Array.from(IDtoUsers[room]), username);
+    }
+  });
+
+  socket.on("add-user-chatroom", (username) => {
+    IDtoUsersRoom[room] =
+      (IDtoUsersRoom[room] && IDtoUsersRoom[room].set(socket.id, username)) ||
+      new Map().set(socket.id, username);
+    const _connectedPeers = rooms[room];
+    for (const [_socketID, _socket] of _connectedPeers.entries()) {
+      _socket.emit(
+        "adduser-chatroom",
+        Array.from(IDtoUsersRoom[room]),
+        username
+      );
     }
   });
 

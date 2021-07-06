@@ -45,7 +45,10 @@ class Meet extends Component {
       messages: [],
       disconnected: false,
       askForUsername: true,
-      username: "User_" + Math.random().toString(36).substring(2, 7),
+      //username: "User_" + Math.random().toString(36).substring(2, 7),
+      username: this.props.location.state
+        ? this.props.location.state.user
+        : "User_" + Math.random().toString(36).substring(2, 7),
       numberOfUsers: 1,
       IDtoUsers: new Map(),
       micstart: true,
@@ -58,8 +61,8 @@ class Meet extends Component {
     this.socket = null;
     this.recordVideo = null;
     //PRODUCTION
-    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
@@ -250,51 +253,54 @@ class Meet extends Component {
 
     this.socket.on("peer-disconnected", (data) => {
       // close peer-connection with this peer
-      toast.info(`${data.username} has left the meeting`, {
-        position: "bottom-left",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-      });
-      const receivedMap = new Map(data.clientsideList);
-      // this.setState({
-      //   IDtoUsers: receivedMap,
-      // });
-      if (this.state.peerConnections[data.socketID]) {
-        this.state.peerConnections[data.socketID].close();
-        // get and stop remote audio and video tracks of the disconnected peer
-        const rVideo = this.state.remoteStreams.filter(
-          (stream) => stream.id === data.socketID
-        );
-        rVideo && this.stopTracks(rVideo[0].stream);
-
-        // filter out the disconnected peer stream
-        const remoteStreams = this.state.remoteStreams.filter(
-          (stream) => stream.id !== data.socketID
-        );
-
-        this.setState((prevState) => {
-          // check if disconnected peer is the selected video and if there still connected peers, then select the first
-          const selectedVideo =
-            prevState.selectedVideo.id === data.socketID && remoteStreams.length
-              ? { selectedVideo: remoteStreams[0] }
-              : null;
-
-          return {
-            // remoteStream: remoteStreams.length > 0 && remoteStreams[0].stream || null,
-            remoteStreams,
-            ...selectedVideo,
-            status:
-              data.peerCount > 1
-                ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}`
-                : "Waiting for other peers to connect",
-            numberOfUsers: data.peerCount,
-            IDtoUsers: receivedMap,
-          };
+      if (this.state.IDtoUsers.has(data.socketID)) {
+        toast.info(`${data.username} has left the meeting`, {
+          position: "bottom-left",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
         });
+        const receivedMap = new Map(data.clientsideList);
+        // this.setState({
+        //   IDtoUsers: receivedMap,
+        // });
+        if (this.state.peerConnections[data.socketID]) {
+          this.state.peerConnections[data.socketID].close();
+          // get and stop remote audio and video tracks of the disconnected peer
+          const rVideo = this.state.remoteStreams.filter(
+            (stream) => stream.id === data.socketID
+          );
+          rVideo && this.stopTracks(rVideo[0].stream);
+
+          // filter out the disconnected peer stream
+          const remoteStreams = this.state.remoteStreams.filter(
+            (stream) => stream.id !== data.socketID
+          );
+
+          this.setState((prevState) => {
+            // check if disconnected peer is the selected video and if there still connected peers, then select the first
+            const selectedVideo =
+              prevState.selectedVideo.id === data.socketID &&
+              remoteStreams.length
+                ? { selectedVideo: remoteStreams[0] }
+                : null;
+
+            return {
+              // remoteStream: remoteStreams.length > 0 && remoteStreams[0].stream || null,
+              remoteStreams,
+              ...selectedVideo,
+              status:
+                data.peerCount > 1
+                  ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}`
+                  : "Waiting for other peers to connect",
+              numberOfUsers: data.peerCount,
+              IDtoUsers: receivedMap,
+            };
+          });
+        }
       }
     });
     this.socket.on("adduser", (IDtoUsersList, username) => {
@@ -615,17 +621,17 @@ class Meet extends Component {
               <br />
               <br />
               {/* PRODUCTION */}
-              <a
+              {/* <a
                 href={
                   "https://teams-clone-engage2k21.herokuapp.com" +
                   window.location.pathname
                 }
               >
                 Click here to join the meeting again.
-              </a>
-              {/* <a href={"//localhost:8080" + window.location.pathname}>
-                Click Here to join the meeting again.
               </a> */}
+              <a href={"//localhost:8080" + window.location.pathname}>
+                Click Here to join the meeting again.
+              </a>
             </p>
           </div>
         </div>
@@ -939,6 +945,15 @@ class Meet extends Component {
               ></Video>
             </div>
             <Chat
+              chatstyle={{
+                zIndex: 10,
+                position: "absolute",
+                right: 19,
+                top: 385,
+                bottom: 5,
+                width: 300,
+                // height: 650,
+              }}
               user={{
                 uid: this.state.username,
               }}
