@@ -72,12 +72,17 @@ peers.on("connection", (socket) => {
 
   socket.on("new-message", (data) => {
     messages[room] = [...messages[room], JSON.parse(data.payload)];
+    const _connectedPeers = rooms[room];
+    //emitting to every peer on this room the disconnected peer
+    for (const [_socketID, _socket] of _connectedPeers.entries()) {
+      _socket.emit("add-new-message", data.payload);
+    }
   });
 
   socket.on("disconnect", () => {
     console.log("disconnected");
     rooms[room].delete(socket.id);
-    messages[room] = rooms[room].size === 0 ? null : messages[room];
+    //messages[room] = rooms[room].size === 0 ? null : messages[room];
     const username = IDtoUsers[room].get(socket.id);
     IDtoUsers[room].delete(socket.id);
     disconnectedPeer(socket.id, username);

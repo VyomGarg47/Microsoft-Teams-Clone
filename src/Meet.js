@@ -43,7 +43,6 @@ class Meet extends Component {
         },
       },
       messages: [],
-      sendChannels: [],
       disconnected: false,
       askForUsername: true,
       username: "User_" + Math.random().toString(36).substring(2, 7),
@@ -226,7 +225,6 @@ class Meet extends Component {
     });
     this.socket.on("connection-success", (data) => {
       this.whoisOnline();
-
       //console.log(data.success)
       const status =
         data.peerCount > 1
@@ -323,60 +321,18 @@ class Meet extends Component {
       });
     });
 
-    this.socket.on("online-peer", (socketID) => {
-      // console.log('connected peers ...', socketID)
+    this.socket.on("add-new-message", (message) => {
+      this.setState((prevState) => {
+        return { messages: [...prevState.messages, JSON.parse(message)] };
+      });
+    });
 
+    this.socket.on("online-peer", (socketID) => {
       // create and send offer to the peer (data.socketID)
       // 1. Create new pc
       this.createPeerConnection(socketID, (pc) => {
         // 2. Create Offer
         if (pc) {
-          // Send Channel
-          const handleSendChannelStatusChange = (event) => {
-            console.log(
-              "send channel status: " + this.state.sendChannels[0].readyState
-            );
-          };
-
-          const sendChannel = pc.createDataChannel("sendChannel");
-          sendChannel.onopen = handleSendChannelStatusChange;
-          sendChannel.onclose = handleSendChannelStatusChange;
-
-          this.setState((prevState) => {
-            return {
-              sendChannels: [...prevState.sendChannels, sendChannel],
-            };
-          });
-
-          // Receive Channels
-          const handleReceiveMessage = (event) => {
-            const message = JSON.parse(event.data);
-            // console.log(message)
-            this.setState((prevState) => {
-              return {
-                messages: [...prevState.messages, message],
-              };
-            });
-          };
-
-          const handleReceiveChannelStatusChange = (event) => {
-            if (this.receiveChannel) {
-              console.log(
-                "receive channel's status has changed to " +
-                  this.receiveChannel.readyState
-              );
-            }
-          };
-
-          const receiveChannelCallback = (event) => {
-            const receiveChannel = event.channel;
-            receiveChannel.onmessage = handleReceiveMessage;
-            receiveChannel.onopen = handleReceiveChannelStatusChange;
-            receiveChannel.onclose = handleReceiveChannelStatusChange;
-          };
-
-          pc.ondatachannel = receiveChannelCallback;
-
           pc.createOffer(this.state.sdpConstraints).then((sdp) => {
             pc.setLocalDescription(sdp);
 
@@ -392,53 +348,6 @@ class Meet extends Component {
     this.socket.on("offer", (data) => {
       this.createPeerConnection(data.socketID, (pc) => {
         pc.addStream(this.state.localStream);
-
-        // Send Channel
-        const handleSendChannelStatusChange = (event) => {
-          console.log(
-            "send channel status: " + this.state.sendChannels[0].readyState
-          );
-        };
-
-        const sendChannel = pc.createDataChannel("sendChannel");
-        sendChannel.onopen = handleSendChannelStatusChange;
-        sendChannel.onclose = handleSendChannelStatusChange;
-
-        this.setState((prevState) => {
-          return {
-            sendChannels: [...prevState.sendChannels, sendChannel],
-          };
-        });
-
-        // Receive Channels
-        const handleReceiveMessage = (event) => {
-          const message = JSON.parse(event.data);
-          // console.log(message)
-          this.setState((prevState) => {
-            return {
-              messages: [...prevState.messages, message],
-            };
-          });
-        };
-
-        const handleReceiveChannelStatusChange = (event) => {
-          if (this.receiveChannel) {
-            console.log(
-              "receive channel's status has changed to " +
-                this.receiveChannel.readyState
-            );
-          }
-        };
-
-        const receiveChannelCallback = (event) => {
-          const receiveChannel = event.channel;
-          receiveChannel.onmessage = handleReceiveMessage;
-          receiveChannel.onopen = handleReceiveChannelStatusChange;
-          receiveChannel.onclose = handleReceiveChannelStatusChange;
-        };
-
-        pc.ondatachannel = receiveChannelCallback;
-
         pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(
           () => {
             // 2. Create Answer
@@ -1031,18 +940,10 @@ class Meet extends Component {
             </div>
             <Chat
               user={{
-                //uid: this.socket && this.socket.id || ''
                 uid: this.state.username,
               }}
               messages={messages}
               sendMessage={(message) => {
-                this.setState((prevState) => {
-                  return { messages: [...prevState.messages, message] };
-                });
-                this.state.sendChannels.forEach((sendChannel) => {
-                  sendChannel.readyState === "open" &&
-                    sendChannel.send(JSON.stringify(message));
-                });
                 this.sendToPeer("new-message", JSON.stringify(message), {
                   local: this.socket.id,
                 });
