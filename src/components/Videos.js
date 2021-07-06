@@ -120,7 +120,7 @@ class Videos extends Component {
             position: "fixed",
             left: 345,
             right: 350,
-            top: 103,
+            top: 76,
             bottom: 143,
             borderRadius: 5,
             backgroundColor: "black",

@@ -104,12 +104,22 @@ const Chat = (props) => {
           zIndex: 10,
           position: "absolute",
           right: 19,
-          top: 415,
+          top: 385,
           bottom: 5,
           width: 300,
           // height: 650,
         }}
       >
+        <div style={{ backgroundColor: "black" }}>
+          <p
+            style={{
+              color: "white",
+              fontWeight: "bold",
+            }}
+          >
+            Meeting chat
+          </p>
+        </div>
         <ul className="chat" id="chatList">
           {props.messages.map((data) => (
             <div key={data.id}>
@@ -150,6 +160,7 @@ const Chat = (props) => {
                 placeholder="Enter your message..."
                 onChange={handleChange}
                 value={message}
+                style={{ padding: 0 }}
               />
             </form>
           </div>

@@ -102,7 +102,13 @@ class Video extends Component {
   };
   render() {
     const muteControls = this.props.showMuteControls && (
-      <div style={{ backgroundColor: "black" }}>
+      <div
+        style={{
+          backgroundColor: "black",
+          display: "flex",
+          justifyContent: "space-evenly",
+        }}
+      >
         <IconButton
           style={{ color: (this.state.mic && "white") || "#bf3459" }}
           onClick={this.mutemic}
@@ -117,7 +123,12 @@ class Video extends Component {
         </IconButton>
         {this.props.showEndCall === true ? (
           <Button
-            style={{ backgroundColor: "#bf3459", color: "white" }}
+            style={{
+              backgroundColor: "#bf3459",
+              color: "white",
+              height: 40,
+              width: 90,
+            }}
             onClick={this.sendData}
             startIcon={<CallEndIcon />}
           >

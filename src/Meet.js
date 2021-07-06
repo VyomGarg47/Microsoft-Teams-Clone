@@ -814,9 +814,12 @@ class Meet extends Component {
                 backgroundColor: "black",
                 justifyContent: "center",
                 margin: 0,
+                height: 25,
               }}
             >
-              <p style={{ color: "white" }}>Meeting</p>
+              <p style={{ color: "white", margin: 0 }}>
+                Meeting Room: {window.location.pathname.replace(/[\/\\]/g, "")}
+              </p>
             </div>
             <div
               className="navbar-meet"

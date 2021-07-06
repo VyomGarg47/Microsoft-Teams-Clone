@@ -287,12 +287,12 @@ input.textarea {
   width: 100%;
   height: 50px;
   background: #0000006b;
+  bottom: 0;
   border: none;
   outline: none;
-  padding-left: 0px;
-  padding-right: 0px;
   color: white;
   font-weight: 400;
+  display: block;
 }
 
 .container-canvas {
@@ -355,7 +355,7 @@ input.textarea {
   margin: 0 0 3em 0;
   padding: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .cam-video {
