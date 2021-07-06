@@ -16,6 +16,7 @@ import RecordRTC from "recordrtc/RecordRTC";
 import ScreenShareIcon from "@material-ui/icons/ScreenShare";
 import Fullscreen from "@material-ui/icons/Fullscreen";
 import RadioButtonChecked from "@material-ui/icons/RadioButtonChecked";
+import LinkIcon from "@material-ui/icons/Link";
 import Note from "@material-ui/icons/Note";
 
 class Meet extends Component {
@@ -316,8 +317,8 @@ class Meet extends Component {
         IDtoUsers: receivedMap,
         status:
           peerCount > 1
-            ? `Total Connected Peers to room ${window.location.pathname}: ${peerCount}`
-            : "Waiting for other peers to connect",
+            ? `Total Number of participants: ${peerCount}`
+            : "Waiting for other people to join",
         numberOfUsers: peerCount,
       });
     });
@@ -723,7 +724,7 @@ class Meet extends Component {
     }
 
     const statusText = (
-      <div style={{ color: "yellow", padding: 5 }}>{status}</div>
+      <div style={{ color: "white", padding: 5 }}>{status}</div>
     );
     return (
       <div>
@@ -772,7 +773,7 @@ class Meet extends Component {
                     width: "100%",
                     height: "100%",
                     position: "absolute",
-                    objectFit: "cover",
+                    objectFit: "contain",
                     marginLeft: "-50%",
                   }}
                   videoType="localVideo"
@@ -780,7 +781,6 @@ class Meet extends Component {
                     position: "relative",
                     width: "100%",
                     height: 400,
-                    borderRadius: 5,
                     backgroundColor: "black",
                   }}
                   showMuteControls={true}
@@ -818,7 +818,11 @@ class Meet extends Component {
               }}
             >
               <p style={{ color: "white", margin: 0 }}>
-                Meeting Room: {window.location.pathname.replace(/[\/\\]/g, "")}
+                Meeting Room:{" "}
+                {
+                  //eslint-disable-next-line
+                  window.location.pathname.replace(/[\/\\]/g, "")
+                }
               </p>
             </div>
             <div
@@ -841,7 +845,7 @@ class Meet extends Component {
                 onClick={this.shareScreen}
                 className="side-panel-button"
                 disabled={this.state.sharingScreen}
-                startIcon={<ScreenShareIcon />}
+                startIcon={<ScreenShareIcon style={{ color: "#9ea2ff" }} />}
               >
                 Share Screen
               </Button>
@@ -852,7 +856,7 @@ class Meet extends Component {
                   marginTop: 5,
                   marginBottom: 5,
                 }}
-                startIcon={<Note />}
+                startIcon={<Note style={{ color: "#9ea2ff" }} />}
                 onClick={() => {
                   this.setState({
                     openCanvas: true,
@@ -877,7 +881,7 @@ class Meet extends Component {
                   }
                 }}
                 className="side-panel-button"
-                startIcon={<Fullscreen />}
+                startIcon={<Fullscreen style={{ color: "#9ea2ff" }} />}
               >
                 Full screen
               </Button>
@@ -890,7 +894,7 @@ class Meet extends Component {
                   marginBottom: 5,
                   marginRight: 5,
                 }}
-                startIcon={<RadioButtonChecked />}
+                startIcon={<RadioButtonChecked style={{ color: "#9ea2ff" }} />}
                 onClick={() => {
                   if (this.state.recordingVideo === false) {
                     this.startRecording();
@@ -912,28 +916,42 @@ class Meet extends Component {
                 margin: 5,
                 position: "absolute",
                 left: 17,
-                backgroundColor: "#212121",
+                backgroundColor: "black",
                 width: 300,
                 height: "100%",
+                borderRadius: 5,
               }}
             >
               <div
                 style={{
                   margin: 10,
-                  backgroundColor: "white",
+                  backgroundColor: "#545c84",
                   padding: 10,
                   borderRadius: 5,
                 }}
               >
-                <Input value={window.location.href} disable="true"></Input>
+                <Input
+                  value={window.location.href}
+                  disable="true"
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#545c84",
+                    color: "white",
+                    borderRadius: 5,
+                    padding: 5,
+                    marginBottom: 5,
+                  }}
+                  inputProps={{ min: 0, style: { textAlign: "center" } }}
+                ></Input>
                 <Button
                   style={{
-                    backgroundColor: "#3f51b5",
-                    color: "whitesmoke",
-                    marginLeft: "20px",
-                    width: "120px",
-                    fontSize: "10px",
+                    backgroundColor: "#33334b",
+                    color: "white",
+                    marginTop: 5,
+                    marginBottom: 5,
+                    width: "100%",
                   }}
+                  startIcon={<LinkIcon style={{ color: "#9ea2ff" }} />}
                   onClick={this.copyUrl}
                 >
                   Copy invite link
@@ -942,7 +960,7 @@ class Meet extends Component {
               <div
                 style={{
                   margin: 10,
-                  backgroundColor: "#cdc4ff4f",
+                  backgroundColor: "#545c84",
                   padding: 10,
                   borderRadius: 5,
                 }}
@@ -952,7 +970,7 @@ class Meet extends Component {
               <div
                 style={{
                   margin: 10,
-                  backgroundColor: "#cdc4ff4f",
+                  backgroundColor: "#545c84",
                   padding: 10,
                   borderRadius: 5,
                 }}
@@ -960,9 +978,17 @@ class Meet extends Component {
                 {[...this.state.IDtoUsers.keys()].map((k) => (
                   <div>
                     {this.state.IDtoUsers.get(k) === this.state.username ? (
-                      <List>{this.state.IDtoUsers.get(k)} (You)</List>
+                      <List>
+                        <p style={{ color: "white", margin: 0 }}>
+                          {this.state.IDtoUsers.get(k)} (You)
+                        </p>
+                      </List>
                     ) : (
-                      <List>{this.state.IDtoUsers.get(k)}</List>
+                      <List>
+                        <p style={{ color: "white", margin: 0 }}>
+                          {this.state.IDtoUsers.get(k)}
+                        </p>
+                      </List>
                     )}
                   </div>
                 ))}
