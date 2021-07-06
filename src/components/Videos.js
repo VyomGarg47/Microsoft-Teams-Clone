@@ -117,12 +117,6 @@ class Videos extends Component {
           showControls={false}
           frameStyle={{
             zIndex: 1,
-            // position: "absolute",
-            // top: 160,
-            // left: 40,
-            // right: 350,
-            // bottom: 200,
-            // backgroundColor: "black",
             position: "fixed",
             left: 345,
             right: 350,
@@ -130,7 +124,6 @@ class Videos extends Component {
             bottom: 143,
             borderRadius: 5,
             backgroundColor: "black",
-            //transform: "translatex(-50%)",
           }}
           videoStyles={{
             width: "100%",

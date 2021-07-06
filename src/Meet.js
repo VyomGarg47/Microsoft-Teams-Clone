@@ -970,13 +970,14 @@ class Meet extends Component {
                 videoType="localVideo"
                 videoStyles={{
                   width: 300,
-                  height: 245,
+                  height: 255,
                 }}
                 frameStyle={{
                   width: 300,
                   height: 255,
-                  margin: 5,
-                  borderRadius: 5,
+                  marginTop: 5,
+                  //margin: 5,
+                  //borderRadius: 5,
                   backgroundColor: "black",
                 }}
                 showMuteControls={true}

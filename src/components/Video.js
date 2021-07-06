@@ -5,6 +5,7 @@ import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import MicIcon from "@material-ui/icons/Mic";
 import MicOffIcon from "@material-ui/icons/MicOff";
 import CallEndIcon from "@material-ui/icons/CallEnd";
+import Button from "@material-ui/core/Button";
 
 class Video extends Component {
   constructor(props) {
@@ -115,35 +116,47 @@ class Video extends Component {
           {this.state.camera === true ? <VideocamIcon /> : <VideocamOffIcon />}
         </IconButton>
         {this.props.showEndCall === true ? (
-          <IconButton style={{ color: "red" }} onClick={this.sendData}>
-            <CallEndIcon />
-          </IconButton>
-        ) : null}
+          <Button
+            style={{ backgroundColor: "#bf3459", color: "white" }}
+            onClick={this.sendData}
+            startIcon={<CallEndIcon />}
+          >
+            Leave
+          </Button>
+        ) : //   <Button
+        //   style={{
+        //     backgroundColor: "#424242",
+        //     color: "white",
+        //     marginBottom: 10,
+        //   }}
+        //   onClick={this.shareScreen}
+        //   className="side-panel-button"
+        //   disabled={this.state.sharingScreen}
+        //   startIcon={<ScreenShareIcon />}
+        // >
+        //   Share Screen
+        // </Button>
+        null}
       </div>
     );
 
     return (
-      <div style={{ ...this.props.frameStyle }}>
-        {/* <audio id={this.props.id} muted={this.props.muted} ref={ (ref) => {this.video = ref }}></audio> */}
-        <video
-          controls={this.props.showControls}
-          id={this.props.id}
-          muted={this.props.muted}
-          autoPlay
-          style={{
-            // position: "relative",
-            // right: 0,
-            // bottom: 0,
-            // minWidth: "100%",
-            // minHeight: "100%",
-            visibility: (this.state.videoVisible && "visible") || "hidden",
-            ...this.props.videoStyles,
-          }}
-          // ref={ this.props.videoRef }
-          ref={(ref) => {
-            this.video = ref;
-          }}
-        ></video>
+      <div>
+        <div style={{ ...this.props.frameStyle }}>
+          <video
+            controls={this.props.showControls}
+            id={this.props.id}
+            muted={this.props.muted}
+            autoPlay
+            style={{
+              visibility: (this.state.videoVisible && "visible") || "hidden",
+              ...this.props.videoStyles,
+            }}
+            ref={(ref) => {
+              this.video = ref;
+            }}
+          ></video>
+        </div>
         {muteControls}
       </div>
     );
