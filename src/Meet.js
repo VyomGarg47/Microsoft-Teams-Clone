@@ -58,7 +58,7 @@ class Meet extends Component {
     this.socket = null;
     this.recordVideo = null;
     //PRODUCTION
-    //this.serviceIP = "https://webrtc-video-call-test.herokuapp.com/webrtcPeer";
+    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
     this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
@@ -617,7 +617,7 @@ class Meet extends Component {
               {/* PRODUCTION */}
               {/* <a
                 href={
-                  "https://webrtc-video-call-test.herokuapp.com" +
+                  "https://teams-clone-engage2k21.herokuapp.com" +
                   window.location.pathname
                 }
               >

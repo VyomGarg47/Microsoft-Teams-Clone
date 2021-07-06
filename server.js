@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
 const compression = require("compression");
+const path = require("path");
 var io = require("socket.io")({
   path: "/webrtc",
 });
@@ -14,19 +15,23 @@ const messages = {};
 const IDtoUsers = {};
 app.use(compression({ threshold: 0 }));
 app.use(express.static(__dirname + "/build")); //once app is build, the react server which was originally at 3000 will now serve at 8080
-app.get("/", (req, res, next) => {
+app.get("*", (req, res) => {
   //default room, if room is not specified
-  res.sendFile(__dirname + "/build/index.html");
+  res.sendFile(path.join(__dirname + "/build/index.html"));
 });
-app.get("/:room", (req, res, next) => {
-  res.sendFile(__dirname + "/build/index.html");
-});
+// app.get("/:room", (req, res, next) => {
+//   res.sendFile(__dirname + "/build/index.html");
+// });
 
-app.post("/:room", (req, res, next) => {
-  // res.sendFile(__dirname + '/build/index.html')
-  console.log(req.body);
-  res.status(200).json({ data: req.body });
-});
+// app.get("/Video/:room", (req, res, next) => {
+//   res.sendFile(__dirname + "/build/index.html");
+// });
+
+// app.post("/:room", (req, res, next) => {
+//   // res.sendFile(__dirname + '/build/index.html')
+//   console.log(req.body);
+//   res.status(200).json({ data: req.body });
+// });
 
 //listens for any request to our port
 const server = app2.listen(port, () =>
@@ -71,6 +76,7 @@ peers.on("connection", (socket) => {
   };
 
   socket.on("new-message", (data) => {
+    console.log("added new message");
     messages[room] = [...messages[room], JSON.parse(data.payload)];
     const _connectedPeers = rooms[room];
     //emitting to every peer on this room the disconnected peer
