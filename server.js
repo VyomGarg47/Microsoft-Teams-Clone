@@ -65,14 +65,12 @@ peers.on("connection", (socket) => {
   const disconnectedPeer = (socketID, username) => {
     const _connectedPeers = rooms[room];
     const clientsideList = Array.from(IDtoUsers[room]);
-    const clientsideListchatroom = Array.from(IDtoUsersRoom[room]);
     //emitting to every peer on this room the disconnected peer
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("peer-disconnected", {
         peerCount: rooms[room].size,
         socketID,
         clientsideList,
-        clientsideListchatroom,
         username,
       });
     }

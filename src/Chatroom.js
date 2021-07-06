@@ -98,51 +98,70 @@ class Chatroom extends Component {
     return (
       <div>
         <ToastContainer transition={Slide} />
-        {[...this.state.IDtoUsers.keys()].map((k) => (
-          <div>
-            {this.state.IDtoUsers.get(k) === this.state.username ? (
-              <List>
-                <p style={{ color: "white", margin: 0 }}>
-                  {this.state.IDtoUsers.get(k)} (You)
-                </p>
-              </List>
-            ) : (
-              <List>
-                <p style={{ color: "white", margin: 0 }}>
-                  {this.state.IDtoUsers.get(k)}
-                </p>
-              </List>
-            )}
-          </div>
-        ))}
-        <Input
-          placeholder="Username"
-          value={this.state.username}
-          onChange={(e) => this.handleUsername(e)}
-          inputProps={{ min: 0, style: { textAlign: "center" } }}
-        />
-        <Button>
-          <Link
-            to={{
-              pathname: `/Video${window.location.pathname}`,
-              state: {
-                user: this.state.username,
-              },
+        <div
+          style={{
+            position: "absolute",
+            height: "100%",
+            width: "30%",
+            left: 0,
+          }}
+        >
+          {[...this.state.IDtoUsers.keys()].map((k) => (
+            <div>
+              {this.state.IDtoUsers.get(k) === this.state.username ? (
+                <List>
+                  <p style={{ color: "white", margin: 0 }}>
+                    {this.state.IDtoUsers.get(k)} (You)
+                  </p>
+                </List>
+              ) : (
+                <List>
+                  <p style={{ color: "white", margin: 0 }}>
+                    {this.state.IDtoUsers.get(k)}
+                  </p>
+                </List>
+              )}
+            </div>
+          ))}
+          <Input
+            placeholder="Username"
+            value={this.state.username}
+            onChange={(e) => this.handleUsername(e)}
+            inputProps={{
+              min: 0,
+              style: { textAlign: "center", width: "100%" },
             }}
-            onClick={() => {
-              this.socket.close();
-            }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ width: "95%", marginTop: 10 }}
           >
-            Create a meeting
-          </Link>
-        </Button>
+            <Link
+              style={{
+                color: "white",
+                textDecoration: "none",
+              }}
+              to={{
+                pathname: `/Video${window.location.pathname}`,
+                state: {
+                  user: this.state.username,
+                },
+              }}
+              onClick={() => {
+                this.socket.close();
+              }}
+            >
+              Create a meeting
+            </Link>
+          </Button>
+        </div>
         <Chat
           chatstyle={{
             position: "absolute",
-            width: "50%",
+            height: "100%",
+            width: "70%",
             right: 0,
-            bottom: 0,
-            top: 50,
           }}
           user={{
             uid: this.state.username,
