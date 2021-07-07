@@ -337,23 +337,33 @@ class Chatroom extends Component {
                   Invite via Email
                 </Button>
               </div>
-              {[...this.state.IDtoUsers.keys()].map((k) => (
-                <div>
-                  {this.state.IDtoUsers.get(k) === this.state.username ? (
-                    <List>
-                      <p style={{ color: "white", margin: 0 }}>
-                        {this.state.IDtoUsers.get(k)} (You)
-                      </p>
-                    </List>
-                  ) : (
-                    <List>
-                      <p style={{ color: "white", margin: 0 }}>
-                        {this.state.IDtoUsers.get(k)}
-                      </p>
-                    </List>
-                  )}
-                </div>
-              ))}
+              <div
+                style={{
+                  margin: 10,
+                  backgroundColor: "#545c84",
+                  padding: 10,
+                  borderRadius: 5,
+                  textAlign: "center",
+                }}
+              >
+                {[...this.state.IDtoUsers.keys()].map((k) => (
+                  <div>
+                    {this.state.IDtoUsers.get(k) === this.state.username ? (
+                      <List>
+                        <p style={{ color: "white", margin: 0 }}>
+                          {this.state.IDtoUsers.get(k)} (You)
+                        </p>
+                      </List>
+                    ) : (
+                      <List>
+                        <p style={{ color: "white", margin: 0 }}>
+                          {this.state.IDtoUsers.get(k)}
+                        </p>
+                      </List>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
             <Chat
               chatstyle={{

@@ -1,14 +1,15 @@
 // https://www.freecodecamp.org/news/building-a-modern-chat-application-with-react-js-558896622194/
-
+import Picker from "emoji-picker-react";
 import React, { useState, useEffect } from "react";
 import DragDrop from "./dragDrop";
-
+import IconButton from "@material-ui/core/IconButton";
+import EmojiEmotionsIcon from "@material-ui/icons/EmojiEmotions";
 const Chat = (props) => {
   const [message, setMessage] = useState("");
   const [user, setUser] = useState({ uid: 0 });
   const [imageZoom, setImageZoom] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
-
+  const [Panel, setPanel] = useState(false);
   const scrollToBottom = () => {
     const chat = document.getElementById("chatList");
     chat.scrollTop = chat.scrollHeight;
@@ -35,10 +36,17 @@ const Chat = (props) => {
       },
     });
     setMessage("");
+    if (Panel) {
+      setPanel(false);
+    }
   };
 
   const handleChange = (event) => {
     setMessage(event.target.value);
+  };
+
+  const addEmoji = (event, emojiObject) => {
+    setMessage(message + emojiObject.emoji);
   };
 
   const renderMessage = (userType, data) => {
@@ -146,18 +154,36 @@ const Chat = (props) => {
             reader.readAsDataURL(files[0]);
           }}
         >
-          <div>
-            <form onSubmit={handleSubmit}>
-              <input
-                className="textarea input"
-                type="text"
-                placeholder="Enter your message..."
-                onChange={handleChange}
-                value={message}
-                style={{ padding: 0 }}
-              />
-            </form>
-          </div>
+          {Panel === true ? <Picker onEmojiClick={addEmoji} /> : null}
+          <IconButton
+            style={{
+              position: "relative",
+              color: "yellow",
+              left: 0,
+              bottom: 0,
+              width: 50,
+            }}
+            onClick={() => {
+              setPanel((prevPanel) => !prevPanel);
+            }}
+          >
+            <EmojiEmotionsIcon />
+          </IconButton>
+          <form onSubmit={handleSubmit}>
+            <input
+              style={{
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                width: "calc(100% - 50px)",
+              }}
+              className="textarea input"
+              type="text"
+              placeholder="Enter your message..."
+              onChange={handleChange}
+              value={message}
+            />
+          </form>
         </DragDrop>
       </div>
     </div>

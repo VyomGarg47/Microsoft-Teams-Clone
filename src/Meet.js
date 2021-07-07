@@ -231,30 +231,8 @@ class Meet extends Component {
     });
     this.socket.on("connection-success", (data) => {
       this.whoisOnline();
-      //console.log(data.success)
-      const status =
-        data.peerCount > 1
-          ? `Total Connected Peers to room ${window.location.pathname
-              .split("/")
-              .pop()}: ${data.peerCount}`
-          : "Waiting for other peers to connect";
-      const numberOfUsers = data.peerCount;
-
       this.setState({
-        status: status,
         messages: data.messages,
-        numberOfUsers: numberOfUsers,
-      });
-    });
-    this.socket.on("joined-peers", (data) => {
-      this.setState({
-        status:
-          data.peerCount > 1
-            ? `Total Connected Peers to room ${window.location.pathname
-                .split("/")
-                .pop()}: ${data.peerCount}`
-            : "Waiting for other peers to connect",
-        numberOfUsers: data.peerCount,
       });
     });
 
@@ -271,9 +249,6 @@ class Meet extends Component {
           progress: undefined,
         });
         const receivedMap = new Map(data.clientsideList);
-        // this.setState({
-        //   IDtoUsers: receivedMap,
-        // });
         if (this.state.peerConnections[data.socketID]) {
           this.state.peerConnections[data.socketID].close();
           // get and stop remote audio and video tracks of the disconnected peer
@@ -970,6 +945,7 @@ class Meet extends Component {
                   backgroundColor: "#545c84",
                   padding: 10,
                   borderRadius: 5,
+                  textAlign: "center",
                 }}
               >
                 {[...this.state.IDtoUsers.keys()].map((k) => (
@@ -1040,6 +1016,7 @@ class Meet extends Component {
               user={{
                 uid: this.state.username,
               }}
+              chatWidth="300"
               messages={messages}
               sendMessage={(message) => {
                 this.sendToPeer("new-message", JSON.stringify(message), {

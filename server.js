@@ -17,22 +17,8 @@ const IDtoUsersRoom = {};
 app.use(compression({ threshold: 0 }));
 app.use(express.static(__dirname + "/build")); //once app is build, the react server which was originally at 3000 will now serve at 8080
 app.get("*", (req, res) => {
-  //default room, if room is not specified
   res.sendFile(path.join(__dirname + "/build/index.html"));
 });
-// app.get("/:room", (req, res, next) => {
-//   res.sendFile(__dirname + "/build/index.html");
-// });
-
-// app.get("/Video/:room", (req, res, next) => {
-//   res.sendFile(__dirname + "/build/index.html");
-// });
-
-// app.post("/:room", (req, res, next) => {
-//   // res.sendFile(__dirname + '/build/index.html')
-//   console.log(req.body);
-//   res.status(200).json({ data: req.body });
-// });
 
 //listens for any request to our port
 const server = app2.listen(port, () =>
@@ -57,8 +43,6 @@ peers.on("connection", (socket) => {
 
   console.log(socket.id);
   socket.emit("connection-success", {
-    success: socket.id,
-    peerCount: rooms[room].size,
     messages: messages[room],
   });
 
@@ -82,8 +66,6 @@ peers.on("connection", (socket) => {
     //emitting to every peer on this room the disconnected peer
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("peer-disconnected-chatroom", {
-        peerCount: IDtoUsersRoom[room].size,
-        socketID,
         clientsideListchatroom,
         username,
       });
@@ -94,7 +76,6 @@ peers.on("connection", (socket) => {
     console.log("added new message");
     messages[room] = [...messages[room], JSON.parse(data.payload)];
     const _connectedPeers = rooms[room];
-    //emitting to every peer on this room the disconnected peer
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("add-new-message", data.payload);
     }
@@ -153,7 +134,6 @@ peers.on("connection", (socket) => {
     const _connectedPeers = rooms[room];
     for (const [socketID, _socket] of _connectedPeers.entries()) {
       if (socketID !== data.socketID.local) {
-        console.log("online-peer", data.socketID, socketID);
         socket.emit("online-peer", socketID);
       }
     }

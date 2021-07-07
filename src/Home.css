@@ -295,10 +295,9 @@ color5: #262626
 }
 /* T Y P E */
 input.textarea {
-  width: 100%;
+  /* width: 100%; */
   height: 50px;
   background: #0000006b;
-  bottom: 0;
   border: none;
   outline: none;
   color: white;

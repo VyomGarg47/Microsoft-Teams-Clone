@@ -8,7 +8,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Router>
+        <Router forceRefresh={true}>
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/Video/:url" component={Meet} />
