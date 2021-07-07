@@ -130,7 +130,6 @@ class Videos extends Component {
             height: "100%",
             position: "absolute",
             objectFit: "contain",
-            marginLeft: "-50%",
             visibility: (this.state.videoVisible && "visible") || "hidden",
           }}
           videoStream={
