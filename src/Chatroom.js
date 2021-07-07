@@ -6,17 +6,20 @@ import Chat from "./components/chat";
 import io from "socket.io-client";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast, Slide } from "react-toastify";
-import Picture1 from "./images/Picture1.png";
 import Picture6 from "./images/Picture6.png";
 class Chatroom extends Component {
   constructor(props) {
     super(props);
     this.state = {
       messages: [],
-      username: "User_" + Math.random().toString(36).substring(2, 7),
+      username: this.props.location.state
+        ? this.props.location.state.user
+        : "User_" + Math.random().toString(36).substring(2, 7),
       numberOfUsers: 0,
       IDtoUsers: new Map(),
-      askForUsername: true,
+      askForUsername: this.props.location.state
+        ? this.props.location.state.askForUsername
+        : true,
     };
     this.socket = null;
     //PRODUCTION
@@ -92,6 +95,12 @@ class Chatroom extends Component {
     });
   };
 
+  componentDidMount = () => {
+    if (this.state.askForUsername === false) {
+      this.connectToSocketServer();
+    }
+  };
+
   startconnection = (e) => {
     this.setState({ askForUsername: false });
     this.connectToSocketServer();
@@ -108,55 +117,84 @@ class Chatroom extends Component {
       <div>
         <ToastContainer transition={Slide} />
         {this.state.askForUsername === true ? (
-          <div className="cssanimation sequence fadeInBottom">
-            <div
-              className="border-radius"
-              style={{
-                maxWidth: 700,
-                background: "white",
-                width: "50%",
-                height: "auto",
-                padding: "10px",
-                minWidth: "320px",
-                textAlign: "center",
-                margin: "auto",
-                marginTop: "100px",
-                justifyContent: "center",
-              }}
-            >
-              <p
+          <div
+            className="cssanimation sequence fadeInBottom"
+            style={{ display: "flex", justifyContent: "center", padding: 50 }}
+          >
+            <div style={{ marginLeft: 50 }}>
+              <div style={{ paddingTop: 50 }}>
+                <h1
+                  style={{
+                    fontSize: "45px",
+                    color: "white",
+                    textAlign: "left",
+                  }}
+                >
+                  Pick a Name. <br /> Create a room. <br /> Share the URL.
+                </h1>
+                <p
+                  style={{
+                    fontSize: "25px",
+                    fontWeight: "200",
+                    color: "white",
+                    marginRight: "20px",
+                    textAlign: "left",
+                    maxWidth: 600,
+                  }}
+                >
+                  Enter your username to join the room. Each room has its own
+                  disposable URL. Just share your custom room URL, it's that
+                  easy.
+                </p>
+              </div>
+              <div
+                className="border-radius"
                 style={{
-                  marginTop: 10,
-                  fontWeight: "bold",
-                  fontSize: "20px",
-                  marginBottom: 10,
+                  maxWidth: 700,
+                  background: "white",
+                  width: "80%",
+                  height: "auto",
+                  padding: "10px",
+                  minWidth: "320px",
+                  textAlign: "center",
+
+                  justifyContent: "center",
                 }}
               >
-                What should we call you ?
-              </p>
-              <Input
-                placeholder="Username"
-                value={this.state.username}
-                onChange={(e) => this.handleUsername(e)}
-                inputProps={{ min: 0, style: { textAlign: "center" } }}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.startconnection}
-                style={{ margin: "5px" }}
-              >
-                Join meeting
-              </Button>
-              <img
-                src={Picture6}
-                alt="Picture6"
-                style={{
-                  margin: 10,
-                  width: "90%",
-                }}
-              ></img>
+                <p
+                  style={{
+                    marginTop: 10,
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                    marginBottom: 10,
+                  }}
+                >
+                  What should we call you ?
+                </p>
+                <Input
+                  placeholder="Username"
+                  value={this.state.username}
+                  onChange={(e) => this.handleUsername(e)}
+                  inputProps={{ min: 0, style: { textAlign: "center" } }}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.startconnection}
+                  style={{ margin: "5px" }}
+                >
+                  Join room
+                </Button>
+              </div>
             </div>
+            <img
+              src={Picture6}
+              alt="Picture6"
+              style={{
+                margin: 50,
+                width: "40%",
+              }}
+            ></img>
           </div>
         ) : (
           <div>
@@ -219,16 +257,6 @@ class Chatroom extends Component {
                   Create a meeting
                 </Button>
               </Link>
-              <img
-                src={Picture1}
-                alt="Picture1"
-                style={{
-                  position: "absolute",
-                  left: 10,
-                  width: "90%",
-                  bottom: 0,
-                }}
-              ></img>
             </div>
             <Chat
               chatstyle={{
@@ -236,6 +264,7 @@ class Chatroom extends Component {
                 height: "100%",
                 width: "70%",
                 right: 0,
+                textAlign: "center",
               }}
               user={{
                 uid: this.state.username,

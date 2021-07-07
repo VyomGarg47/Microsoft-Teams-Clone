@@ -17,7 +17,10 @@ import ScreenShareIcon from "@material-ui/icons/ScreenShare";
 import Fullscreen from "@material-ui/icons/Fullscreen";
 import RadioButtonChecked from "@material-ui/icons/RadioButtonChecked";
 import LinkIcon from "@material-ui/icons/Link";
+import EmailIcon from "@material-ui/icons/Email";
 import Note from "@material-ui/icons/Note";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { Link } from "react-router-dom";
 
 class Meet extends Component {
   constructor(props) {
@@ -231,7 +234,9 @@ class Meet extends Component {
       //console.log(data.success)
       const status =
         data.peerCount > 1
-          ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}`
+          ? `Total Connected Peers to room ${window.location.pathname
+              .split("/")
+              .pop()}: ${data.peerCount}`
           : "Waiting for other peers to connect";
       const numberOfUsers = data.peerCount;
 
@@ -245,7 +250,9 @@ class Meet extends Component {
       this.setState({
         status:
           data.peerCount > 1
-            ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}`
+            ? `Total Connected Peers to room ${window.location.pathname
+                .split("/")
+                .pop()}: ${data.peerCount}`
             : "Waiting for other peers to connect",
         numberOfUsers: data.peerCount,
       });
@@ -294,7 +301,9 @@ class Meet extends Component {
               ...selectedVideo,
               status:
                 data.peerCount > 1
-                  ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}`
+                  ? `Total Connected Peers to room ${window.location.pathname
+                      .split("/")
+                      .pop()}: ${data.peerCount}`
                   : "Waiting for other peers to connect",
               numberOfUsers: data.peerCount,
               IDtoUsers: receivedMap,
@@ -456,7 +465,12 @@ class Meet extends Component {
       }
     );
   };
-
+  sendEmail = () => {
+    window.open(
+      "mailto:email@example.com?subject=Meet%20Invite&body=" +
+        window.location.href
+    );
+  };
   shareScreen = () => {
     let peerConnectionList = this.state.peerConnections;
     const currentlocalstream = this.state.localStream;
@@ -529,6 +543,7 @@ class Meet extends Component {
       openCanvas: false,
     });
   };
+
   render() {
     const showCanvas = () => {
       return (
@@ -617,7 +632,7 @@ class Meet extends Component {
               }}
             >
               You have successfully disconnected.
-              <br /> Room ID = {window.location.pathname}
+              <br /> Room ID = {window.location.pathname.split("/").pop()}
               <br />
               <br />
               {/* PRODUCTION */}
@@ -736,7 +751,8 @@ class Meet extends Component {
                 Meeting Room:{" "}
                 {
                   //eslint-disable-next-line
-                  window.location.pathname.replace(/[\/\\]/g, "")
+                  //window.location.pathname.replace(/[\/\\]/g, "")
+                  window.location.pathname.split("/").pop()
                 }
               </p>
             </div>
@@ -871,6 +887,49 @@ class Meet extends Component {
                 >
                   Copy invite link
                 </Button>
+                <Button
+                  style={{
+                    backgroundColor: "#33334b",
+                    color: "white",
+                    marginTop: 5,
+                    marginBottom: 5,
+                    width: "100%",
+                  }}
+                  startIcon={<EmailIcon style={{ color: "#9ea2ff" }} />}
+                  onClick={this.sendEmail}
+                >
+                  Invite via Email
+                </Button>
+              </div>
+              <div style={{ margin: 10 }}>
+                <Link
+                  style={{
+                    color: "white",
+                    textDecoration: "none",
+                    width: "100%",
+                  }}
+                  to={{
+                    pathname: `/${window.location.pathname.split("/").pop()}`,
+                    state: {
+                      user: this.state.username,
+                      askForUsername: false,
+                    },
+                  }}
+                  onClick={() => {
+                    this.socket.close();
+                  }}
+                >
+                  <Button
+                    style={{
+                      backgroundColor: "#bf3459",
+                      color: "white",
+                      width: "100%",
+                    }}
+                    startIcon={<ArrowBackIcon />}
+                  >
+                    Go back to room
+                  </Button>
+                </Link>
               </div>
               <div
                 style={{
@@ -952,6 +1011,7 @@ class Meet extends Component {
                 top: 385,
                 bottom: 5,
                 width: 300,
+                textAlign: "center",
                 // height: 650,
               }}
               user={{

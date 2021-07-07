@@ -26,55 +26,69 @@ class Home extends Component {
 
   render() {
     return (
-      <div className="container2 cssanimation sequence fadeInBottom">
-        <div>
-          <h1 style={{ fontSize: "45px", color: "white" }}>Video Meeting</h1>
-          <p
+      <div
+        className="container2 cssanimation sequence fadeInBottom"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ marginLeft: 50 }}>
+          <div>
+            <h1 style={{ fontSize: "45px", color: "white", textAlign: "left" }}>
+              Microsoft Teams Clone
+            </h1>
+            <p
+              style={{
+                fontSize: "25px",
+                fontWeight: "200",
+                color: "white",
+                marginRight: "20px",
+                textAlign: "left",
+                maxWidth: 600,
+              }}
+            >
+              This project aims to build a video conferencing website that is
+              easy to use, provides good video quality and latency, and contains
+              all the necessary features for an engaging and complete video call
+              experience.
+            </p>
+          </div>
+
+          <div
+            className="border-radius"
             style={{
-              fontSize: "25px",
-              fontWeight: "200",
-              color: "white",
-              marginLeft: "20px",
-              marginRight: "20px",
+              background: "white",
+              width: "27%",
+              height: "auto",
+              padding: "10px",
+              minWidth: "325px",
+              textAlign: "center",
+              //margin: "auto",
+              marginTop: "50px",
             }}
           >
-            Video conference website that lets you stay in touch with all your
-            friends.
-          </p>
-        </div>
-
-        <div
-          className="border-radius"
-          style={{
-            background: "white",
-            width: "27%",
-            height: "auto",
-            padding: "10px",
-            minWidth: "325px",
-            textAlign: "center",
-            margin: "auto",
-            marginTop: "50px",
-          }}
-        >
-          <p style={{ margin: 0, fontWeight: "bold", fontSize: "20px" }}>
-            Start or join a meeting
-          </p>
-          <Input placeholder="URL" onChange={(e) => this.handleChange(e)} />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.join}
-            style={{ margin: "20px" }}
-          >
-            Go
-          </Button>
+            <p style={{ margin: 0, fontWeight: "bold", fontSize: "20px" }}>
+              Start or join a meeting
+            </p>
+            <Input placeholder="URL" onChange={(e) => this.handleChange(e)} />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.join}
+              style={{ margin: "20px" }}
+            >
+              Go
+            </Button>
+          </div>
         </div>
         <img
           src={Picture1}
           alt="Picture1"
           style={{
+            paddingTop: 150,
             margin: 50,
-            width: 300,
+            width: "30%",
           }}
         ></img>
       </div>

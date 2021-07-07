@@ -3,7 +3,7 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  text-align: center;
+  /* text-align: center; */
   /* background-color: whitesmoke; */
   /* background-image: url("./img/1.jpg"); */
   /* background: url(./img/2.jpg) no-repeat center center fixed;
@@ -28,7 +28,7 @@ body {
 }
 
 .container2 {
-  padding-top: 150px;
+  /* padding-top: 100px; */
   margin: auto;
   align-items: center;
   justify-content: center;
@@ -69,58 +69,6 @@ color3: #2D2E40
 color4: #8C8C8C
 color5: #262626
 */
-.App {
-  text-align: center;
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 50vh;
-}
-.App p {
-  font-size: 12px;
-  width: 50%;
-}
-.App-logo {
-  animation: App-logo-spin infinite 0.5s linear;
-  height: 10vmin;
-}
-.form {
-  display: flex;
-  flex-direction: column;
-}
-.form input[type="text"] {
-  width: 300px;
-  height: 30px;
-  margin-bottom: 10px;
-}
-.form input[type="submit"] {
-  padding: 5px;
-  height: 30px;
-  border: none;
-  background-color: #187dbc;
-  color: #fff;
-}
-.form input[type="submit"]:hover {
-  border: #fff;
-  cursor: pointer;
-  background-color: #000;
-  color: #fff;
-}
-.error {
-  color: red;
-  font-size: 10px;
-  text-align: center;
-}
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 .message {
   font-size: 15px !important;
   color: #ffffff;
