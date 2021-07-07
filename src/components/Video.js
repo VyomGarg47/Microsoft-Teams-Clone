@@ -127,12 +127,12 @@ class Video extends Component {
               backgroundColor: "#bf3459",
               color: "white",
               height: 40,
-              width: 90,
+              width: 120,
             }}
             onClick={this.sendData}
             startIcon={<CallEndIcon />}
           >
-            Leave
+            <p style={{ fontWeight: "bold" }}>End call</p>
           </Button>
         ) : null}
       </div>

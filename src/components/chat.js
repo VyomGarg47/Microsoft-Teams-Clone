@@ -154,10 +154,15 @@ const Chat = (props) => {
             reader.readAsDataURL(files[0]);
           }}
         >
-          {Panel === true ? <Picker onEmojiClick={addEmoji} /> : null}
+          {Panel === true ? (
+            <Picker
+              pickerStyle={{ position: "absolute", bottom: 60 }}
+              onEmojiClick={addEmoji}
+            />
+          ) : null}
           <IconButton
             style={{
-              position: "relative",
+              position: "absolute",
               color: "yellow",
               left: 0,
               bottom: 0,

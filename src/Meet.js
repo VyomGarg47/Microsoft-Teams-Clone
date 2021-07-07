@@ -64,8 +64,8 @@ class Meet extends Component {
     this.socket = null;
     this.recordVideo = null;
     //PRODUCTION
-    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
@@ -650,16 +650,17 @@ class Meet extends Component {
             <div
               className="border-radius"
               style={{
-                maxWidth: 700,
+                maxWidth: 500,
                 background: "white",
                 width: "50%",
                 height: "auto",
                 padding: "10px",
-                minWidth: "320px",
+                minWidth: "300px",
                 textAlign: "center",
                 margin: "auto",
-                marginTop: "100px",
+                marginTop: 50,
                 justifyContent: "center",
+                maxHeight: 700,
               }}
             >
               <p
@@ -672,12 +673,22 @@ class Meet extends Component {
               >
                 Ready to Join ?
               </p>
-              <Input
-                placeholder="Username"
-                value={this.state.username}
-                onChange={(e) => this.handleUsername(e)}
-                inputProps={{ min: 0, style: { textAlign: "center" } }}
-              />
+              <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+                <Input
+                  placeholder="Username"
+                  value={this.state.username}
+                  onChange={(e) => this.handleUsername(e)}
+                  inputProps={{ min: 0, style: { textAlign: "center" } }}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.startconnection}
+                  style={{ margin: "5px" }}
+                >
+                  Join meeting
+                </Button>
+              </div>
               <div
                 style={{
                   margin: "10px",
@@ -696,7 +707,7 @@ class Meet extends Component {
                   frameStyle={{
                     position: "relative",
                     width: "100%",
-                    height: 400,
+                    height: 300,
                     backgroundColor: "black",
                   }}
                   showMuteControls={true}
@@ -712,14 +723,6 @@ class Meet extends Component {
                   muted
                 ></Video>
               </div>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.startconnection}
-                style={{ margin: "5px" }}
-              >
-                Join meeting
-              </Button>
             </div>
           </div>
         ) : (
@@ -958,7 +961,6 @@ class Meet extends Component {
             <div
               style={{
                 position: "absolute",
-                zIndex: 101,
                 right: 19,
               }}
             >

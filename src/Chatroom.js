@@ -9,6 +9,10 @@ import { ToastContainer, toast, Slide } from "react-toastify";
 import Picture6 from "./images/Picture6.png";
 import LinkIcon from "@material-ui/icons/Link";
 import EmailIcon from "@material-ui/icons/Email";
+import screenfull from "screenfull";
+import Fullscreen from "@material-ui/icons/Fullscreen";
+import VideocamIcon from "@material-ui/icons/Videocam";
+
 class Chatroom extends Component {
   constructor(props) {
     super(props);
@@ -25,8 +29,8 @@ class Chatroom extends Component {
     };
     this.socket = null;
     //PRODUCTION
-    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   sendToPeer = (messageType, payload, socketID) => {
     console.log("sendToPeer");
@@ -177,7 +181,7 @@ class Chatroom extends Component {
             style={{ display: "flex", justifyContent: "center", padding: 50 }}
           >
             <div style={{ marginLeft: 50 }}>
-              <div style={{ paddingTop: 50 }}>
+              <div style={{ paddingTop: 0 }}>
                 <h1
                   style={{
                     fontSize: "45px",
@@ -261,7 +265,7 @@ class Chatroom extends Component {
                 left: 0,
               }}
             >
-              <div style={{ margin: 10 }}>
+              <div style={{ margin: 30, marginLeft: 50, marginRight: 50 }}>
                 <Link
                   style={{
                     color: "white",
@@ -281,88 +285,162 @@ class Chatroom extends Component {
                   <Button
                     variant="contained"
                     color="primary"
-                    style={{ width: "100%" }}
+                    style={{
+                      width: "100%",
+                      height: "70px",
+                      borderRadius: 10,
+                    }}
+                    startIcon={
+                      <VideocamIcon
+                        style={{ color: "white", fontSize: "30px" }}
+                      />
+                    }
                   >
-                    {this.state.numberOfUsers === 0
-                      ? "Create a meeting"
-                      : "Join the meeting"}
+                    <p
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "20px",
+                        color: "white",
+                      }}
+                    >
+                      {this.state.numberOfUsers === 0
+                        ? "Create a meeting"
+                        : "Join the meeting"}
+                    </p>
                   </Button>
                 </Link>
               </div>
               <div
                 style={{
-                  margin: 10,
-                  backgroundColor: "#545c84",
+                  backgroundColor: "black",
+                  borderRadius: 10,
                   padding: 10,
-                  borderRadius: 5,
+                  height: "100%",
+                  margin: 30,
+                  marginLeft: 50,
+                  marginRight: 50,
                 }}
               >
-                <Input
-                  value={window.location.href}
-                  disable="true"
+                <div
                   style={{
-                    width: "100%",
+                    margin: 10,
                     backgroundColor: "#545c84",
-                    color: "white",
+                    padding: 20,
                     borderRadius: 5,
-                    padding: 5,
-                    marginBottom: 5,
                   }}
-                  inputProps={{ min: 0, style: { textAlign: "center" } }}
-                ></Input>
-                <Button
-                  style={{
-                    backgroundColor: "#33334b",
-                    color: "white",
-                    marginTop: 5,
-                    marginBottom: 5,
-                    width: "100%",
-                  }}
-                  startIcon={<LinkIcon style={{ color: "#9ea2ff" }} />}
-                  onClick={this.copyUrl}
                 >
-                  Copy invite link
-                </Button>
-                <Button
+                  <Input
+                    value={window.location.href}
+                    disable="true"
+                    style={{
+                      width: "100%",
+                      backgroundColor: "#545c84",
+                      color: "white",
+                      borderRadius: 5,
+                      padding: 5,
+                      marginBottom: 5,
+                      fontSize: 18,
+                    }}
+                    inputProps={{ min: 0, style: { textAlign: "center" } }}
+                  ></Input>
+                  <Button
+                    style={{
+                      backgroundColor: "#33334b",
+                      color: "white",
+                      marginTop: 5,
+                      marginBottom: 5,
+                      width: "100%",
+                      height: 50,
+                      fontSize: 16,
+                    }}
+                    startIcon={
+                      <LinkIcon
+                        style={{ color: "#9ea2ff", fontSize: "30px" }}
+                      />
+                    }
+                    onClick={this.copyUrl}
+                  >
+                    Copy invite link
+                  </Button>
+                  <Button
+                    style={{
+                      backgroundColor: "#33334b",
+                      color: "white",
+                      marginTop: 5,
+                      marginBottom: 5,
+                      width: "100%",
+                      height: 50,
+                      fontSize: 16,
+                    }}
+                    startIcon={
+                      <EmailIcon
+                        style={{ color: "#9ea2ff", fontSize: "25px" }}
+                      />
+                    }
+                    onClick={this.sendEmail}
+                  >
+                    Invite via Email
+                  </Button>
+                </div>
+                <div style={{ margin: 10 }}>
+                  <Button
+                    style={{
+                      backgroundColor: "#424242",
+                      color: "white",
+                      width: "100%",
+                      marginTop: 5,
+                      marginBottom: 5,
+                      height: 50,
+                      fontSize: 16,
+                    }}
+                    onClick={() => {
+                      if (screenfull.isEnabled) {
+                        screenfull.toggle();
+                      } else {
+                        // Ignore or do something else
+                      }
+                    }}
+                    className="side-panel-button"
+                    startIcon={
+                      <Fullscreen
+                        style={{ color: "#9ea2ff", fontSize: "25px" }}
+                      />
+                    }
+                  >
+                    Full screen
+                  </Button>
+                </div>
+                <div
                   style={{
-                    backgroundColor: "#33334b",
-                    color: "white",
-                    marginTop: 5,
-                    marginBottom: 5,
-                    width: "100%",
+                    margin: 10,
+                    backgroundColor: "#545c84",
+                    padding: 10,
+                    borderRadius: 5,
+                    textAlign: "center",
                   }}
-                  startIcon={<EmailIcon style={{ color: "#9ea2ff" }} />}
-                  onClick={this.sendEmail}
                 >
-                  Invite via Email
-                </Button>
-              </div>
-              <div
-                style={{
-                  margin: 10,
-                  backgroundColor: "#545c84",
-                  padding: 10,
-                  borderRadius: 5,
-                  textAlign: "center",
-                }}
-              >
-                {[...this.state.IDtoUsers.keys()].map((k) => (
-                  <div>
-                    {this.state.IDtoUsers.get(k) === this.state.username ? (
-                      <List>
-                        <p style={{ color: "white", margin: 0 }}>
-                          {this.state.IDtoUsers.get(k)} (You)
-                        </p>
-                      </List>
-                    ) : (
-                      <List>
-                        <p style={{ color: "white", margin: 0 }}>
-                          {this.state.IDtoUsers.get(k)}
-                        </p>
-                      </List>
-                    )}
-                  </div>
-                ))}
+                  {[...this.state.IDtoUsers.keys()].map((k) => (
+                    <div>
+                      {this.state.IDtoUsers.get(k) === this.state.username ? (
+                        <List>
+                          <p
+                            style={{ color: "white", margin: 0, fontSize: 18 }}
+                          >
+                            {this.state.IDtoUsers.get(k)} (You)
+                          </p>
+                        </List>
+                      ) : (
+                        <List>
+                          <p
+                            style={{ color: "white", margin: 0, fontSize: 18 }}
+                          >
+                            {this.state.IDtoUsers.get(k)}
+                          </p>
+                        </List>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <Chat
