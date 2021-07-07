@@ -68,7 +68,7 @@ peers.on("connection", (socket) => {
     //emitting to every peer on this room the disconnected peer
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("peer-disconnected", {
-        peerCount: rooms[room].size,
+        peerCount: IDtoUsers[room].size,
         socketID,
         clientsideList,
         username,
@@ -82,7 +82,7 @@ peers.on("connection", (socket) => {
     //emitting to every peer on this room the disconnected peer
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("peer-disconnected-chatroom", {
-        peerCount: rooms[room].size,
+        peerCount: IDtoUsersRoom[room].size,
         socketID,
         clientsideListchatroom,
         username,
@@ -138,11 +138,13 @@ peers.on("connection", (socket) => {
       (IDtoUsersRoom[room] && IDtoUsersRoom[room].set(socket.id, username)) ||
       new Map().set(socket.id, username);
     const _connectedPeers = rooms[room];
+    const peerCount = IDtoUsers[room] ? IDtoUsers[room].size : 0;
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit(
         "adduser-chatroom",
         Array.from(IDtoUsersRoom[room]),
-        username
+        username,
+        peerCount
       );
     }
   });

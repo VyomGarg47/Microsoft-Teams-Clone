@@ -7,6 +7,8 @@ import io from "socket.io-client";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast, Slide } from "react-toastify";
 import Picture6 from "./images/Picture6.png";
+import LinkIcon from "@material-ui/icons/Link";
+import EmailIcon from "@material-ui/icons/Email";
 class Chatroom extends Component {
   constructor(props) {
     super(props);
@@ -23,8 +25,8 @@ class Chatroom extends Component {
     };
     this.socket = null;
     //PRODUCTION
-    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   sendToPeer = (messageType, payload, socketID) => {
     console.log("sendToPeer");
@@ -51,15 +53,13 @@ class Chatroom extends Component {
     });
     this.socket.on("connection-success", (data) => {
       this.whoisOnline();
-      const numberOfUsers = data.peerCount;
       this.setState({
         messages: data.messages,
-        numberOfUsers: numberOfUsers,
       });
     });
-    this.socket.on("adduser-chatroom", (IDtoUsersRoom, username) => {
+    this.socket.on("adduser-chatroom", (IDtoUsersRoom, username, peerCount) => {
       if (username) {
-        toast.info(`${username} joined`, {
+        toast.info(`${username} joined the room`, {
           position: "bottom-left",
           autoClose: 1500,
           hideProgressBar: false,
@@ -69,15 +69,36 @@ class Chatroom extends Component {
           progress: undefined,
         });
       }
-      const peerCount = IDtoUsersRoom.length;
       const receivedMap = new Map(IDtoUsersRoom);
       this.setState({
+        numberOfUsers: peerCount,
         IDtoUsers: receivedMap,
+      });
+    });
+    this.socket.on("adduser", (IDtoUsersRoom, username) => {
+      const peerCount = IDtoUsersRoom.length;
+      if (peerCount === 1) {
+        toast.info(`${username} just started a meeting`, {
+          position: "bottom-left",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+      this.setState({
         numberOfUsers: peerCount,
       });
     });
+    this.socket.on("peer-disconnected", (data) => {
+      this.setState({
+        numberOfUsers: data.peerCount,
+      });
+    });
     this.socket.on("peer-disconnected-chatroom", (data) => {
-      toast.info(`${data.username} has left the meeting`, {
+      toast.info(`${data.username} has left the room`, {
         position: "bottom-left",
         autoClose: 1500,
         hideProgressBar: false,
@@ -86,11 +107,9 @@ class Chatroom extends Component {
         draggable: true,
         progress: undefined,
       });
-      const peerCount = data.clientsideListchatroom.length;
       const receivedMap = new Map(data.clientsideListchatroom);
       this.setState({
         IDtoUsers: receivedMap,
-        numberOfUsers: peerCount,
       });
     });
   };
@@ -111,6 +130,42 @@ class Chatroom extends Component {
       username: e.target.value,
     });
   };
+
+  sendEmail = () => {
+    window.open(
+      "mailto:email@example.com?subject=Meet%20Invite&body=" +
+        window.location.href
+    );
+  };
+
+  copyUrl = () => {
+    let text = window.location.href;
+    navigator.clipboard.writeText(text).then(
+      function () {
+        toast.success("Link copied to clipboard!", {
+          position: "bottom-left",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+        });
+      },
+      () => {
+        toast.error("Failed to copy!", {
+          position: "bottom-left",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    );
+  };
+
   render() {
     const { messages } = this.state;
     return (
@@ -206,6 +261,82 @@ class Chatroom extends Component {
                 left: 0,
               }}
             >
+              <div style={{ margin: 10 }}>
+                <Link
+                  style={{
+                    color: "white",
+                    textDecoration: "none",
+                    width: "100%",
+                  }}
+                  to={{
+                    pathname: `/Video${window.location.pathname}`,
+                    state: {
+                      user: this.state.username,
+                    },
+                  }}
+                  onClick={() => {
+                    this.socket.close();
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ width: "100%" }}
+                  >
+                    {this.state.numberOfUsers === 0
+                      ? "Create a meeting"
+                      : "Join the meeting"}
+                  </Button>
+                </Link>
+              </div>
+              <div
+                style={{
+                  margin: 10,
+                  backgroundColor: "#545c84",
+                  padding: 10,
+                  borderRadius: 5,
+                }}
+              >
+                <Input
+                  value={window.location.href}
+                  disable="true"
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#545c84",
+                    color: "white",
+                    borderRadius: 5,
+                    padding: 5,
+                    marginBottom: 5,
+                  }}
+                  inputProps={{ min: 0, style: { textAlign: "center" } }}
+                ></Input>
+                <Button
+                  style={{
+                    backgroundColor: "#33334b",
+                    color: "white",
+                    marginTop: 5,
+                    marginBottom: 5,
+                    width: "100%",
+                  }}
+                  startIcon={<LinkIcon style={{ color: "#9ea2ff" }} />}
+                  onClick={this.copyUrl}
+                >
+                  Copy invite link
+                </Button>
+                <Button
+                  style={{
+                    backgroundColor: "#33334b",
+                    color: "white",
+                    marginTop: 5,
+                    marginBottom: 5,
+                    width: "100%",
+                  }}
+                  startIcon={<EmailIcon style={{ color: "#9ea2ff" }} />}
+                  onClick={this.sendEmail}
+                >
+                  Invite via Email
+                </Button>
+              </div>
               {[...this.state.IDtoUsers.keys()].map((k) => (
                 <div>
                   {this.state.IDtoUsers.get(k) === this.state.username ? (
@@ -223,40 +354,6 @@ class Chatroom extends Component {
                   )}
                 </div>
               ))}
-              <Input
-                placeholder="Username"
-                value={this.state.username}
-                //onChange={(e) => this.handleUsername(e)}
-                disable="true"
-                inputProps={{
-                  min: 0,
-                  style: { textAlign: "center", width: "100%" },
-                }}
-              />
-              <Link
-                style={{
-                  color: "white",
-                  textDecoration: "none",
-                  width: "100%",
-                }}
-                to={{
-                  pathname: `/Video${window.location.pathname}`,
-                  state: {
-                    user: this.state.username,
-                  },
-                }}
-                onClick={() => {
-                  this.socket.close();
-                }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ margin: "20px" }}
-                >
-                  Create a meeting
-                </Button>
-              </Link>
             </div>
             <Chat
               chatstyle={{
