@@ -10,6 +10,7 @@ import List from "@material-ui/core/List";
 import { ToastContainer, toast, Slide } from "react-toastify";
 import connectSound from "./sounds/connect.mp3";
 import disconnectSound from "./sounds/disconnect.mp3";
+import notificationSound from "./sounds/notification.mp3";
 import "react-toastify/dist/ReactToastify.min.css";
 import screenfull from "screenfull";
 import RecordRTC from "recordrtc/RecordRTC";
@@ -79,6 +80,7 @@ class Meet extends Component {
     };
     // called when getUserMedia() fails
     const failure = (e) => {
+      window.location.href = "/error";
       console.log("getUserMedia Error: ", e);
     };
     const constraints = {
@@ -327,6 +329,8 @@ class Meet extends Component {
     });
 
     this.socket.on("add-new-message", (message) => {
+      const notisound = new Audio(notificationSound);
+      notisound.play();
       this.setState((prevState) => {
         return { messages: [...prevState.messages, JSON.parse(message)] };
       });

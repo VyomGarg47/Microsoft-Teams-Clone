@@ -17,6 +17,8 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PeopleIcon from "@material-ui/icons/People";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Note from "@material-ui/icons/Note";
+import connectSound from "./sounds/connect.mp3";
+import notificationSound from "./sounds/notification.mp3";
 
 class Chatroom extends Component {
   constructor(props) {
@@ -54,6 +56,8 @@ class Chatroom extends Component {
   };
 
   connectToSocketServer = () => {
+    const sound = new Audio(connectSound);
+    sound.play();
     this.socket = io.connect(this.serviceIP, {
       path: "/webrtc",
       query: {
@@ -61,7 +65,8 @@ class Chatroom extends Component {
       },
     });
     this.socket.on("add-new-message", (message) => {
-      console.log(JSON.parse(message));
+      const notisound = new Audio(notificationSound);
+      notisound.play();
       const parsedmessage = JSON.parse(message);
       this.setState((prevState) => {
         return {
@@ -311,8 +316,8 @@ class Chatroom extends Component {
                   padding: "10px",
                   minWidth: "320px",
                   textAlign: "center",
-
                   justifyContent: "center",
+                  paddingBottom: "30px",
                 }}
               >
                 <p

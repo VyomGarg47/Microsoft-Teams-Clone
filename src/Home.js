@@ -71,15 +71,17 @@ class Home extends Component {
             <p style={{ margin: 0, fontWeight: "bold", fontSize: "20px" }}>
               Start or join a meeting
             </p>
-            <Input placeholder="URL" onChange={(e) => this.handleChange(e)} />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={this.join}
-              style={{ margin: "20px" }}
-            >
-              Go
-            </Button>
+            <div>
+              <Input placeholder="URL" onChange={(e) => this.handleChange(e)} />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.join}
+                style={{ margin: "20px", width: "70px" }}
+              >
+                Go
+              </Button>
+            </div>
           </div>
         </div>
         <img

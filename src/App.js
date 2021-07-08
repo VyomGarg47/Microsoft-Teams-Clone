@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Meet from "./Meet";
 import Home from "./Home";
+import Error from "./Error";
 import Chatroom from "./Chatroom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
@@ -11,6 +12,7 @@ class App extends Component {
         <Router forceRefresh={true}>
           <Switch>
             <Route path="/" exact component={Home} />
+            <Route path="/Error" component={Error} />
             <Route path="/Video/:url" component={Meet} />
             <Route path="/:url" component={Chatroom} />
           </Switch>
