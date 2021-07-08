@@ -69,8 +69,8 @@ class Meet extends Component {
     this.recordVideo = null;
     this.child = React.createRef();
     //PRODUCTION
-    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    this.serviceIP = "/webrtcPeer";
+    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    //this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
