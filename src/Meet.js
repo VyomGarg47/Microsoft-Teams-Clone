@@ -547,9 +547,19 @@ class Meet extends Component {
                 <option> 30 </option>
               </select>
             </div>
-          </div>
-          <div className="close-canvas-container">
-            <button onClick={() => this.closeCanvas()}>Close</button>
+            <div className="close-canvas-container">
+              <Button
+                style={{
+                  backgroundColor: "#bf3459",
+                  color: "white",
+
+                  fontSize: 14,
+                }}
+                onClick={() => this.closeCanvas()}
+              >
+                Close whiteboard
+              </Button>
+            </div>
           </div>
           <div className="board-container">
             <Board

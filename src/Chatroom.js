@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button";
 import Input from "@material-ui/core/Input";
 import List from "@material-ui/core/List";
 import Chat from "./components/chat";
+import Board from "./components/Board";
 import io from "socket.io-client";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast, Slide } from "react-toastify";
@@ -28,7 +29,10 @@ class Chatroom extends Component {
         ? this.props.location.state.user
         : "User_" + Math.random().toString(36).substring(2, 7),
       numberOfUsers: 0,
+      openCanvas: false,
       IDtoUsers: new Map(),
+      color: "#000000",
+      size: "5",
       askForUsername: this.props.location.state
         ? this.props.location.state.askForUsername
         : true,
@@ -192,7 +196,76 @@ class Chatroom extends Component {
     );
   };
 
+  changeColor(params) {
+    this.setState({
+      color: params.target.value,
+    });
+  }
+
+  changeSize(params) {
+    this.setState({
+      size: params.target.value,
+    });
+  }
+
+  closeCanvas = () => {
+    this.setState({
+      openCanvas: false,
+    });
+  };
+
   render() {
+    const showCanvas = () => {
+      return (
+        <div className="container-canvas">
+          <div className="tools-section">
+            <div className="color-picker-container">
+              Select Brush Color : &nbsp;
+              <input
+                type="color"
+                value={this.state.color}
+                onChange={this.changeColor.bind(this)}
+              />
+            </div>
+
+            <div className="brushsize-container">
+              Select Brush Size : &nbsp;
+              <select
+                value={this.state.size}
+                onChange={this.changeSize.bind(this)}
+              >
+                <option> 5 </option>
+                <option> 10 </option>
+                <option> 15 </option>
+                <option> 20 </option>
+                <option> 25 </option>
+                <option> 30 </option>
+              </select>
+            </div>
+            <div className="close-canvas-container">
+              <Button
+                style={{
+                  backgroundColor: "#bf3459",
+                  color: "white",
+
+                  fontSize: 14,
+                }}
+                onClick={() => this.closeCanvas()}
+              >
+                Close whiteboard
+              </Button>
+            </div>
+          </div>
+          <div className="board-container">
+            <Board
+              color={this.state.color}
+              size={this.state.size}
+              socket={this.socket}
+            ></Board>
+          </div>
+        </div>
+      );
+    };
     const { messages } = this.state;
     return (
       <div>
@@ -279,6 +352,9 @@ class Chatroom extends Component {
           </div>
         ) : (
           <div>
+            <div style={{ zIndex: 150, position: "relative" }}>
+              {this.state.openCanvas && showCanvas()}
+            </div>
             <div className="sidebar">
               <Button
                 style={{
@@ -340,6 +416,11 @@ class Chatroom extends Component {
                   width: 50,
                   margin: 4,
                   marginBottom: 15,
+                }}
+                onClick={() => {
+                  this.setState({
+                    openCanvas: true,
+                  });
                 }}
               >
                 <div style={{ display: "flex", flexDirection: "column" }}>

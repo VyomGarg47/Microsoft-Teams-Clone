@@ -317,23 +317,26 @@ input.textarea {
 .color-picker-container {
   text-align: center;
   display: inline;
-  color: white;
+  color: black;
+  font-weight: bold;
 }
 
 .close-canvas-container {
-  text-align: center;
   display: inline;
   color: red;
+  margin-left: 12px;
 }
 
 .brushsize-container {
   display: inline;
   color: black;
+  font-weight: bold;
   margin-left: 12px;
 }
 
 .tools-section {
   text-align: center;
+  margin-top: 5px;
 }
 
 .board-container {
