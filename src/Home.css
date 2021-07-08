@@ -302,6 +302,7 @@ input.textarea {
   outline: none;
   color: white;
   font-weight: 400;
+  font-size: 17px;
 }
 
 .container-canvas {
