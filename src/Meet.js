@@ -42,7 +42,7 @@ class Meet extends Component {
       sdpConstraints: {
         mandatory: {
           OfferToReceiveAudio: true,
-          OfferToReceiveVideo: false,
+          OfferToReceiveVideo: true,
         },
       },
       messages: [],
