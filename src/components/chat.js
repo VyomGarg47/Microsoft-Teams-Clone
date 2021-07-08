@@ -50,7 +50,6 @@ const Chat = (props) => {
   };
 
   const renderMessage = (userType, data) => {
-    console.log("===========", data);
     const message = data.message;
 
     const msgDiv = (data.type === "text" && (

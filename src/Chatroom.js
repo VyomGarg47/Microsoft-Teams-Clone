@@ -12,12 +12,18 @@ import EmailIcon from "@material-ui/icons/Email";
 import screenfull from "screenfull";
 import Fullscreen from "@material-ui/icons/Fullscreen";
 import VideocamIcon from "@material-ui/icons/Videocam";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import PeopleIcon from "@material-ui/icons/People";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import Note from "@material-ui/icons/Note";
 
 class Chatroom extends Component {
   constructor(props) {
     super(props);
     this.state = {
       messages: [],
+      activitypanel: false,
+      activities: [],
       username: this.props.location.state
         ? this.props.location.state.user
         : "User_" + Math.random().toString(36).substring(2, 7),
@@ -51,8 +57,15 @@ class Chatroom extends Component {
       },
     });
     this.socket.on("add-new-message", (message) => {
+      console.log(JSON.parse(message));
+      const parsedmessage = JSON.parse(message);
       this.setState((prevState) => {
-        return { messages: [...prevState.messages, JSON.parse(message)] };
+        return {
+          messages: [...prevState.messages, JSON.parse(message)],
+          activities: this.state.activities.concat(
+            `${parsedmessage.message.id} just sent a message`
+          ),
+        };
       });
     });
     this.socket.on("connection-success", (data) => {
@@ -75,6 +88,7 @@ class Chatroom extends Component {
       }
       const receivedMap = new Map(IDtoUsersRoom);
       this.setState({
+        activities: this.state.activities.concat(`${username} joined the room`),
         numberOfUsers: peerCount,
         IDtoUsers: receivedMap,
       });
@@ -90,6 +104,11 @@ class Chatroom extends Component {
           pauseOnHover: false,
           draggable: true,
           progress: undefined,
+        });
+        this.setState({
+          activities: this.state.activities.concat(
+            `${username} just started a meeting`
+          ),
         });
       }
       this.setState({
@@ -113,6 +132,9 @@ class Chatroom extends Component {
       });
       const receivedMap = new Map(data.clientsideListchatroom);
       this.setState({
+        activities: this.state.activities.concat(
+          `${data.username} has left the room`
+        ),
         IDtoUsers: receivedMap,
       });
     });
@@ -144,6 +166,9 @@ class Chatroom extends Component {
 
   copyUrl = () => {
     let text = window.location.href;
+    // this.setState({
+    //   activities: this.state.activities.concat("Link Copied"),
+    // });
     navigator.clipboard.writeText(text).then(
       function () {
         toast.success("Link copied to clipboard!", {
@@ -257,15 +282,99 @@ class Chatroom extends Component {
           </div>
         ) : (
           <div>
+            <div className="sidebar">
+              <Button
+                style={{
+                  color: !this.state.activitypanel ? "#9ea2ff" : "#787878",
+                  width: 50,
+                  margin: 4,
+                  marginBottom: 15,
+                }}
+                onClick={() => {
+                  this.setState({
+                    activitypanel: false,
+                  });
+                }}
+              >
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <PeopleIcon style={{ fontSize: "50px" }} />
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      margin: 0,
+                      color: !this.state.activitypanel ? "#9ea2ff" : "#adad9e",
+                    }}
+                  >
+                    People
+                  </p>
+                </div>
+              </Button>
+              <Button
+                style={{
+                  color: this.state.activitypanel ? "#9ea2ff" : "#787878",
+                  width: 50,
+                  margin: 4,
+                  marginBottom: 15,
+                }}
+                onClick={() => {
+                  this.setState({
+                    activitypanel: true,
+                  });
+                }}
+              >
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <NotificationsIcon
+                    style={{ fontSize: "50px", marginLeft: 4 }}
+                  />
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      margin: 0,
+                      color: this.state.activitypanel ? "#9ea2ff" : "#adad9e",
+                    }}
+                  >
+                    Activity
+                  </p>
+                </div>
+              </Button>
+              <Button
+                style={{
+                  color: "#787878",
+                  width: 50,
+                  margin: 4,
+                  marginBottom: 15,
+                }}
+              >
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <Note style={{ fontSize: "50px", marginLeft: 4 }} />
+                  <p
+                    style={{
+                      fontSize: "8px",
+                      margin: 0,
+                      color: "#adad9e",
+                    }}
+                  >
+                    Whiteboard
+                  </p>
+                </div>
+              </Button>
+            </div>
             <div
               style={{
                 position: "absolute",
                 height: "100%",
-                width: "30%",
+                width: "40%",
                 left: 0,
+                alignItems: "center",
               }}
             >
-              <div style={{ margin: 30, marginLeft: 50, marginRight: 50 }}>
+              <div
+                style={{
+                  margin: 30,
+                  marginLeft: "calc(10% + 70px)",
+                  marginRight: "10%",
+                }}
+              >
                 <Link
                   style={{
                     color: "white",
@@ -317,8 +426,8 @@ class Chatroom extends Component {
                   padding: 10,
                   height: "100%",
                   margin: 30,
-                  marginLeft: 50,
-                  marginRight: 50,
+                  marginLeft: "calc(10% + 70px)",
+                  marginRight: "10%",
                 }}
               >
                 <div
@@ -383,6 +492,34 @@ class Chatroom extends Component {
                   </Button>
                 </div>
                 <div style={{ margin: 10 }}>
+                  <Link
+                    style={{
+                      color: "white",
+                      textDecoration: "none",
+                      width: "100%",
+                    }}
+                    to={{
+                      pathname: "/",
+                    }}
+                    onClick={() => {
+                      this.socket.close();
+                    }}
+                  >
+                    <Button
+                      style={{
+                        backgroundColor: "#bf3459",
+                        color: "white",
+                        width: "100%",
+                        marginTop: 5,
+                        marginBottom: 10,
+                        height: 50,
+                        fontSize: 16,
+                      }}
+                      startIcon={<ExitToAppIcon style={{ fontSize: "25px" }} />}
+                    >
+                      LEAVE ROOM
+                    </Button>
+                  </Link>
                   <Button
                     style={{
                       backgroundColor: "#424242",
@@ -419,27 +556,58 @@ class Chatroom extends Component {
                     textAlign: "center",
                   }}
                 >
-                  {[...this.state.IDtoUsers.keys()].map((k) => (
+                  {this.state.activitypanel === false ? (
                     <div>
-                      {this.state.IDtoUsers.get(k) === this.state.username ? (
-                        <List>
-                          <p
-                            style={{ color: "white", margin: 0, fontSize: 18 }}
-                          >
-                            {this.state.IDtoUsers.get(k)} (You)
-                          </p>
-                        </List>
-                      ) : (
-                        <List>
-                          <p
-                            style={{ color: "white", margin: 0, fontSize: 18 }}
-                          >
-                            {this.state.IDtoUsers.get(k)}
-                          </p>
-                        </List>
-                      )}
+                      {[...this.state.IDtoUsers.keys()].map((k) => (
+                        <div>
+                          {this.state.IDtoUsers.get(k) ===
+                          this.state.username ? (
+                            <List>
+                              <p
+                                style={{
+                                  color: "white",
+                                  margin: 0,
+                                  fontSize: 18,
+                                }}
+                              >
+                                {this.state.IDtoUsers.get(k)} (You)
+                              </p>
+                            </List>
+                          ) : (
+                            <List>
+                              <p
+                                style={{
+                                  color: "white",
+                                  margin: 0,
+                                  fontSize: 18,
+                                }}
+                              >
+                                {this.state.IDtoUsers.get(k)}
+                              </p>
+                            </List>
+                          )}
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    <div>
+                      {this.state.activities.map((data, i) => (
+                        <div key={i}>
+                          <List>
+                            <p
+                              style={{
+                                color: "white",
+                                margin: 0,
+                                fontSize: 18,
+                              }}
+                            >
+                              {data}
+                            </p>
+                          </List>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -447,7 +615,7 @@ class Chatroom extends Component {
               chatstyle={{
                 position: "absolute",
                 height: "100%",
-                width: "70%",
+                width: "60%",
                 right: 0,
                 textAlign: "center",
               }}
