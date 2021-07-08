@@ -42,7 +42,7 @@ class Meet extends Component {
       sdpConstraints: {
         mandatory: {
           OfferToReceiveAudio: true,
-          OfferToReceiveVideo: true,
+          OfferToReceiveVideo: false,
         },
       },
       messages: [],
@@ -198,6 +198,20 @@ class Meet extends Component {
           };
         });
       };
+
+      // pc.onnegotiationneeded = () => {
+      //   pc.createOffer(this.state.sdpConstraints)
+      //     .then((sdp) => {
+      //       return pc.setLocalDescription(sdp);
+      //     })
+      //     .then(() => {
+      //       const sdp = pc.localDescription;
+      //       this.sendToPeer("offer", sdp, {
+      //         local: this.socket.id,
+      //         remote: socketID,
+      //       });
+      //     });
+      // };
 
       pc.close = () => {
         // alert('GONE')
@@ -460,7 +474,7 @@ class Meet extends Component {
     let peerConnectionList = this.state.peerConnections;
     const currentlocalstream = this.state.localStream;
     navigator.mediaDevices
-      .getDisplayMedia({ cursor: true })
+      .getDisplayMedia({ cursor: true, frameRate: { max: 10 } })
       .then((stream) => {
         const screenTrack = stream.getTracks()[0];
         for (const id in peerConnectionList) {
@@ -477,14 +491,15 @@ class Meet extends Component {
         });
         screenTrack.onended = () => {
           console.log("STREAM ENDED");
+          let newpeerConnectionList = this.state.peerConnections;
           window.localStream = currentlocalstream; //this is a global variable available through the app, attacking stream to this local variable
           this.setState({
             localStream: currentlocalstream, //updates the localstream
             sharingScreen: false,
           });
           const newscreenTrack = currentlocalstream.getTracks()[1];
-          for (const id in peerConnectionList) {
-            peerConnectionList[id].getSenders().forEach(async (s) => {
+          for (const id in newpeerConnectionList) {
+            newpeerConnectionList[id].getSenders().forEach(async (s) => {
               if (s.track && s.track.kind === "video") {
                 await s.replaceTrack(newscreenTrack);
               }

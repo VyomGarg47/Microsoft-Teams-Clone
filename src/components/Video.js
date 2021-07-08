@@ -26,11 +26,6 @@ class Video extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.StartedScreenSharing === true) {
-      if (this.state.camera === true) {
-        this.mutecamera();
-      }
-    }
     // console.log('1. nextProps', this.props.showMuteControls, nextProps.videoStream && nextProps.videoStream.getTracks())
     console.log("1", this.props.videoType, nextProps.videoStream);
 
@@ -104,12 +99,6 @@ class Video extends Component {
   };
   sendData = (e) => {
     this.props.parentCallback(true);
-  };
-
-  screenShareStarted = () => {
-    if (this.state.camera == false) {
-      this.mutecamera();
-    }
   };
 
   render() {
