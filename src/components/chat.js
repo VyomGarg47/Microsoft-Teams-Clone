@@ -88,16 +88,13 @@ const Chat = (props) => {
         src={data}
         style={{
           backgroundColor: "black",
-          position: "relative",
           zIndex: 100,
-          display: "block",
           cursor: "pointer",
           marginLeft: "auto",
           marginRight: "auto",
           padding: 20,
           borderRadius: 20,
-          maxHeight: "100%",
-          maxWidth: "100%",
+          objectFit: "contain",
         }}
         onClick={() => setImageZoom(false)}
         alt=""
