@@ -26,6 +26,11 @@ class Video extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.StartedScreenSharing === true) {
+      if (this.state.camera === true) {
+        this.mutecamera();
+      }
+    }
     // console.log('1. nextProps', this.props.showMuteControls, nextProps.videoStream && nextProps.videoStream.getTracks())
     console.log("1", this.props.videoType, nextProps.videoStream);
 
@@ -100,6 +105,13 @@ class Video extends Component {
   sendData = (e) => {
     this.props.parentCallback(true);
   };
+
+  screenShareStarted = () => {
+    if (this.state.camera == false) {
+      this.mutecamera();
+    }
+  };
+
   render() {
     const muteControls = this.props.showMuteControls && (
       <div
@@ -109,19 +121,28 @@ class Video extends Component {
           justifyContent: "space-evenly",
         }}
       >
-        <IconButton
-          disabled={this.props.sharingScreen}
-          style={{ color: (this.state.mic && "white") || "#bf3459" }}
-          onClick={this.mutemic}
-        >
-          {this.state.mic === true ? <MicIcon /> : <MicOffIcon />}
-        </IconButton>
-        <IconButton
-          style={{ color: (this.state.camera && "white") || "#bf3459" }}
-          onClick={this.mutecamera}
-        >
-          {this.state.camera === true ? <VideocamIcon /> : <VideocamOffIcon />}
-        </IconButton>
+        {this.props.sharingScreen === false ? (
+          <IconButton
+            style={{ color: (this.state.mic && "white") || "#bf3459" }}
+            onClick={this.mutemic}
+          >
+            {this.state.mic === true ? <MicIcon /> : <MicOffIcon />}
+          </IconButton>
+        ) : null}
+
+        {this.props.sharingScreen === false ? (
+          <IconButton
+            style={{ color: (this.state.camera && "white") || "#bf3459" }}
+            onClick={this.mutecamera}
+          >
+            {this.state.camera === true ? (
+              <VideocamIcon />
+            ) : (
+              <VideocamOffIcon />
+            )}
+          </IconButton>
+        ) : null}
+
         {this.props.showEndCall === true ? (
           <Button
             style={{

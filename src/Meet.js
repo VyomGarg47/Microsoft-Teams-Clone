@@ -63,9 +63,10 @@ class Meet extends Component {
     };
     this.socket = null;
     this.recordVideo = null;
+    this.child = React.createRef();
     //PRODUCTION
-    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
@@ -446,6 +447,15 @@ class Meet extends Component {
         window.location.href
     );
   };
+  verifyshareScreen = () => {
+    if (this.state.numberOfUsers > 1) {
+      this.shareScreen();
+    } else {
+      alert(
+        "Total participants in the meeting must be greater than 1 to start screen sharing."
+      );
+    }
+  };
   shareScreen = () => {
     let peerConnectionList = this.state.peerConnections;
     const currentlocalstream = this.state.localStream;
@@ -725,6 +735,7 @@ class Meet extends Component {
                     height: 300,
                     backgroundColor: "black",
                   }}
+                  sharingScreen={this.state.sharingScreen}
                   showMuteControls={true}
                   videoStream={localStream}
                   parentCallback={this.callbackFunction}
@@ -777,7 +788,7 @@ class Meet extends Component {
                   marginLeft: 5,
                   marginBottom: 5,
                 }}
-                onClick={this.shareScreen}
+                onClick={this.verifyshareScreen}
                 className="side-panel-button"
                 disabled={this.state.sharingScreen}
                 startIcon={<ScreenShareIcon style={{ color: "#9ea2ff" }} />}
