@@ -166,9 +166,6 @@ class Chatroom extends Component {
 
   copyUrl = () => {
     let text = window.location.href;
-    // this.setState({
-    //   activities: this.state.activities.concat("Link Copied"),
-    // });
     navigator.clipboard.writeText(text).then(
       function () {
         toast.success("Link copied to clipboard!", {
@@ -548,12 +545,14 @@ class Chatroom extends Component {
                   </Button>
                 </div>
                 <div
+                  className="scroll-panel"
                   style={{
                     margin: 10,
                     backgroundColor: "#545c84",
                     padding: 10,
                     borderRadius: 5,
                     textAlign: "center",
+                    maxHeight: "calc(100% - 550px)",
                   }}
                 >
                   {this.state.activitypanel === false ? (
@@ -591,21 +590,24 @@ class Chatroom extends Component {
                     </div>
                   ) : (
                     <div>
-                      {this.state.activities.map((data, i) => (
-                        <div key={i}>
-                          <List>
-                            <p
-                              style={{
-                                color: "white",
-                                margin: 0,
-                                fontSize: 18,
-                              }}
-                            >
-                              {data}
-                            </p>
-                          </List>
-                        </div>
-                      ))}
+                      {this.state.activities
+                        .slice(0)
+                        .reverse()
+                        .map((data, i) => (
+                          <div key={i}>
+                            <List>
+                              <p
+                                style={{
+                                  color: "white",
+                                  margin: 0,
+                                  fontSize: 18,
+                                }}
+                              >
+                                {data}
+                              </p>
+                            </List>
+                          </div>
+                        ))}
                     </div>
                   )}
                 </div>

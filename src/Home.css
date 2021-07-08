@@ -386,3 +386,9 @@ input.textarea {
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 30px;
 }
+
+.scroll-panel {
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  padding-bottom: 70px;
+}
