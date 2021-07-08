@@ -147,7 +147,7 @@ const Chat = (props) => {
                     data: e.target.result,
                   },
                 });
-              else alert("Message exceeds Maximum Message Size!");
+              else alert("File exceeds maximum allowed size!");
             };
 
             reader.readAsDataURL(files[0]);

@@ -718,7 +718,7 @@ class Meet extends Component {
                   startmic={true}
                   startvid={true}
                   showEndCall={false}
-                  showControls={true}
+                  showControls={false}
                   autoPlay
                   muted
                 ></Video>
@@ -926,6 +926,7 @@ class Meet extends Component {
                   backgroundColor: "#545c84",
                   padding: 10,
                   borderRadius: 5,
+                  textAlign: "center",
                 }}
               >
                 {statusText}
@@ -988,7 +989,7 @@ class Meet extends Component {
                 changeCamera={this.changeCameraBeforeJoin}
                 showEndCall={true}
                 autoPlay
-                showControls={true}
+                showControls={false}
                 muted
               ></Video>
             </div>
