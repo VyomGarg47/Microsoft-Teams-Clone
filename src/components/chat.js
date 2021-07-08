@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import DragDrop from "./dragDrop";
 import IconButton from "@material-ui/core/IconButton";
 import EmojiEmotionsIcon from "@material-ui/icons/EmojiEmotions";
+import Modal from "@material-ui/core/Modal";
+
 const Chat = (props) => {
   const [message, setMessage] = useState("");
   const [user, setUser] = useState({ uid: 0 });
@@ -94,6 +96,8 @@ const Chat = (props) => {
           marginRight: "auto",
           padding: 20,
           borderRadius: 20,
+          maxHeight: "100%",
+          maxWidth: "100%",
         }}
         onClick={() => setImageZoom(false)}
         alt=""
@@ -103,8 +107,25 @@ const Chat = (props) => {
 
   return (
     <div>
-      {imageZoom && showEnlargedImage(selectedImage)}
-
+      {/* {imageZoom && showEnlargedImage(selectedImage)} */}
+      <Modal
+        open={imageZoom}
+        onClose={() => {
+          setImageZoom(false);
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            overflow: "auto",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          {showEnlargedImage(selectedImage)}
+        </div>
+      </Modal>
       <div
         className="chatWindow"
         style={{
