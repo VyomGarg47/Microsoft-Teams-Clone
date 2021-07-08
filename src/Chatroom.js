@@ -41,8 +41,8 @@ class Chatroom extends Component {
     };
     this.socket = null;
     //PRODUCTION
-    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   sendToPeer = (messageType, payload, socketID) => {
     console.log("sendToPeer");

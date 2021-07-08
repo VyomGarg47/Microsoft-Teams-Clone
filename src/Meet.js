@@ -21,6 +21,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import EmailIcon from "@material-ui/icons/Email";
 import Note from "@material-ui/icons/Note";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import PanToolIcon from "@material-ui/icons/PanTool";
 import { Link } from "react-router-dom";
 
 class Meet extends Component {
@@ -55,19 +56,21 @@ class Meet extends Component {
         : "User_" + Math.random().toString(36).substring(2, 7),
       numberOfUsers: 1,
       IDtoUsers: new Map(),
+      HandIDtoUsers: new Map(),
       micstart: true,
       vidstart: true,
       sharingScreen: false,
       color: "#000000",
       size: "5",
       recordingVideo: false,
+      Handraise: false,
     };
     this.socket = null;
     this.recordVideo = null;
     this.child = React.createRef();
     //PRODUCTION
-    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
@@ -266,6 +269,7 @@ class Meet extends Component {
           progress: undefined,
         });
         const receivedMap = new Map(data.clientsideList);
+        const HandRaiseMap = new Map(data.RaiseHandList);
         if (this.state.peerConnections[data.socketID]) {
           this.state.peerConnections[data.socketID].close();
           // get and stop remote audio and video tracks of the disconnected peer
@@ -299,12 +303,13 @@ class Meet extends Component {
                   : "Waiting for other peers to connect",
               numberOfUsers: data.peerCount,
               IDtoUsers: receivedMap,
+              HandIDtoUsers: HandRaiseMap,
             };
           });
         }
       }
     });
-    this.socket.on("adduser", (IDtoUsersList, username) => {
+    this.socket.on("adduser", (IDtoUsersList, username, HandRaiseList) => {
       if (username) {
         toast.info(`${username} joined the meeting`, {
           position: "bottom-left",
@@ -318,13 +323,22 @@ class Meet extends Component {
       }
       const peerCount = IDtoUsersList.length;
       const receivedMap = new Map(IDtoUsersList);
+      const HandRaiseMap = new Map(HandRaiseList);
       this.setState({
         IDtoUsers: receivedMap,
+        HandIDtoUsers: HandRaiseMap,
         status:
           peerCount > 1
             ? `Total Number of participants: ${peerCount}`
             : "Waiting for other people to join",
         numberOfUsers: peerCount,
+      });
+    });
+
+    this.socket.on("handraise", (HandRaiseList) => {
+      const receivedMap = new Map(HandRaiseList);
+      this.setState({
+        HandIDtoUsers: receivedMap,
       });
     });
 
@@ -517,6 +531,15 @@ class Meet extends Component {
   };
 
   startRecording = () => {
+    toast.success("Started Recording", {
+      position: "bottom-left",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+    });
     this.recordVideo = RecordRTC(this.state.localStream, {
       type: "video",
       mimeType: "video/webm; codecs=vp9",
@@ -528,6 +551,15 @@ class Meet extends Component {
   };
 
   stopRecording = () => {
+    toast.success("Stopped Recording", {
+      position: "bottom-left",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+    });
     this.setState({
       recordingVideo: false,
     });
@@ -551,6 +583,20 @@ class Meet extends Component {
     this.setState({
       openCanvas: false,
     });
+  };
+
+  RaiseHand = () => {
+    if (this.state.Handraise === false) {
+      this.socket.emit("hand-raise", this.state.username);
+      this.setState({
+        Handraise: !this.state.Handraise,
+      });
+    } else {
+      this.socket.emit("hand-lower");
+      this.setState({
+        Handraise: !this.state.Handraise,
+      });
+    }
   };
 
   render() {
@@ -859,7 +905,14 @@ class Meet extends Component {
                   marginBottom: 5,
                   marginRight: 5,
                 }}
-                startIcon={<RadioButtonChecked style={{ color: "#9ea2ff" }} />}
+                startIcon={
+                  <RadioButtonChecked
+                    style={{
+                      color:
+                        this.state.recordingVideo === false ? "#9ea2ff" : "red",
+                    }}
+                  />
+                }
                 onClick={() => {
                   if (this.state.recordingVideo === false) {
                     this.startRecording();
@@ -871,6 +924,19 @@ class Meet extends Component {
                 {this.state.recordingVideo === false
                   ? "Start Recording"
                   : "Stop Recording"}
+              </Button>
+              <Button
+                style={{
+                  backgroundColor: "#424242",
+                  color: "white",
+                  marginTop: 5,
+                  marginBottom: 5,
+                }}
+                startIcon={<PanToolIcon style={{ color: "yellow" }} />}
+                onClick={this.RaiseHand}
+                className="side-panel-button"
+              >
+                {this.state.Handraise === false ? "Raise Hand" : "Lower Hand"}
               </Button>
             </div>
             <div style={{ zIndex: 150, position: "relative" }}>
@@ -975,6 +1041,26 @@ class Meet extends Component {
                 }}
               >
                 {statusText}
+              </div>
+              <div
+                style={{
+                  margin: 10,
+                  backgroundColor: "#545c84",
+                  padding: 10,
+                  borderRadius: 5,
+                  textAlign: "center",
+                }}
+              >
+                {[...this.state.HandIDtoUsers.keys()].map((k) => (
+                  <div>
+                    <List>
+                      <p style={{ color: "white", margin: 0 }}>
+                        {this.state.HandIDtoUsers.get(k)}{" "}
+                        <PanToolIcon style={{ color: "yellow" }} />
+                      </p>
+                    </List>
+                  </div>
+                ))}
               </div>
               <div
                 style={{

@@ -14,6 +14,7 @@ const rooms = {};
 const messages = {};
 const IDtoUsers = {};
 const IDtoUsersRoom = {};
+const IDtoUsersHandRaise = {};
 app.use(compression({ threshold: 0 }));
 app.use(express.static(__dirname + "/build")); //once app is build, the react server which was originally at 3000 will now serve at 8080
 app.get("*", (req, res) => {
@@ -49,6 +50,10 @@ peers.on("connection", (socket) => {
   const disconnectedPeer = (socketID, username) => {
     const _connectedPeers = rooms[room];
     const clientsideList = Array.from(IDtoUsers[room]);
+    let RaiseHandList = [];
+    if (IDtoUsersHandRaise[room]) {
+      RaiseHandList = Array.from(IDtoUsersHandRaise[room]);
+    }
     //emitting to every peer on this room the disconnected peer
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("peer-disconnected", {
@@ -56,6 +61,7 @@ peers.on("connection", (socket) => {
         socketID,
         clientsideList,
         username,
+        RaiseHandList,
       });
     }
   };
@@ -85,6 +91,9 @@ peers.on("connection", (socket) => {
     console.log("disconnected");
     rooms[room].delete(socket.id);
     //messages[room] = rooms[room].size === 0 ? null : messages[room];
+    if (IDtoUsersHandRaise[room] && IDtoUsersHandRaise[room].has(socket.id)) {
+      IDtoUsersHandRaise[room].delete(socket.id);
+    }
     if (IDtoUsers[room] && IDtoUsers[room].has(socket.id)) {
       const username = IDtoUsers[room].get(socket.id);
       IDtoUsers[room].delete(socket.id);
@@ -109,8 +118,38 @@ peers.on("connection", (socket) => {
       (IDtoUsers[room] && IDtoUsers[room].set(socket.id, username)) ||
       new Map().set(socket.id, username);
     const _connectedPeers = rooms[room];
+    let HandRaiseList = [];
+    if (IDtoUsersHandRaise[room]) {
+      HandRaiseList = Array.from(IDtoUsersHandRaise[room]);
+    }
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
-      _socket.emit("adduser", Array.from(IDtoUsers[room]), username);
+      _socket.emit(
+        "adduser",
+        Array.from(IDtoUsers[room]),
+        username,
+        HandRaiseList
+      );
+    }
+  });
+
+  socket.on("hand-raise", (username) => {
+    IDtoUsersHandRaise[room] =
+      (IDtoUsersHandRaise[room] &&
+        IDtoUsersHandRaise[room].set(socket.id, username)) ||
+      new Map().set(socket.id, username);
+    const _connectedPeers = rooms[room];
+    for (const [_socketID, _socket] of _connectedPeers.entries()) {
+      _socket.emit("handraise", Array.from(IDtoUsersHandRaise[room]));
+    }
+  });
+
+  socket.on("hand-lower", () => {
+    if (IDtoUsersHandRaise[room] && IDtoUsersHandRaise[room].has(socket.id)) {
+      IDtoUsersHandRaise[room].delete(socket.id);
+      const _connectedPeers = rooms[room];
+      for (const [_socketID, _socket] of _connectedPeers.entries()) {
+        _socket.emit("handraise", Array.from(IDtoUsersHandRaise[room]));
+      }
     }
   });
 
