@@ -110,6 +110,7 @@ class Video extends Component {
         }}
       >
         <IconButton
+          disabled={this.props.sharingScreen}
           style={{ color: (this.state.mic && "white") || "#bf3459" }}
           onClick={this.mutemic}
         >

@@ -449,37 +449,42 @@ class Meet extends Component {
   shareScreen = () => {
     let peerConnectionList = this.state.peerConnections;
     const currentlocalstream = this.state.localStream;
-    navigator.mediaDevices.getDisplayMedia({ cursor: true }).then((stream) => {
-      const screenTrack = stream.getTracks()[0];
-      for (const id in peerConnectionList) {
-        peerConnectionList[id].getSenders().forEach(async (s) => {
-          if (s.track && s.track.kind === "video") {
-            await s.replaceTrack(screenTrack);
-          }
-        });
-      }
-      window.localStream = stream; //this is a global variable available through the app, attacking stream to this local variable
-      this.setState({
-        localStream: stream,
-        sharingScreen: true,
-      });
-      screenTrack.onended = () => {
-        console.log("STREAM ENDED");
-        window.localStream = currentlocalstream; //this is a global variable available through the app, attacking stream to this local variable
-        this.setState({
-          localStream: currentlocalstream, //updates the localstream
-          sharingScreen: false,
-        });
-        const newscreenTrack = currentlocalstream.getTracks()[1];
+    navigator.mediaDevices
+      .getDisplayMedia({ cursor: true })
+      .then((stream) => {
+        const screenTrack = stream.getTracks()[0];
         for (const id in peerConnectionList) {
           peerConnectionList[id].getSenders().forEach(async (s) => {
             if (s.track && s.track.kind === "video") {
-              await s.replaceTrack(newscreenTrack);
+              await s.replaceTrack(screenTrack);
             }
           });
         }
-      };
-    });
+        window.localStream = stream; //this is a global variable available through the app, attacking stream to this local variable
+        this.setState({
+          localStream: stream,
+          sharingScreen: true,
+        });
+        screenTrack.onended = () => {
+          console.log("STREAM ENDED");
+          window.localStream = currentlocalstream; //this is a global variable available through the app, attacking stream to this local variable
+          this.setState({
+            localStream: currentlocalstream, //updates the localstream
+            sharingScreen: false,
+          });
+          const newscreenTrack = currentlocalstream.getTracks()[1];
+          for (const id in peerConnectionList) {
+            peerConnectionList[id].getSenders().forEach(async (s) => {
+              if (s.track && s.track.kind === "video") {
+                await s.replaceTrack(newscreenTrack);
+              }
+            });
+          }
+        };
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   startRecording = () => {
@@ -991,6 +996,7 @@ class Meet extends Component {
                 }}
                 showMuteControls={true}
                 // ref={this.localVideoref}
+                sharingScreen={this.state.sharingScreen}
                 startmic={this.state.micstart}
                 startvid={this.state.vidstart}
                 videoStream={localStream}
