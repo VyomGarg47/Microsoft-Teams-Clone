@@ -1,3 +1,4 @@
+"use strict";
 const express = require("express");
 const http = require("http");
 const compression = require("compression");
@@ -15,7 +16,7 @@ const messages = {};
 const IDtoUsers = {};
 const IDtoUsersRoom = {};
 const IDtoUsersHandRaise = {};
-app.use(compression({ threshold: 0 }));
+app.use(compression()); //Compress all HTTP responses, Gzip
 app.use(express.static(__dirname + "/build")); //once app is build, the react server which was originally at 3000 will now serve at 8080
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/build/index.html"));
@@ -47,33 +48,21 @@ peers.on("connection", (socket) => {
     messages: messages[room],
   });
 
-  const disconnectedPeer = (socketID, username) => {
+  const disconnectedPeer = (socketID) => {
     const _connectedPeers = rooms[room];
-    const clientsideList = Array.from(IDtoUsers[room]);
-    let RaiseHandList = [];
-    if (IDtoUsersHandRaise[room]) {
-      RaiseHandList = Array.from(IDtoUsersHandRaise[room]);
-    }
-    //emitting to every peer on this room the disconnected peer
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("peer-disconnected", {
         peerCount: IDtoUsers[room].size,
         socketID,
-        clientsideList,
-        username,
-        RaiseHandList,
       });
     }
   };
 
-  const disconnectedPeerRoom = (socketID, username) => {
+  const disconnectedPeerRoom = (socketID) => {
     const _connectedPeers = rooms[room];
-    const clientsideListchatroom = Array.from(IDtoUsersRoom[room]);
-    //emitting to every peer on this room the disconnected peer
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("peer-disconnected-chatroom", {
-        clientsideListchatroom,
-        username,
+        socketID,
       });
     }
   };
@@ -95,14 +84,12 @@ peers.on("connection", (socket) => {
       IDtoUsersHandRaise[room].delete(socket.id);
     }
     if (IDtoUsers[room] && IDtoUsers[room].has(socket.id)) {
-      const username = IDtoUsers[room].get(socket.id);
       IDtoUsers[room].delete(socket.id);
-      disconnectedPeer(socket.id, username);
+      disconnectedPeer(socket.id);
     }
     if (IDtoUsersRoom[room] && IDtoUsersRoom[room].has(socket.id)) {
-      const username = IDtoUsersRoom[room].get(socket.id);
       IDtoUsersRoom[room].delete(socket.id);
-      disconnectedPeerRoom(socket.id, username);
+      disconnectedPeerRoom(socket.id);
     }
   });
 

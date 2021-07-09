@@ -41,8 +41,8 @@ class Chatroom extends Component {
     };
     this.socket = null;
     //PRODUCTION
-    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   sendToPeer = (messageType, payload, socketID) => {
     console.log("sendToPeer");
@@ -130,7 +130,8 @@ class Chatroom extends Component {
       });
     });
     this.socket.on("peer-disconnected-chatroom", (data) => {
-      toast.info(`${data.username} has left the room`, {
+      const username = this.state.IDtoUsers.get(data.socketID);
+      toast.info(`${username} has left the room`, {
         position: "bottom-left",
         autoClose: 1500,
         hideProgressBar: false,
@@ -139,12 +140,13 @@ class Chatroom extends Component {
         draggable: true,
         progress: undefined,
       });
-      const receivedMap = new Map(data.clientsideListchatroom);
+      //const receivedMap = new Map(data.clientsideListchatroom);
+      this.state.IDtoUsers.delete(data.socketID);
       this.setState({
         activities: this.state.activities.concat(
-          `${data.username} has left the room`
+          `${username} has left the room`
         ),
-        IDtoUsers: receivedMap,
+        IDtoUsers: this.state.IDtoUsers,
       });
     });
   };

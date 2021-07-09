@@ -69,8 +69,8 @@ class Meet extends Component {
     this.recordVideo = null;
     this.child = React.createRef();
     //PRODUCTION
-    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
@@ -259,7 +259,8 @@ class Meet extends Component {
     this.socket.on("peer-disconnected", (data) => {
       // close peer-connection with this peer
       if (this.state.IDtoUsers.has(data.socketID)) {
-        toast.info(`${data.username} has left the meeting`, {
+        const username = this.state.IDtoUsers.get(data.socketID);
+        toast.info(`${username} has left the meeting`, {
           position: "bottom-left",
           autoClose: 1500,
           hideProgressBar: false,
@@ -268,8 +269,8 @@ class Meet extends Component {
           draggable: true,
           progress: undefined,
         });
-        const receivedMap = new Map(data.clientsideList);
-        const HandRaiseMap = new Map(data.RaiseHandList);
+        this.state.IDtoUsers.delete(data.socketID);
+        this.state.HandIDtoUsers.delete(data.socketID);
         if (this.state.peerConnections[data.socketID]) {
           this.state.peerConnections[data.socketID].close();
           // get and stop remote audio and video tracks of the disconnected peer
@@ -302,8 +303,8 @@ class Meet extends Component {
                       .pop()}: ${data.peerCount}`
                   : "Waiting for other peers to connect",
               numberOfUsers: data.peerCount,
-              IDtoUsers: receivedMap,
-              HandIDtoUsers: HandRaiseMap,
+              IDtoUsers: this.state.IDtoUsers,
+              HandIDtoUsers: this.state.HandIDtoUsers,
             };
           });
         }
