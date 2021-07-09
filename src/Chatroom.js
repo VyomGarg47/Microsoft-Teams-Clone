@@ -118,11 +118,13 @@ class Chatroom extends Component {
           activities: this.state.activities.concat(
             `${username} just started a meeting`
           ),
+          numberOfUsers: peerCount,
+        });
+      } else {
+        this.setState({
+          numberOfUsers: peerCount,
         });
       }
-      this.setState({
-        numberOfUsers: peerCount,
-      });
     });
     this.socket.on("peer-disconnected", (data) => {
       this.setState({
