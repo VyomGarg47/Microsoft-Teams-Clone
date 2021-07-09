@@ -54,9 +54,10 @@ class Meet extends Component {
       disconnected: false,
       askForUsername: true,
       //username: "User_" + Math.random().toString(36).substring(2, 7),
-      username: this.props.location.state
-        ? this.props.location.state.user
-        : "User_" + Math.random().toString(36).substring(2, 7),
+      username:
+        this.props.location && this.props.location.state
+          ? this.props.location.state.user
+          : "User_" + Math.random().toString(36).substring(2, 7),
       numberOfUsers: 1,
       IDtoUsers: new Map(),
       HandIDtoUsers: new Map(),

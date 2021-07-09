@@ -30,17 +30,19 @@ class Chatroom extends Component {
       messages: [],
       activitypanel: false,
       activities: [],
-      username: this.props.location.state
-        ? this.props.location.state.user
-        : "User_" + Math.random().toString(36).substring(2, 7),
+      username:
+        this.props.location && this.props.location.state
+          ? this.props.location.state.user
+          : "User_" + Math.random().toString(36).substring(2, 7),
       numberOfUsers: 0,
       openCanvas: false,
       IDtoUsers: new Map(),
       color: "#000000",
       size: "5",
-      askForUsername: this.props.location.state
-        ? this.props.location.state.askForUsername
-        : true,
+      askForUsername:
+        this.props.location && this.props.location.state
+          ? this.props.location.state.askForUsername
+          : true,
     };
     this.socket = null;
     //PRODUCTION
