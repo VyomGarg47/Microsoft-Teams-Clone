@@ -72,13 +72,13 @@ class Meet extends Component {
     this.recordVideo = null;
     this.child = React.createRef();
     //PRODUCTION
-    //this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    this.serviceIP = "/webrtcPeer";
+    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
+    //this.serviceIP = "/webrtcPeer";
   }
   getLocalStream = () => {
     // called when getUserMedia() successfully returns
     const success = (stream) => {
-      window.localStream = stream; //this is a global variable available through the app, attacking stream to this local variable
+      window.localStream = stream; //this is a global variable available through the app, attaching stream to this local variable
       this.setState({
         localStream: stream, //updates the localstream
       });
@@ -86,8 +86,8 @@ class Meet extends Component {
     };
     // called when getUserMedia() fails
     const failure = (e) => {
-      window.location.href = "/error";
       console.log("getUserMedia Error: ", e);
+      window.location.href = "/error";
     };
     const constraints = {
       audio: true,
