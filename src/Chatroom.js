@@ -1,24 +1,27 @@
 import React, { Component } from "react";
-import Button from "@material-ui/core/Button";
-import Input from "@material-ui/core/Input";
-import List from "@material-ui/core/List";
-import Chat from "./components/chat";
-import Board from "./components/Board";
 import io from "socket.io-client";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast, Slide } from "react-toastify";
+import screenfull from "screenfull";
+
+import Chat from "./components/chat";
+import Board from "./components/Board";
 import Picture6 from "./images/Picture6.png";
+import connectSound from "./sounds/connect.mp3";
+import notificationSound from "./sounds/notification.mp3";
+
+import Button from "@material-ui/core/Button";
+import Input from "@material-ui/core/Input";
+import List from "@material-ui/core/List";
+
 import LinkIcon from "@material-ui/icons/Link";
 import EmailIcon from "@material-ui/icons/Email";
-import screenfull from "screenfull";
 import Fullscreen from "@material-ui/icons/Fullscreen";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PeopleIcon from "@material-ui/icons/People";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Note from "@material-ui/icons/Note";
-import connectSound from "./sounds/connect.mp3";
-import notificationSound from "./sounds/notification.mp3";
 
 class Chatroom extends Component {
   constructor(props) {

@@ -1,19 +1,23 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
+import { ToastContainer, toast, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+import screenfull from "screenfull";
+import RecordRTC from "recordrtc/RecordRTC";
+import { Link } from "react-router-dom";
+
 import Video from "./components/Video";
 import Videos from "./components/Videos";
 import Chat from "./components/chat";
 import Board from "./components/Board";
-import Input from "@material-ui/core/Input";
-import Button from "@material-ui/core/Button";
-import List from "@material-ui/core/List";
-import { ToastContainer, toast, Slide } from "react-toastify";
+
 import connectSound from "./sounds/connect.mp3";
 import disconnectSound from "./sounds/disconnect.mp3";
 import notificationSound from "./sounds/notification.mp3";
-import "react-toastify/dist/ReactToastify.min.css";
-import screenfull from "screenfull";
-import RecordRTC from "recordrtc/RecordRTC";
+
+import Input from "@material-ui/core/Input";
+import Button from "@material-ui/core/Button";
+import List from "@material-ui/core/List";
 import ScreenShareIcon from "@material-ui/icons/ScreenShare";
 import Fullscreen from "@material-ui/icons/Fullscreen";
 import RadioButtonChecked from "@material-ui/icons/RadioButtonChecked";
@@ -22,7 +26,6 @@ import EmailIcon from "@material-ui/icons/Email";
 import Note from "@material-ui/icons/Note";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import PanToolIcon from "@material-ui/icons/PanTool";
-import { Link } from "react-router-dom";
 
 class Meet extends Component {
   constructor(props) {
