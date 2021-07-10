@@ -1,3 +1,4 @@
+<img width="100%">![Readme Top](https://user-images.githubusercontent.com/55129843/125173135-3ba9c000-e1db-11eb-86b4-b2cce9498fdb.png)</img>
 # Microsoft Teams Clone
 
 ## Introduction
