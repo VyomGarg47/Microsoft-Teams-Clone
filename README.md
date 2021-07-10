@@ -73,8 +73,8 @@ Tech stack used primarily includes:
 * Jest and React-testing libraries
 
 ## Getting started
-Prerequisites: Node.js(https://nodejs.org/en/)
-Clone the repository
+Prerequisites: [Node.js](https://nodejs.org/en/).
+Clone the repository.
 Then run the following commands in the project root folder.
 * ```npm install ```
 * ```npm run build```
