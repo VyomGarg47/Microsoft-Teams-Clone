@@ -1,70 +1,86 @@
-# Getting Started with Create React App
+# Microsoft Teams Clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Introduction
 
-## Available Scripts
+This project aims to build a video conferencing website that is easy to use, provides good video quality and latency, and contains all the necessary features for an engaging and complete video call experience.
 
-In the project directory, you can run:
+Best works with: Chrome, Edge.
 
-### `yarn start`
+Check out the demo at: https://teams-clone-engage2k21.herokuapp.com/
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Features
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Primary features 
 
-### `yarn test`
+* An unlimited number of conference rooms without any call time limitations.
+* Support for multiple participants in each room.
+* Screen sharing to present documents, slides, and more.
+* Share photos and chat with your friends.
+* Continue your conversation before or after the meeting in the chatroom.
+* Persistent chats so you won’t have to worry about losing them.
+* Simple collaborative whiteboard for teaching and sharing new ideas.
+* Raise your hand in the meeting to ask a question.
+* Support for Toast notifications.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Secondary features
 
-### `yarn build`
+* Record your screen, audio, and video.
+* Activity center so you won’t miss any notifications.
+* Emojis that allow you to express yourself.
+* Full-screen mode for Video elements.
+* Option to mute audio of each participant.
+* Customize username, adjust audio and video before joining the meeting.
+* Copy and share Room URLs easily.
+* Sound notifications for better user experience.
+* Direct peer-to-peer connections ensure low latency thanks to WebRTC.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Instructions
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* To start a meeting, visit https://teams-clone-engage2k21.herokuapp.com/, then click on the “Go” button to create a new room or enter an existing room URL to join that room.
+* After the room is created, set up your username and click on the “Join Room” button.
+* In the chatroom,
+  * Chat with the room participants using the Meeting Chat.
+  * Share photos by dragging and dropping them on the "Enter your message" panel.
+  * Copy the chat room URL using the “Copy Invite Link” button.
+  * Check out the recent activities by clicking on the “Activity” button on the sidebar.
+  * Start an instant meeting by using the “Create a meeting” button.
+* Before joining,
+  * Allow the permissions for using your camera and microphone.
+  * Adjust your audio and video before joining the meeting.
+* In the meeting,
+  * Toggle your audio and video, or end the call using the buttons on the top right, just below your stream.
+  * Copy the room URL using the “Copy Invite Link” button.
+  * Switch between the streams of different participants by clicking on it from the bottom panel.
+  * Mute or unmute the participants by clicking on the button with three dots on their stream and then clicking mute.
+  * Share your screen, go fullscreen, start recording, raise your hand or open a collaborative whiteboard using their respective      buttons on the top.
+  * Use “Go back to room” if you want to go back to the chatroom.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Agile methodology used
+* Scrum.
+* CI/CD and TDD.
 
-### `yarn eject`
+## Technical Stack
+Tech stack used primarily includes:
+* Socket.IO
+* React
+* Node.js
+* Express.js
+* React-toastify
+* RecordRTC
+* Screenfull
+* Compression
+* Material-UI
+* Jest and React-testing libraries
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Getting started
+Prerequisites: Node.js(https://nodejs.org/en/)
+Clone the repository
+Then run the following commands in the project root folder.
+* ```npm install ```
+* ```npm run build```
+* ```node server.js```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Additional Resources
+An excellent series on WebRTC by Amir Eshaq
+* https://youtu.be/h2WkZ0h0-Rc
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
