@@ -35,6 +35,26 @@ Check out the demo at: https://teams-clone-engage2k21.herokuapp.com/
 * Sound notifications for better user experience.
 * Direct peer-to-peer connections ensure low latency thanks to WebRTC.
 
+## Demo
+### Video Meeting
+![video meeting](https://user-images.githubusercontent.com/55129843/125177227-a4069a80-e1f7-11eb-9269-b0378bd176d7.png)
+### Chatroom
+![chatroom](https://user-images.githubusercontent.com/55129843/125177233-b5e83d80-e1f7-11eb-8670-0f3998aac8e5.png)
+### Send photos in meeting chats!
+![send image](https://user-images.githubusercontent.com/55129843/125177230-ae289900-e1f7-11eb-8702-d9c5c8c07362.png)
+### Share your screen!
+![share screen](https://user-images.githubusercontent.com/55129843/125177238-c00a3c00-e1f7-11eb-9901-a98894916d91.png)
+### Join meeting directly from chatroom, and adjust your audio and video!
+![Joining meeting](https://user-images.githubusercontent.com/55129843/125177334-88e85a80-e1f8-11eb-8931-adc376b852c4.gif)
+### Switch between different participants !
+![Participants control](https://user-images.githubusercontent.com/55129843/125177279-1b3c2e80-e1f8-11eb-8822-f48a959750c4.gif)
+### Collaborative Whiteboard for better learning experience !
+![whiteboard](https://user-images.githubusercontent.com/55129843/125177286-28591d80-e1f8-11eb-8574-ab21c9a6fc53.gif)
+
+
+
+
+
 ## Instructions
 
 * To start a meeting, visit https://teams-clone-engage2k21.herokuapp.com/, then click on the “Go” button to create a new room or enter an existing room URL to join that room.
