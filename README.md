@@ -48,6 +48,8 @@ Check out the demo at: https://teams-clone-engage2k21.herokuapp.com/
 ![Joining meeting](https://user-images.githubusercontent.com/55129843/125177334-88e85a80-e1f8-11eb-8931-adc376b852c4.gif)
 ### Pin and mute different participants!
 ![Participants control](https://user-images.githubusercontent.com/55129843/125177279-1b3c2e80-e1f8-11eb-8822-f48a959750c4.gif)
+### Activity center and toast notification so you won't miss anything!
+![activities and toast notification](https://user-images.githubusercontent.com/55129843/125185776-55cbb880-e244-11eb-8a96-a23ed94cb04e.gif)
 ### Collaborative Whiteboard for better learning experience!
 ![whiteboard](https://user-images.githubusercontent.com/55129843/125177286-28591d80-e1f8-11eb-8574-ab21c9a6fc53.gif)
 
