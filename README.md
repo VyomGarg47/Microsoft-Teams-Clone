@@ -46,9 +46,9 @@ Check out the demo at: https://teams-clone-engage2k21.herokuapp.com/
 ![share screen](https://user-images.githubusercontent.com/55129843/125177238-c00a3c00-e1f7-11eb-9901-a98894916d91.png)
 ### Join meeting directly from chatroom, and adjust your audio and video!
 ![Joining meeting](https://user-images.githubusercontent.com/55129843/125177334-88e85a80-e1f8-11eb-8931-adc376b852c4.gif)
-### Switch between different participants !
+### Pin and mute different participants!
 ![Participants control](https://user-images.githubusercontent.com/55129843/125177279-1b3c2e80-e1f8-11eb-8822-f48a959750c4.gif)
-### Collaborative Whiteboard for better learning experience !
+### Collaborative Whiteboard for better learning experience!
 ![whiteboard](https://user-images.githubusercontent.com/55129843/125177286-28591d80-e1f8-11eb-8574-ab21c9a6fc53.gif)
 
 
