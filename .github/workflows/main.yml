@@ -15,7 +15,7 @@ jobs:
       uses: foo-software/lighthouse-check-action@master
       with:
         outputDirectory: /tmp/artifacts
-        urls: 'https://webrtc-video-call-test.herokuapp.com/'
+        urls: 'https://teams-clone-engage2k21.herokuapp.com/'
     - name: Upload artifacts
       uses: actions/upload-artifact@master
       with:
