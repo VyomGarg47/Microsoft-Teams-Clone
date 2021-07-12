@@ -50,9 +50,10 @@ class Meet extends Component {
           OfferToReceiveVideo: true,
         },
       },
-      messages: [],
-      disconnected: false,
-      askForUsername: true,
+      messages: [], //holds all the messages
+      disconnected: false, //sets to true when user disconnects
+      askForUsername: true, //Ask for username, adjust audio and video before joining the meeting
+      //use a random username, or the same username from the chatroom
       username:
         this.props.location && this.props.location.state
           ? this.props.location.state.user
@@ -63,27 +64,35 @@ class Meet extends Component {
       micstart: true,
       vidstart: true,
       sharingScreen: false,
-      color: "#000000",
-      size: "5",
+      color: "#000000", //default color for the whiteboard
+      size: "5", //default pen size for the whiteboard
       recordingVideo: false,
       Handraise: false,
     };
     this.socket = null;
     this.recordVideo = null;
-    this.child = React.createRef();
     //PRODUCTION
-    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer"; //comment this code if testing on localhost
+    //this.serviceIP = "/webrtcPeer"; //uncomment this code if testing on localhost
   }
+  /**
+   * Gets the audio and video stream from the user
+   */
   getLocalStream = () => {
-    // called when getUserMedia() successfully returns
+    /**
+     * Called when user gives camera and mic permissions
+     * @param {stream} stream Contains the user stream
+     */
     const success = (stream) => {
       window.localStream = stream; //this is a global variable available through the app, attaching stream to this local variable
       this.setState({
         localStream: stream, //updates the localstream
       });
     };
-    // called when getUserMedia() fails
+    /**
+     * Redirects user to error page if permissions are denied
+     * @param {*} e
+     */
     const failure = (e) => {
       window.location.href = "/error";
     };
@@ -95,24 +104,33 @@ class Meet extends Component {
       },
     };
     navigator.mediaDevices
-      .getUserMedia(constraints) //capture audio and video
+      .getUserMedia(constraints) //capture audio and video using the given contraints
       .then(success)
       .catch(failure);
   };
-
+  /**
+   * Called when the peer successully establish a connection
+   * Emits "add-user" and "onlinePeers" events
+   */
   whoisOnline = () => {
-    // let all peers know I am joining
     this.socket.emit("add-user", this.state.username);
     this.sendToPeer("onlinePeers", null, { local: this.socket.id });
   };
-
+  /**
+   * Emit events to the server
+   * @param {string} messageType The event to emit
+   * @param {object} payload The data to send
+   * @param {socket.id} socketID The socketID
+   */
   sendToPeer = (messageType, payload, socketID) => {
     this.socket.emit(messageType, {
       socketID,
       payload,
     });
   };
-
+  /**
+   * Create a Peer Connection
+   */
   createPeerConnection = (socketID, callback) => {
     try {
       let pc = new RTCPeerConnection(this.state.pc_config);
@@ -171,7 +189,6 @@ class Meet extends Component {
 
         this.setState((prevState) => {
           // If we already have a stream in display let it stay the same, otherwise use the latest stream
-          // const remoteStream = prevState.remoteStreams.length > 0 ? {} : { remoteStream: e.streams[0] }
           const remoteStream =
             prevState.remoteStreams.length > 0
               ? {}
@@ -187,11 +204,9 @@ class Meet extends Component {
             : { selectedVideo: remoteVideo };
 
           return {
-            // selectedVideo: remoteVideo,
             ...selectedVideo,
-            // remoteStream: e.streams[0],
             ...remoteStream,
-            remoteStreams, //: [...prevState.remoteStreams, remoteVideo]
+            remoteStreams,
           };
         });
       };
@@ -205,33 +220,47 @@ class Meet extends Component {
           pc.addTrack(track, this.state.localStream);
         });
 
-      // return pc
       callback(pc);
     } catch (e) {
       console.log("Something went wrong! pc not created!!", e);
-      // return;
       callback(null);
     }
   };
+  /**
+   * Called immediately once the component is mounted
+   * Calls the getLocalStream function to retrieve user's camera and mic streams
+   */
   componentDidMount = () => {
     this.getLocalStream();
   };
+  /**
+   * Connects to the socket server once the username, audio and video is adjusted
+   */
   connectToSocketServer = () => {
     this.socket = io.connect(this.serviceIP, {
+      //connect to the socket server
       path: "/webrtc",
       query: {
         room: window.location.pathname,
       },
     });
+    /**
+     * Listens for "connection-success" event
+     * @param {object} data all the messages
+     */
     this.socket.on("connection-success", (data) => {
       this.whoisOnline();
       this.setState({
         messages: data.messages,
       });
     });
-
+    /**
+     * * Listens for "peer-disconnected" event
+     * Sends a toast notification for the disconnected peer
+     * Closed peer-connection with this peer
+     * @param {object} data contains disconnected peer socketID, and the total peercount
+     */
     this.socket.on("peer-disconnected", (data) => {
-      // close peer-connection with this peer
       if (this.state.IDtoUsers.has(data.socketID)) {
         const username = this.state.IDtoUsers.get(data.socketID);
         toast.info(`${username} has left the meeting`, {
@@ -281,6 +310,14 @@ class Meet extends Component {
         }
       }
     });
+    /**
+     * Listens for "adduser" event
+     * Sends a toast notification
+     * Updates the current peerCount, Users map and HandRaiseMap with newly recieved items
+     * @param {array} IDtoUsersList Array containing list of all the users currently in the room.
+     * @param {string} username Username of the newly joined participants
+     * @param {array} HandRaiseList Array containing list of all the participants with raised hands
+     */
     this.socket.on("adduser", (IDtoUsersList, username, HandRaiseList) => {
       if (username) {
         toast.info(`${username} joined the meeting`, {
@@ -306,14 +343,22 @@ class Meet extends Component {
         numberOfUsers: peerCount,
       });
     });
-
+    /**
+     * Listens for "handraise" event
+     * Updates the current map with newly recieved map
+     * @param {array} HandRaiseList Array containing list of all participants with raised hands
+     */
     this.socket.on("handraise", (HandRaiseList) => {
       const receivedMap = new Map(HandRaiseList);
       this.setState({
         HandIDtoUsers: receivedMap,
       });
     });
-
+    /**
+     * Listens for "add-new-message" event
+     * Plays an audio sound and updates the current list of messages
+     * @param {object} message Contains the newly delievered message
+     */
     this.socket.on("add-new-message", (message) => {
       const notisound = new Audio(notificationSound);
       notisound.play();
@@ -321,7 +366,10 @@ class Meet extends Component {
         return { messages: [...prevState.messages, JSON.parse(message)] };
       });
     });
-
+    /**
+     * Listens for "online-peer" event
+     * @param {socket.id} socketID contains the socketID with which peerConnection is to be made
+     */
     this.socket.on("online-peer", (socketID) => {
       // create and send offer to the peer (data.socketID)
       // 1. Create new pc
@@ -339,7 +387,11 @@ class Meet extends Component {
         }
       });
     });
-
+    /**
+     * Listens for the "offer" event
+     * Create an answer and emit it.
+     * @param {object} data connects the socketID and sdp
+     */
     this.socket.on("offer", (data) => {
       this.createPeerConnection(data.socketID, (pc) => {
         pc.addStream(this.state.localStream);
@@ -358,7 +410,11 @@ class Meet extends Component {
         );
       });
     });
-
+    /**
+     * Listens for the "answer" event
+     * Updates the remote description
+     * @param {object} data connects the socketID and sdp
+     */
     this.socket.on("answer", (data) => {
       // get remote's peerConnection
       const pc = this.state.peerConnections[data.socketID];
@@ -366,7 +422,11 @@ class Meet extends Component {
         () => {}
       );
     });
-
+    /**
+     * Listens for the "answer" event
+     * Adds the ice candidates
+     * @param {object} data connects the socketID and ice candidates
+     */
     this.socket.on("candidate", (data) => {
       // get remote's peerConnection
       const pc = this.state.peerConnections[data.socketID];
@@ -374,45 +434,77 @@ class Meet extends Component {
       if (pc) pc.addIceCandidate(new RTCIceCandidate(data.candidate));
     });
   };
+  /**
+   * Switch to the currently selected stream
+   * @param {stream} _video The stream to switch to
+   */
   switchVideo = (_video) => {
     this.setState({
       selectedVideo: _video,
     });
   };
-
+  /**
+   * Stops all track
+   * @param {stream} stream The stream to switch to
+   */
   stopTracks = (stream) => {
     stream.getTracks().forEach((track) => track.stop());
   };
-
+  /**
+   * Disconnects the user
+   * @param {bool} data Whether the user has left the meeting or not
+   */
   callbackFunction = (data) => {
     this.setState({ disconnected: data });
   };
+  /**
+   * To adjust microphone before joining
+   */
   changeMicBeforeJoin = () => {
     const temp = this.state.micstart;
     this.setState({ micstart: !temp });
   };
+  /**
+   * To adjust camera before joining
+   */
   changeCameraBeforeJoin = () => {
     const temp = this.state.vidstart;
     this.setState({ vidstart: !temp });
   };
+  /**
+   * Updates the username
+   */
   handleUsername = (e) => {
     this.setState({
       username: e.target.value,
     });
   };
+  /**
+   * Plays sound when user joins the meeting
+   */
   playConnectSound = () => {
     const audioEl = new Audio(connectSound);
     audioEl.play();
   };
+  /**
+   * Plays sound when user disconnects the meeting
+   */
   playDisconnectSound = () => {
     const audioEl = new Audio(disconnectSound);
     audioEl.play();
   };
+  /**
+   * Starts connection once the user enters username and adjust audio and video
+   */
   startconnection = (e) => {
     this.setState({ askForUsername: false });
     this.connectToSocketServer();
     this.playConnectSound();
   };
+  /**
+   * To copy invite link
+   * Sends notification when link is copied
+   */
   copyUrl = () => {
     let text = window.location.href;
     navigator.clipboard.writeText(text).then(
@@ -440,12 +532,18 @@ class Meet extends Component {
       }
     );
   };
+  /**
+   * To open any mail app with the room's invite link
+   */
   sendEmail = () => {
     window.open(
       "mailto:email@example.com?subject=Meet%20Invite&body=" +
         window.location.href
     );
   };
+  /**
+   * Verify contrains before sharing the screen and then calls the screen sharing function
+   */
   verifyshareScreen = () => {
     if (this.state.numberOfUsers > 1) {
       this.shareScreen();
@@ -455,6 +553,12 @@ class Meet extends Component {
       );
     }
   };
+  /**
+   * Screen sharing function
+   * Start screensharing by first requesting the media
+   * Then replace the video track in peerConnectionList with the new stream
+   * Agains replace the video track with users camera stream when sharing stops
+   */
   shareScreen = () => {
     let peerConnectionList = this.state.peerConnections;
     const currentlocalstream = this.state.localStream;
@@ -495,7 +599,10 @@ class Meet extends Component {
         console.log(e);
       });
   };
-
+  /**
+   * Sends a toast notificaiton that recording has started
+   * starts screen recording
+   */
   startRecording = () => {
     toast.success("Started Recording", {
       position: "bottom-left",
@@ -515,7 +622,11 @@ class Meet extends Component {
       recordingVideo: true,
     });
   };
-
+  /**
+   * Sends a toast notificaiton that recording has stopped
+   * stops screen recording
+   * Downloads the file
+   */
   stopRecording = () => {
     toast.success("Stopped Recording", {
       position: "bottom-left",
@@ -533,24 +644,35 @@ class Meet extends Component {
       this.recordVideo.save();
     });
   };
-
+  /**
+   * Change pen's color in canvas
+   */
   changeColor(params) {
     this.setState({
       color: params.target.value,
     });
   }
-
+  /**
+   * Change pen's size in canvas
+   */
   changeSize(params) {
     this.setState({
       size: params.target.value,
     });
   }
+  /**
+   * Updates the canvas state and closes the canvas
+   */
   closeCanvas = () => {
     this.setState({
       openCanvas: false,
     });
   };
-
+  /**
+   * Raise or lower the user's hand
+   * emits the "hand-raise" event
+   * emits the "lower-hand" event
+   */
   RaiseHand = () => {
     if (this.state.Handraise === false) {
       this.socket.emit("hand-raise", this.state.username);
