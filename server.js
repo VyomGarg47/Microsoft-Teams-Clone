@@ -76,6 +76,7 @@ peers.on("connection", (socket) => {
   /**
    * Called whenever a peers enters a new message,
    * Sends the new message to all the peers in the room
+   * @param {object} data contains the newly entered message
    */
   socket.on("new-message", (data) => {
     messages[room] = [...messages[room], JSON.parse(data.payload)];
@@ -107,6 +108,7 @@ peers.on("connection", (socket) => {
   /**
    * Called whenever a peer sends the data from the whiteboard.
    * Sends that data to all the peers in the room.
+   * @param {object} data contains the whiteboard that as a base64 Image
    */
   socket.on("canvas-data", (data) => {
     const _connectedPeers = rooms[room];
@@ -118,6 +120,7 @@ peers.on("connection", (socket) => {
    * gets called whenever an new user joins a meeting
    * maps the username to the peer's socket.id in IDtoUsers of that room
    * emits the username, the new map (converted into an array), and the current Hand raise list (also converted to an array) to every peer.
+   * @param {string} username Username of the user to add.
    */
   socket.on("add-user", (username) => {
     IDtoUsers[room] =
@@ -141,6 +144,7 @@ peers.on("connection", (socket) => {
    * gets called when a user in a meeting raises his or her hand
    * Maps the username to peer's socket.id in the IDtoUsersHandRaise map
    * Emits the map(converted into an array) to all the peers.
+   * @param {string} username Username of the user who raised his/her hand
    */
   socket.on("hand-raise", (username) => {
     IDtoUsersHandRaise[room] =
@@ -170,6 +174,7 @@ peers.on("connection", (socket) => {
    * gets called whenever an new user joins a chatroom
    * maps the username to the peer's socket.id in IDtoUsersRoom of that room
    * emits the username, the new map (converted into an array), and the count of participants in the meeting to every peer in that room.
+   * @param {string} username Username of the user who just joined the chatroom
    */
   socket.on("add-user-chatroom", (username) => {
     IDtoUsersRoom[room] =
@@ -189,6 +194,7 @@ peers.on("connection", (socket) => {
   /**
    * gets called whenever a peer emits "onlinePeer" event.
    * Sends the socket id of every peer in that room to this peer
+   * @param {object} data contains the socketID of the peer
    */
   socket.on("onlinePeers", (data) => {
     const _connectedPeers = rooms[room];
@@ -201,6 +207,7 @@ peers.on("connection", (socket) => {
   /**
    * gets called whenever a peer emits "offer" event.
    * Emits the sdp and socket.id of this peer to the peer for which the offer was meant
+   * @param {object} data Contains sdp and socketID
    */
   socket.on("offer", (data) => {
     const socket = rooms[room].get(data.socketID.remote);
@@ -212,6 +219,7 @@ peers.on("connection", (socket) => {
   /**
    * gets called whenever a peer emits "answer" event.
    * Emits the sdp and socket.id of this peer to the peer for which the answer was meant
+   * @param {object} data Contains sdp and socketID
    */
   socket.on("answer", (data) => {
     const socket = rooms[room].get(data.socketID.remote);
@@ -223,6 +231,7 @@ peers.on("connection", (socket) => {
   /**
    * gets called whenever a peer emits "candidate" event.
    * Emits the candidate and socket.id of this peer to the peer for which this was meant
+   * @param {object} data Contains sdp and socketID
    */
   socket.on("candidate", (data) => {
     const socket = rooms[room].get(data.socketID.remote);

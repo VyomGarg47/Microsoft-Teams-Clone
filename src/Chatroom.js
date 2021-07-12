@@ -27,18 +27,20 @@ class Chatroom extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: [],
-      activitypanel: false,
-      activities: [],
+      messages: [], //contains all messages
+      activitypanel: false, //show activity panel or not, false by default
+      activities: [], //contains all activities
+      //use a random username, or the same username from the chatroom
       username:
         this.props.location && this.props.location.state
           ? this.props.location.state.user
           : "User_" + Math.random().toString(36).substring(2, 7),
-      numberOfUsers: 0,
+      numberOfUsers: 0, //number of participants in the meeting
       openCanvas: false,
       IDtoUsers: new Map(),
-      color: "#000000",
-      size: "5",
+      color: "#000000", //default color for the whiteboard
+      size: "5", //default size for the whiteboard
+      //whether to ask for username or not
       askForUsername:
         this.props.location && this.props.location.state
           ? this.props.location.state.askForUsername
@@ -46,19 +48,31 @@ class Chatroom extends Component {
     };
     this.socket = null;
     //PRODUCTION
-    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer";
-    //this.serviceIP = "/webrtcPeer";
+    this.serviceIP = "https://teams-clone-engage2k21.herokuapp.com/webrtcPeer"; //comment this code if testing on localhost
+    //this.serviceIP = "/webrtcPeer"; //uncomment this code if testing on localhost
   }
+  /**
+   * Emit events to the server
+   * @param {string} messageType The event to emit
+   * @param {object} payload The data to send
+   * @param {socket.id} socketID The socketID
+   */
   sendToPeer = (messageType, payload, socketID) => {
     this.socket.emit(messageType, {
       socketID,
       payload,
     });
   };
+  /**
+   * Called when the peer successully establish a connection
+   * Emits "add-user-chatroom" event
+   */
   whoisOnline = () => {
     this.socket.emit("add-user-chatroom", this.state.username);
   };
-
+  /**
+   * Connects to the socket server once the username is entered
+   */
   connectToSocketServer = () => {
     const sound = new Audio(connectSound);
     sound.play();
@@ -68,6 +82,11 @@ class Chatroom extends Component {
         room: "/Video" + window.location.pathname,
       },
     });
+    /**
+     * Listens for "add-new-message" event
+     * Plays an audio sound and updates the current list of messages
+     * @param {object} message Contains the newly delievered message
+     */
     this.socket.on("add-new-message", (message) => {
       const notisound = new Audio(notificationSound);
       notisound.play();
@@ -81,12 +100,24 @@ class Chatroom extends Component {
         };
       });
     });
+    /**
+     * Listens for "connection-success" event
+     * @param {object} data all the messages
+     */
     this.socket.on("connection-success", (data) => {
       this.whoisOnline();
       this.setState({
         messages: data.messages,
       });
     });
+    /**
+     * Listens for "adduser-chatroom" event
+     * Sends a toast notification
+     * Updates the current peerCount, Users map and activites
+     * @param {array} IDtoUsersRoom Array containing list of all the users currently in the chatroom.
+     * @param {string} username Username of the newly joined participant
+     * @param {int} peerCount Count of participants in the meeting
+     */
     this.socket.on("adduser-chatroom", (IDtoUsersRoom, username, peerCount) => {
       if (username) {
         toast.info(`${username} joined the room`, {
@@ -106,6 +137,13 @@ class Chatroom extends Component {
         IDtoUsers: receivedMap,
       });
     });
+    /**
+     * Listens for "adduser" event
+     * Sends a toast notification if a meeting was started
+     * updates the number of users in the meeting
+     * @param {array} IDtoUsersRoom Array containing list of all the users currently in the meeting.
+     * @param {string} username Username of the newly joined participant
+     */
     this.socket.on("adduser", (IDtoUsersRoom, username) => {
       const peerCount = IDtoUsersRoom.length;
       if (peerCount === 1) {
@@ -130,11 +168,21 @@ class Chatroom extends Component {
         });
       }
     });
+    /**
+     * Updates number of participants in the meeting
+     * @param {object} data contains the count of participants in the meeting
+     */
     this.socket.on("peer-disconnected", (data) => {
       this.setState({
         numberOfUsers: data.peerCount,
       });
     });
+    /**
+     * Sends a notification
+     * updates the IDtoUsers map
+     * updates activities
+     * @param {object} data contains the socketID of the user who disconnected the chatroom
+     */
     this.socket.on("peer-disconnected-chatroom", (data) => {
       const username = this.state.IDtoUsers.get(data.socketID);
       toast.info(`${username} has left the room`, {
@@ -155,31 +203,43 @@ class Chatroom extends Component {
       });
     });
   };
-
+  /**
+   * Called immediately once the component is mounted
+   * calls the connectToSocketServer is username is already present
+   */
   componentDidMount = () => {
     if (this.state.askForUsername === false) {
       this.connectToSocketServer();
     }
   };
-
+  /**
+   * Starts connection once the user enters the username.
+   */
   startconnection = (e) => {
     this.setState({ askForUsername: false });
     this.connectToSocketServer();
   };
-
+  /**
+   * Updates the username
+   */
   handleUsername = (e) => {
     this.setState({
       username: e.target.value,
     });
   };
-
+  /**
+   * To open any mail app with the room's invite link
+   */
   sendEmail = () => {
     window.open(
       "mailto:email@example.com?subject=Meet%20Invite&body=" +
         window.location.href
     );
   };
-
+  /**
+   * To copy invite link
+   * Sends notification when link is copied
+   */
   copyUrl = () => {
     let text = window.location.href;
     navigator.clipboard.writeText(text).then(
@@ -207,19 +267,25 @@ class Chatroom extends Component {
       }
     );
   };
-
+  /**
+   * Change pen's color in canvas
+   */
   changeColor(params) {
     this.setState({
       color: params.target.value,
     });
   }
-
+  /**
+   * Change pen's size in canvas
+   */
   changeSize(params) {
     this.setState({
       size: params.target.value,
     });
   }
-
+  /**
+   * Updates the canvas state and closes the canvas
+   */
   closeCanvas = () => {
     this.setState({
       openCanvas: false,
