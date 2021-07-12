@@ -70,7 +70,6 @@ const Chat = (props) => {
           className="message"
           style={{
             width: 200,
-            // height: 100
             cursor: "pointer",
           }}
           src={message.data}
@@ -104,7 +103,6 @@ const Chat = (props) => {
 
   return (
     <div>
-      {/* {imageZoom && showEnlargedImage(selectedImage)} */}
       <Modal
         open={imageZoom}
         onClose={() => {
@@ -153,8 +151,6 @@ const Chat = (props) => {
           sendFiles={(files) => {
             const reader = new FileReader();
             reader.onload = (e) => {
-              //https://blog.mozilla.org/webrtc/large-data-channel-messages/
-              //https://lgrahl.de/articles/demystifying-webrtc-dc-size-limit.html
               const maximumMessageSize = 262118; //65535 <=== 64KiB // 16384 <=== 16KiB to be safe
               if (e.target.result.length <= maximumMessageSize)
                 sendMessage({

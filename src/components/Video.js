@@ -13,8 +13,6 @@ class Video extends Component {
     this.state = {
       mic: this.props.startmic,
       camera: this.props.startvid,
-      // currentStream: new MediaStream(),
-      // videoTrack: false,
       videoVisible: true,
     };
   }

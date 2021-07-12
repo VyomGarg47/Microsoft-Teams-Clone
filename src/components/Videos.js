@@ -38,10 +38,6 @@ class Videos extends Component {
         const _videoTrack = rVideo.stream
           .getTracks()
           .filter((track) => track.kind === "video");
-        // if (_videoTrack.length)
-        //   _videoTrack[0].onmute = () => {
-        //     alert('muted')
-        //   }
 
         let video = (_videoTrack && (
           <Video

@@ -53,7 +53,6 @@ class Meet extends Component {
       messages: [],
       disconnected: false,
       askForUsername: true,
-      //username: "User_" + Math.random().toString(36).substring(2, 7),
       username:
         this.props.location && this.props.location.state
           ? this.props.location.state.user
@@ -87,7 +86,6 @@ class Meet extends Component {
     };
     // called when getUserMedia() fails
     const failure = (e) => {
-      console.log("getUserMedia Error: ", e);
       window.location.href = "/error";
     };
     const constraints = {
@@ -133,15 +131,6 @@ class Meet extends Component {
             remote: socketID,
           });
         }
-      };
-
-      pc.oniceconnectionstatechange = (e) => {
-        // if (pc.iceConnectionState === 'disconnected') {
-        //   const remoteStreams = this.state.remoteStreams.filter(stream => stream.id !== socketID)
-        //   this.setState({
-        //     remoteStream: remoteStreams.length > 0 && remoteStreams[0].stream || null,
-        //   })
-        // }
       };
 
       pc.ontrack = (e) => {
@@ -208,28 +197,11 @@ class Meet extends Component {
         });
       };
 
-      // pc.onnegotiationneeded = () => {
-      //   pc.createOffer(this.state.sdpConstraints)
-      //     .then((sdp) => {
-      //       return pc.setLocalDescription(sdp);
-      //     })
-      //     .then(() => {
-      //       const sdp = pc.localDescription;
-      //       this.sendToPeer("offer", sdp, {
-      //         local: this.socket.id,
-      //         remote: socketID,
-      //       });
-      //     });
-      // };
-
       pc.close = () => {
-        // alert('GONE')
         console.log("pc closed");
       };
 
       if (this.state.localStream)
-        // pc.addStream(this.state.localStream)
-
         this.state.localStream.getTracks().forEach((track) => {
           pc.addTrack(track, this.state.localStream);
         });
@@ -246,7 +218,6 @@ class Meet extends Component {
     this.getLocalStream();
   };
   connectToSocketServer = () => {
-    console.log("CONNECT TO SOCKET SERVER");
     this.socket = io.connect(this.serviceIP, {
       path: "/webrtc",
       query: {
@@ -297,15 +268,12 @@ class Meet extends Component {
                 : null;
 
             return {
-              // remoteStream: remoteStreams.length > 0 && remoteStreams[0].stream || null,
               remoteStreams,
               ...selectedVideo,
               status:
                 data.peerCount > 1
-                  ? `Total Connected Peers to room ${window.location.pathname
-                      .split("/")
-                      .pop()}: ${data.peerCount}`
-                  : "Waiting for other peers to connect",
+                  ? `Total Number of participants: ${data.peerCount}`
+                  : "Waiting for other people to join",
               numberOfUsers: data.peerCount,
               IDtoUsers: this.state.IDtoUsers,
               HandIDtoUsers: this.state.HandIDtoUsers,
@@ -395,7 +363,6 @@ class Meet extends Component {
     this.socket.on("answer", (data) => {
       // get remote's peerConnection
       const pc = this.state.peerConnections[data.socketID];
-      // console.log(data.sdp)
       pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(
         () => {}
       );
@@ -408,16 +375,12 @@ class Meet extends Component {
       if (pc) pc.addIceCandidate(new RTCIceCandidate(data.candidate));
     });
   };
-  // componentDidMount = () => {};
   switchVideo = (_video) => {
-    // console.log(_video)
     this.setState({
       selectedVideo: _video,
     });
   };
 
-  // ************************************* //
-  // ************************************* //
   stopTracks = (stream) => {
     stream.getTracks().forEach((track) => track.stop());
   };
@@ -513,7 +476,6 @@ class Meet extends Component {
           sharingScreen: true,
         });
         screenTrack.onended = () => {
-          console.log("STREAM ENDED");
           let newpeerConnectionList = this.state.peerConnections;
           window.localStream = currentlocalstream; //this is a global variable available through the app, attacking stream to this local variable
           this.setState({
@@ -833,12 +795,7 @@ class Meet extends Component {
               }}
             >
               <p style={{ color: "white", margin: 0 }}>
-                Meeting Room:{" "}
-                {
-                  //eslint-disable-next-line
-                  //window.location.pathname.replace(/[\/\\]/g, "")
-                  window.location.pathname.split("/").pop()
-                }
+                Meeting Room: {window.location.pathname.split("/").pop()}
               </p>
             </div>
             <div
@@ -846,7 +803,6 @@ class Meet extends Component {
               style={{
                 margin: 0,
                 backgroundColor: "#212121",
-                //backgroundColor: "#424242",
                 zIndex: 104,
               }}
             >
@@ -1111,12 +1067,9 @@ class Meet extends Component {
                   width: 300,
                   height: 255,
                   marginTop: 5,
-                  //margin: 5,
-                  //borderRadius: 5,
                   backgroundColor: "black",
                 }}
                 showMuteControls={true}
-                // ref={this.localVideoref}
                 sharingScreen={this.state.sharingScreen}
                 startmic={this.state.micstart}
                 startvid={this.state.vidstart}
@@ -1139,7 +1092,6 @@ class Meet extends Component {
                 bottom: 5,
                 width: 300,
                 textAlign: "center",
-                // height: 650,
               }}
               user={{
                 uid: this.state.username,

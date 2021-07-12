@@ -11,11 +11,11 @@ const app = express();
 const app2 = http.createServer(app);
 const port = process.env.PORT || 8080;
 
-const rooms = {};
-const messages = {};
-const IDtoUsers = {};
-const IDtoUsersRoom = {};
-const IDtoUsersHandRaise = {};
+const rooms = {}; //contains all peers in a particular room
+const messages = {}; //contains all messages of a room
+const IDtoUsers = {}; //maps socket.id to username for all participants in a meeting of a particular room
+const IDtoUsersRoom = {}; //maps socket.id to username for all participants in chatroom of a particular room
+const IDtoUsersHandRaise = {}; //maps socket.id to username for all participants with hand raised
 app.use(compression()); //Compress all HTTP responses, Gzip
 app.use(express.static(__dirname + "/build")); //once app is build, the react server which was originally at 3000 will now serve at 8080
 app.get("*", (req, res) => {
@@ -32,22 +32,25 @@ io.on("connection", (socket) => {
   console.log("connected");
 });
 const peers = io.of("/webrtcPeer");
-// keep a reference of all socket connections
 
 peers.on("connection", (socket) => {
   const room = socket.handshake.query.room;
-
   rooms[room] =
     (rooms[room] && rooms[room].set(socket.id, socket)) ||
-    new Map().set(socket.id, socket); //if room is already in map, do nothing else create a new room
-
+    new Map().set(socket.id, socket); //if a map exits for this room, then set the key, else create a new map and then set the key
   messages[room] = messages[room] || [];
 
-  console.log(socket.id);
+  /**
+   * emits connection-success with all the current messages of that room to the peer who just joined.
+   */
   socket.emit("connection-success", {
     messages: messages[room],
   });
-
+  /**
+   * Called when a peer disconnects from the meeting,
+   * Emits the disconnected peer to all the peers in that room
+   * @param {socket.id} socketID  ID to the disconnected socket
+   */
   const disconnectedPeer = (socketID) => {
     const _connectedPeers = rooms[room];
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
@@ -57,7 +60,11 @@ peers.on("connection", (socket) => {
       });
     }
   };
-
+  /**
+   * Called when a peer disconnects from the chatroom
+   * Emits the disconnected peer to all the peers in that room
+   * @param {socket.id} socketID
+   */
   const disconnectedPeerRoom = (socketID) => {
     const _connectedPeers = rooms[room];
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
@@ -66,9 +73,11 @@ peers.on("connection", (socket) => {
       });
     }
   };
-
+  /**
+   * Called whenever a peers enters a new message,
+   * Sends the new message to all the peers in the room
+   */
   socket.on("new-message", (data) => {
-    console.log("added new message");
     messages[room] = [...messages[room], JSON.parse(data.payload)];
     const _connectedPeers = rooms[room];
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
@@ -76,10 +85,13 @@ peers.on("connection", (socket) => {
     }
   });
 
+  /**
+   * Called when a peer disconnects
+   * Checks whether the peer was disconnected from the meeting or from the chatroom
+   * And finally calls their respective function.
+   */
   socket.on("disconnect", () => {
-    console.log("disconnected");
     rooms[room].delete(socket.id);
-    //messages[room] = rooms[room].size === 0 ? null : messages[room];
     if (IDtoUsersHandRaise[room] && IDtoUsersHandRaise[room].has(socket.id)) {
       IDtoUsersHandRaise[room].delete(socket.id);
     }
@@ -92,18 +104,25 @@ peers.on("connection", (socket) => {
       disconnectedPeerRoom(socket.id);
     }
   });
-
+  /**
+   * Called whenever a peer sends the data from the whiteboard.
+   * Sends that data to all the peers in the room.
+   */
   socket.on("canvas-data", (data) => {
     const _connectedPeers = rooms[room];
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("canvas-data", data);
     }
   });
-
+  /**
+   * gets called whenever an new user joins a meeting
+   * maps the username to the peer's socket.id in IDtoUsers of that room
+   * emits the username, the new map (converted into an array), and the current Hand raise list (also converted to an array) to every peer.
+   */
   socket.on("add-user", (username) => {
     IDtoUsers[room] =
       (IDtoUsers[room] && IDtoUsers[room].set(socket.id, username)) ||
-      new Map().set(socket.id, username);
+      new Map().set(socket.id, username); //if a map exits for this room, then set the key, else create a new map and then set the key
     const _connectedPeers = rooms[room];
     let HandRaiseList = [];
     if (IDtoUsersHandRaise[room]) {
@@ -118,18 +137,26 @@ peers.on("connection", (socket) => {
       );
     }
   });
-
+  /**
+   * gets called when a user in a meeting raises his or her hand
+   * Maps the username to peer's socket.id in the IDtoUsersHandRaise map
+   * Emits the map(converted into an array) to all the peers.
+   */
   socket.on("hand-raise", (username) => {
     IDtoUsersHandRaise[room] =
       (IDtoUsersHandRaise[room] &&
         IDtoUsersHandRaise[room].set(socket.id, username)) ||
-      new Map().set(socket.id, username);
+      new Map().set(socket.id, username); //if a map exits for this room, then set the key, else create a new map and then set the key
     const _connectedPeers = rooms[room];
     for (const [_socketID, _socket] of _connectedPeers.entries()) {
       _socket.emit("handraise", Array.from(IDtoUsersHandRaise[room]));
     }
   });
-
+  /**
+   * gets called when a user in a meeting lower his or her hand
+   * Delets the key with peer's socket.id in the IDtoUsersHandRaise map
+   * Emits the new map(converted into an array) to all the peers.
+   */
   socket.on("hand-lower", () => {
     if (IDtoUsersHandRaise[room] && IDtoUsersHandRaise[room].has(socket.id)) {
       IDtoUsersHandRaise[room].delete(socket.id);
@@ -139,7 +166,11 @@ peers.on("connection", (socket) => {
       }
     }
   });
-
+  /**
+   * gets called whenever an new user joins a chatroom
+   * maps the username to the peer's socket.id in IDtoUsersRoom of that room
+   * emits the username, the new map (converted into an array), and the count of participants in the meeting to every peer in that room.
+   */
   socket.on("add-user-chatroom", (username) => {
     IDtoUsersRoom[room] =
       (IDtoUsersRoom[room] && IDtoUsersRoom[room].set(socket.id, username)) ||
@@ -155,7 +186,10 @@ peers.on("connection", (socket) => {
       );
     }
   });
-
+  /**
+   * gets called whenever a peer emits "onlinePeer" event.
+   * Sends the socket id of every peer in that room to this peer
+   */
   socket.on("onlinePeers", (data) => {
     const _connectedPeers = rooms[room];
     for (const [socketID, _socket] of _connectedPeers.entries()) {
@@ -164,7 +198,10 @@ peers.on("connection", (socket) => {
       }
     }
   });
-
+  /**
+   * gets called whenever a peer emits "offer" event.
+   * Emits the sdp and socket.id of this peer to the peer for which the offer was meant
+   */
   socket.on("offer", (data) => {
     const socket = rooms[room].get(data.socketID.remote);
     socket.emit("offer", {
@@ -172,7 +209,10 @@ peers.on("connection", (socket) => {
       socketID: data.socketID.local,
     });
   });
-
+  /**
+   * gets called whenever a peer emits "answer" event.
+   * Emits the sdp and socket.id of this peer to the peer for which the answer was meant
+   */
   socket.on("answer", (data) => {
     const socket = rooms[room].get(data.socketID.remote);
     socket.emit("answer", {
@@ -180,7 +220,10 @@ peers.on("connection", (socket) => {
       socketID: data.socketID.local,
     });
   });
-
+  /**
+   * gets called whenever a peer emits "candidate" event.
+   * Emits the candidate and socket.id of this peer to the peer for which this was meant
+   */
   socket.on("candidate", (data) => {
     const socket = rooms[room].get(data.socketID.remote);
     socket.emit("candidate", {

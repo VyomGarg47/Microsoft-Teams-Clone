@@ -36,7 +36,6 @@ class Error extends Component {
             padding: "10px",
             minWidth: "325px",
             textAlign: "center",
-            //margin: "auto",
             marginTop: "50px",
           }}
         >

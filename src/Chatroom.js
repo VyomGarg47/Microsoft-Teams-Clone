@@ -50,7 +50,6 @@ class Chatroom extends Component {
     //this.serviceIP = "/webrtcPeer";
   }
   sendToPeer = (messageType, payload, socketID) => {
-    console.log("sendToPeer");
     this.socket.emit(messageType, {
       socketID,
       payload,
@@ -147,7 +146,6 @@ class Chatroom extends Component {
         draggable: true,
         progress: undefined,
       });
-      //const receivedMap = new Map(data.clientsideListchatroom);
       this.state.IDtoUsers.delete(data.socketID);
       this.setState({
         activities: this.state.activities.concat(
