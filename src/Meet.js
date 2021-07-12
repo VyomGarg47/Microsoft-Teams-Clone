@@ -82,7 +82,6 @@ class Meet extends Component {
       this.setState({
         localStream: stream, //updates the localstream
       });
-      //this.connectToSocketServer();
     };
     // called when getUserMedia() fails
     const failure = (e) => {
