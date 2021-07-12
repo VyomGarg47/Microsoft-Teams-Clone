@@ -108,7 +108,7 @@ peers.on("connection", (socket) => {
   /**
    * Called whenever a peer sends the data from the whiteboard.
    * Sends that data to all the peers in the room.
-   * @param {object} data contains the whiteboard that as a base64 Image
+   * @param {object} data contains the whiteboard as a base64 Image
    */
   socket.on("canvas-data", (data) => {
     const _connectedPeers = rooms[room];

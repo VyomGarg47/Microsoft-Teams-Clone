@@ -65,7 +65,7 @@ class Meet extends Component {
       vidstart: true,
       sharingScreen: false,
       color: "#000000", //default color for the whiteboard
-      size: "5", //default pen size for the whiteboard
+      size: "5", //default size for the whiteboard
       recordingVideo: false,
       Handraise: false,
     };
@@ -315,7 +315,7 @@ class Meet extends Component {
      * Sends a toast notification
      * Updates the current peerCount, Users map and HandRaiseMap with newly recieved items
      * @param {array} IDtoUsersList Array containing list of all the users currently in the room.
-     * @param {string} username Username of the newly joined participants
+     * @param {string} username Username of the newly joined participant
      * @param {array} HandRaiseList Array containing list of all the participants with raised hands
      */
     this.socket.on("adduser", (IDtoUsersList, username, HandRaiseList) => {
