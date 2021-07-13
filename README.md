@@ -61,7 +61,7 @@ Check out the demo at: https://teams-clone-engage2k21.herokuapp.com/
 
 ## Instructions
 
-* To start a meeting, visit https://teams-clone-engage2k21.herokuapp.com/, then click on the “Go” button to create a new room or enter an existing room URL to join that room.
+* To start a meeting, visit https://teams-clone-engage2k21.herokuapp.com/, then click on “Create a new Room” to create a new room or enter an existing room URL to join that room.
 * After the room is created, set up your username and click on the “Join Room” button.
 * In the chatroom,
   * Chat with the room participants using the Meeting Chat.
