@@ -9,6 +9,6 @@ test("render Home page", () => {
 
 test("render Home page", () => {
   render(<App />);
-  const linkElement = screen.getByText(/Start or join a meeting/i);
+  const linkElement = screen.getByText(/Create a new Room/i);
   expect(linkElement).toBeInTheDocument();
 });
