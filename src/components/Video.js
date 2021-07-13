@@ -29,7 +29,6 @@ class Video extends Component {
       nextProps.videoStream &&
       nextProps.videoStream !== this.props.videoStream
     ) {
-      // if (!this.props.videoStream) {
       this.video.srcObject = nextProps.videoStream;
     }
 
@@ -42,7 +41,6 @@ class Video extends Component {
       videoTrack.length
     ) {
       videoTrack[0].onmute = () => {
-        // alert('muted')
         this.setState({
           videoVisible: false,
         });

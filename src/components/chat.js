@@ -1,4 +1,3 @@
-// https://www.freecodecamp.org/news/building-a-modern-chat-application-with-react-js-558896622194/
 import Picker from "emoji-picker-react";
 import React, { useState, useEffect } from "react";
 import DragDrop from "./dragDrop";

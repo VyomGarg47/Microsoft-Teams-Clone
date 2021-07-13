@@ -10,9 +10,13 @@ class Home extends Component {
       url: "",
     };
   }
-
+  /**
+   * updates the URL value
+   */
   handleChange = (e) => this.setState({ url: e.target.value });
-
+  /**
+   * Called when user creates a room or enters a link for an existing room
+   */
   join = () => {
     var url;
     if (this.state.url !== "") {
