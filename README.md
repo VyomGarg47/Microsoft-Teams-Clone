@@ -81,8 +81,13 @@ Check out the demo at: https://teams-clone-engage2k21.herokuapp.com/
   * Use “Go back to room” if you want to go back to the chatroom.
 
 ## Agile methodology used
-* Scrum.
-* CI/CD and TDD.
+### Scrum.
+Scrum is an agile development methodology used in the development of Software, based on an iterative and incremental processes. Scrum is adaptable, fast, flexible and effective agile framework that is designed to deliver value to the customer throughout the development of the project. You can checkout my scrumboard on the [Project section of this repository](https://github.com/VyomGarg47/Microsoft-Teams-Clone/projects).
+### CI/CD and TDD.
+CI/CD is a method to frequently deliver apps to customers by introducing automation into the stages of app development. The main concepts attributed to CI/CD are continuous integration, continuous delivery, and continuous deployment. To automate the process and monitor my app, I set up two workflows using Github Actions. One of them runs the project on a couple of test cases that I designed for this app and checks whether it is building successfully or not. 
+![Test case](https://user-images.githubusercontent.com/55129843/125404653-79be0400-e3d4-11eb-9ccd-0cf3cbf9533d.png)
+And the other uses lighthouse to give me a performance metric of the app, including details like accessibility, server response time, and much more.
+![lighthouse](https://user-images.githubusercontent.com/55129843/125404836-bd187280-e3d4-11eb-8723-4e5364115b54.png)
 
 ## Technical Stack
 Tech stack used primarily includes:
