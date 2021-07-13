@@ -40,14 +40,16 @@ Check out the demo at: https://teams-clone-engage2k21.herokuapp.com/
 ![video meeting](https://user-images.githubusercontent.com/55129843/125177227-a4069a80-e1f7-11eb-9269-b0378bd176d7.png)
 ### Chatroom
 ![chatroom](https://user-images.githubusercontent.com/55129843/125177233-b5e83d80-e1f7-11eb-8670-0f3998aac8e5.png)
-### Send photos in meeting chats!
+### Send photos in chats!
 ![send image](https://user-images.githubusercontent.com/55129843/125177230-ae289900-e1f7-11eb-8702-d9c5c8c07362.png)
 ### Share your screen!
 ![share screen](https://user-images.githubusercontent.com/55129843/125177238-c00a3c00-e1f7-11eb-9901-a98894916d91.png)
-### Join meeting directly from chatroom, and adjust your audio and video!
+### Join meeting directly from chatroom, and adjust your audio-video before entering!
 ![Joining meeting](https://user-images.githubusercontent.com/55129843/125177334-88e85a80-e1f8-11eb-8931-adc376b852c4.gif)
-### Pin and mute different participants!
+### Pin and mute different participants, or maybe take them fullscreen!
 ![Participants control](https://user-images.githubusercontent.com/55129843/125177279-1b3c2e80-e1f8-11eb-8822-f48a959750c4.gif)
+### Raise your hand and clear your doubts!
+![Hand Raise](https://user-images.githubusercontent.com/55129843/125400014-f77f1100-e3ce-11eb-8d6f-ed9c67eaeee9.gif)
 ### Activity center and toast notification so you won't miss anything!
 ![activities and toast notification](https://user-images.githubusercontent.com/55129843/125185776-55cbb880-e244-11eb-8a96-a23ed94cb04e.gif)
 ### Collaborative Whiteboard for better learning experience!
