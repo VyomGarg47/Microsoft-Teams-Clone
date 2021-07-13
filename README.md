@@ -50,7 +50,7 @@ Check out the demo at: https://teams-clone-engage2k21.herokuapp.com/
 ![Participants control](https://user-images.githubusercontent.com/55129843/125177279-1b3c2e80-e1f8-11eb-8822-f48a959750c4.gif)
 ### Raise your hand and clear your doubts!
 ![Hand Raise](https://user-images.githubusercontent.com/55129843/125400014-f77f1100-e3ce-11eb-8d6f-ed9c67eaeee9.gif)
-### Activity center and toast notification so you won't miss anything!
+### Activity center and toast notifications so you won't miss anything!
 ![activities and toast notification](https://user-images.githubusercontent.com/55129843/125185776-55cbb880-e244-11eb-8a96-a23ed94cb04e.gif)
 ### Collaborative Whiteboard for better learning experience!
 ![whiteboard](https://user-images.githubusercontent.com/55129843/125177286-28591d80-e1f8-11eb-8574-ab21c9a6fc53.gif)
