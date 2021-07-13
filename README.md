@@ -88,6 +88,7 @@ CI/CD is a method to frequently deliver apps to customers by introducing automat
 ![Test case](https://user-images.githubusercontent.com/55129843/125404653-79be0400-e3d4-11eb-9ccd-0cf3cbf9533d.png)
 And the other uses lighthouse to give me a performance metric of the app, including details like accessibility, server response time, and much more.
 ![lighthouse](https://user-images.githubusercontent.com/55129843/125404836-bd187280-e3d4-11eb-8723-4e5364115b54.png)
+And finally, Heroku auto deploys the app after every commit once the Continuous Integration services have passed.
 
 ## Technical Stack
 Tech stack used primarily includes:
