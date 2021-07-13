@@ -40,7 +40,7 @@ Check out the demo at: https://teams-clone-engage2k21.herokuapp.com/
 ![video meeting](https://user-images.githubusercontent.com/55129843/125177227-a4069a80-e1f7-11eb-9269-b0378bd176d7.png)
 ### Chatroom
 ![chatroom](https://user-images.githubusercontent.com/55129843/125177233-b5e83d80-e1f7-11eb-8670-0f3998aac8e5.png)
-### Send photos in chats!
+### Send photos in chat!
 ![send image](https://user-images.githubusercontent.com/55129843/125177230-ae289900-e1f7-11eb-8702-d9c5c8c07362.png)
 ### Share your screen!
 ![share screen](https://user-images.githubusercontent.com/55129843/125177238-c00a3c00-e1f7-11eb-9901-a98894916d91.png)
